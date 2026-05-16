@@ -16,12 +16,7 @@ export default function LoginPage() {
 
   return (
 
-    <div className="
-      flex 
-      items-center 
-      justify-center 
-      h-screen 
-      ">
+    <div className="flex items-center justify-center h-screen ">
 
       <div 
         className="
@@ -87,13 +82,14 @@ export default function LoginPage() {
         </div>
 
         <button className="
-          border
-          border-white
+          border-[0.5px]
+          border-gray-500
           w-full
           mb-3
           py-2
           rounded-md
           cursor-pointer
+          bg-[#1f1d1d]
         ">
           Continue with Google
         </button>
