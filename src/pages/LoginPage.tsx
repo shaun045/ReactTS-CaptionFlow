@@ -1,19 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo/CaptionflowLogo.png";
 
-interface LoginPageProps {
-  onLogin: () => void;
- }
 
-export default function LoginPage({ onLogin }: LoginPageProps) {
+export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault()
-    onLogin()
   }
+
+  const navigate = useNavigate();
 
   return (
 
@@ -49,7 +48,9 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         </h1>
         <p className="text-gray-500 text-xs">
           Don't have an account? 
-          <span className="underline ml-1 cursor-pointer hover:text-gray-300">
+          <span className="underline ml-1 cursor-pointer hover:text-gray-300"
+            onClick={() => navigate("/register")}
+          >
             Sign up
           </span>
         </p>

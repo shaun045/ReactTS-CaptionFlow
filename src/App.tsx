@@ -1,33 +1,20 @@
-import { useState } from 'react'
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
-import SideBar from './components/SideBar/SideBar'
-import MainEditor from './components/MainEditor/MainEditor'
-import SubtitlePanel from './components/SubtitlePanel/SubtitlePanel'
-import Timeline from './components/Timeline/Timeline'
 import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage';
+import EditorPage from './pages/EditorPage';
 
 function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  if (!isLoggedIn) {
-    return <LoginPage onLogin={() => setIsLoggedIn(true)}/>
-  }
-
   return (
-
-    <div className='flex flex-col'>
-      <h1>CAPTION FLOW</h1>
-
-      <div className='grid grid-cols-3'>
-        <SideBar />
-        <MainEditor />
-        <SubtitlePanel />
-      </div>
-
-      <Timeline />
-
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginPage />}/>
+        <Route path="/register" element={<RegisterPage />}/>
+        <Route path="/editor" element={<EditorPage />}/>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
