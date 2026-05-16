@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import logo from "../assets/logo/CaptionflowLogo.png";
 
 interface LoginPageProps {
@@ -6,6 +6,15 @@ interface LoginPageProps {
  }
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onLogin()
+  }
+
   return (
 
     <div className="
@@ -45,40 +54,30 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           </span>
         </p>
 
-        <div className="
-          flex
-          flex-col
-          w-full
-          mt-5
-          gap-2
-        ">
+        <form onSubmit={handleSubmit} className="flex flex-col w-full gap-2 mt-3">
           <h2>Email</h2>
-          <input 
-            className="
-              border 
-              border-gray-500 
-              p-2
-              pl-3
-              rounded-md
-              font-light
-            " 
-            type="text"
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
             placeholder="name@example.com"
+            className="border border-gray-500 p-2 pl-3 rounded-md"
           />
-          <button 
-            onClick={onLogin}
-            className="
-              py-2
-              rounded-md
-              bg-white
-              text-black
-              font-medium
-              cursor-pointer
-            "
+          <h2>Password</h2>
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            placeholder="Enter your password"
+            className="border border-gray-500 p-2 pl-3 rounded-md mb-2"
+          />
+          <button
+            type="submit"
+            className="py-2 rounded-md bg-white text-black font-medium cursor-pointer hover:bg-gray-200"
           >
             Login
           </button>
-        </div>
+        </form>
 
         <div className="flex items-center my-5 w-full max-w-md mx-auto">
           <span className="grow h-px bg-neutral-800"></span>
