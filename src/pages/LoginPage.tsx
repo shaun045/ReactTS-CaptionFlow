@@ -31,14 +31,7 @@ export default function LoginPage() {
         ">
         <img src={logo} alt="Logo" className="w-15"/>
 
-        <h1 
-          className="
-            flex
-            justify-center
-            font-bold 
-            text-xl  
-            w-full
-          ">
+        <h1 className="flex justify-center font-bold text-xl w-full">
           Welcome to CaptionFlow
         </h1>
         <p className="text-gray-500 text-xs">

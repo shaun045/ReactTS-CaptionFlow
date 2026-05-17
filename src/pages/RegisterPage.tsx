@@ -8,8 +8,13 @@ export default function RegisterPage() {
     <div className="flex items-center justify-center h-screen ">
 
       <div className="flex items-center flex-col bg-[#131212] p-6 rounded-lg w-96 text-white">
-        <h1>Create your account</h1>
-        <p>Fill in the form below to create your account</p>
+
+        <h1 className="flex justify-center font-bold text-xl w-full">
+          Create your account
+        </h1>
+        <p className="text-gray-400 text-xs mt-2">
+          Fill in the form below to create your account
+        </p>
 
         <form className="flex flex-col w-full gap-2 mt-3">
           <h2>Full name</h2>
@@ -24,7 +29,9 @@ export default function RegisterPage() {
             placeholder="name@example.com"
             className="border border-gray-500 p-2 pl-3 rounded-md"
           />
-          <p>We'll use this to contact you. We will not share your email with anoyone else.</p>
+          <p className="text-gray-400 text-sm mt-1 mb-5">
+            We'll use this to contact you. We will not share your email with anoyone else.
+          </p>
 
           <h2>Password</h2>
           <input
