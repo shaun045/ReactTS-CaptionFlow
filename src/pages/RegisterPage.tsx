@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { supabase } from "../lib/supabase";
 import { useState } from "react";
+import { FcGoogle } from 'react-icons/fc'
 
 
 export default function RegisterPage() {
@@ -110,7 +111,12 @@ export default function RegisterPage() {
           rounded-md
           cursor-pointer
           bg-[#1f1d1d]
+          flex
+          items-center
+          justify-center
+          gap-2
         ">
+          <FcGoogle className="text-2xl"/>
           Continue with Google
         </button>
         <p className="text-gray-500 text-xs">

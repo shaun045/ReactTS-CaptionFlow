@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import logo from "../assets/logo/CaptionflowLogo.png";
-
+import { FcGoogle } from 'react-icons/fc'
 
 export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault()
@@ -24,7 +26,17 @@ export default function LoginPage() {
     }
   }
 
-  const navigate = useNavigate();
+  const handleGoogleLogin = async () => {
+    const {error} = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'http://localhost:5173/editor'
+      }
+    })
+
+    if (error) console.log(error.message);
+  };
+
 
   return (
 
@@ -85,18 +97,18 @@ export default function LoginPage() {
           rounded-md
           cursor-pointer
           bg-[#1f1d1d]
-        ">
+          flex
+          items-center
+          justify-center
+          gap-2 hover:bg-gray-700
+        "
+          onClick={handleGoogleLogin}
+        >
+          <FcGoogle className="text-2xl"/>
           Continue with Google
         </button>
 
-        <p className="
-          flex 
-          flex-col
-          text-center 
-          text-xs
-          text-gray-400
-          mt-4
-        ">
+        <p className="flex flex-col text-center text-xs text-gray-400 mt-4">
           By clicking continue, you agree with our 
           <span className="flex justify-center gap-1">
             <span className="underline cursor-pointer hover:text-gray-300">
