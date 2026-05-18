@@ -30,7 +30,7 @@ export default function LoginPage() {
     const {error} = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'http://localhost:5173/editor'
+        redirectTo: `${import.meta.env.VITE_APP_URL}/editor`
       }
     })
 

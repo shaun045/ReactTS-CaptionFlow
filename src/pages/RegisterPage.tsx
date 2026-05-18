@@ -38,6 +38,17 @@ export default function RegisterPage() {
     }
   }
 
+  const handleGoogleLogin = async () => {
+    const {error} = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${import.meta.env.VITE_APP_URL}/editor`
+      }
+    })
+
+    if (error) console.log(error.message);
+  };
+
 
   return (
     <div className="flex items-center justify-center h-screen ">
@@ -115,7 +126,9 @@ export default function RegisterPage() {
           items-center
           justify-center
           gap-2
-        ">
+        "
+          onClick={handleGoogleLogin}
+        >
           <FcGoogle className="text-2xl"/>
           Continue with Google
         </button>
