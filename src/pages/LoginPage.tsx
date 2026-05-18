@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 import logo from "../assets/logo/CaptionflowLogo.png";
 
 
@@ -8,8 +9,19 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault()
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+
+    if (error) {
+      console.log(error.message)
+    } else {
+      navigate("/editor");
+    }
   }
 
   const navigate = useNavigate();
@@ -18,17 +30,7 @@ export default function LoginPage() {
 
     <div className="flex items-center justify-center h-screen ">
 
-      <div 
-        className="
-          flex 
-          items-center
-          flex-col
-          bg-[#131212] 
-          p-6 
-          rounded-lg 
-          w-96
-          text-white
-        ">
+      <div className="flex items-center flex-col bg-[#131212] p-6 rounded-lg w-96 text-white">
         <img src={logo} alt="Logo" className="w-15"/>
 
         <h1 className="flex justify-center font-bold text-xl w-full">
