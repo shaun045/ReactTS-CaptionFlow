@@ -1,7 +1,7 @@
 
 export default function MainEditor() {
   return (
-    <main>
+    <main className="flex flex-col h-full w-full border">
       Main Editor tab
     </main>
   )
