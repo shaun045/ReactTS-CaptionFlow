@@ -1,25 +1,57 @@
 import { useState } from "react";
 import { FaAngleDoubleLeft } from "react-icons/fa";
+import { IoIosColorPalette } from "react-icons/io";
+import { MdFontDownload } from "react-icons/md";
+import { IoSettings } from "react-icons/io5";
+import { BsFonts } from "react-icons/bs";
 
 export default function SideBar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [activePanel, setActivePanel] = useState<string | null>(null);
 
   return (
-    <aside className={`flex flex-col h-screen border transition-all duration-500 ${isCollapsed ? "w-16" : "w-100"}`}>
+    <aside className={`flex flex-col h-screen transition-all duration-500 ${isCollapsed ? "w-13" : "w-100"} justify-between`}>
 
-      <div className="flex justify-end px-2 py-1">
+    <div className="flex flex-col flex-1">
+      <div className="flex justify-end px-2 py-1 bg-[#1d0d27]">
         <FaAngleDoubleLeft className={`cursor-pointer transition-all duration-500 ${isCollapsed ? "rotate-180" : ""}`}
-          onClick={() => setIsCollapsed(!isCollapsed)}
+          onClick={() => {
+            setIsCollapsed(!isCollapsed)
+            if (!isCollapsed) setActivePanel(null)
+          }}
         />
       </div>
 
-      <ul className="border">
-        <li>Fonts</li>
-        <li>Colors</li>
-        <li>Styles</li>
-      </ul>
+      <div className="flex h-full">
+        <ul className="flex flex-col items-start p-2 gap-2 bg-[#1d0d27]">
+          <li>
+            <BsFonts className="text-4xl cursor-pointer rounded-sm p-1 hover:bg-[#201c31] transition-colors duration-200"
+            onClick={() => setActivePanel(activePanel === 'fonts' ? null : 'fonts')}
+            />
+          </li>
+          <li>
+            <IoIosColorPalette className="text-4xl cursor-pointer rounded-sm p-1 hover:bg-[#201c31] transition-colors duration-200"
+            onClick={() => setActivePanel(activePanel === 'colors' ? null : 'colors')}
+            />
+          </li>
+          <li>
+            <MdFontDownload className="text-4xl cursor-pointer rounded-sm p-1 hover:bg-[#201c31] transition-colors duration-200"
+            onClick={() => setActivePanel(activePanel === 'styles' ? null : 'styles')}
+            />
+          </li>
+        </ul>
+        <div className="w-64">
+          {activePanel === 'fonts' && <div>FONTS PANEL</div>}
+          {activePanel === 'colors' && <div>COLORS PANEL</div>}
+          {activePanel === 'styles' && <div>STYLES PANEL</div>}
+        </div>
+      </div>
+    </div>
 
-      <button>Settings</button>
+    <button className="flex border items-start p-2">
+      <IoSettings className="text-2xl"/>
+    </button>
+
     </aside>
   )
 }
