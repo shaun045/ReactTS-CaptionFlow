@@ -4,6 +4,8 @@ import { IoIosColorPalette } from "react-icons/io";
 import { MdFontDownload } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
 import { BsFonts } from "react-icons/bs";
+import FontPanel from "./Panels/FontPanel";
+import ColorsPanel from "./Panels/ColorsPanel";
 
 export default function SideBar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -40,15 +42,15 @@ export default function SideBar() {
             />
           </li>
         </ul>
-        <div className="w-64">
-          {activePanel === 'fonts' && <div>FONTS PANEL</div>}
-          {activePanel === 'colors' && <div>COLORS PANEL</div>}
+        <div className="w-100 bg-[#291336]">
+          {activePanel === 'fonts' && <FontPanel />}
+          {activePanel === 'colors' && <ColorsPanel/>}
           {activePanel === 'styles' && <div>STYLES PANEL</div>}
         </div>
       </div>
     </div>
 
-    <button className="flex border items-start p-2">
+    <button className="flex items-start p-2 bg-[#1d0d27]">
       <IoSettings className="text-2xl"/>
     </button>
 
