@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 const fonts: string[] = [
   "Inter",
   "Roboto",
@@ -17,6 +19,8 @@ const fonts: string[] = [
 ]
 
 export default function FontPanel() {
+  const [selectedFont, setSelectedFont] = useState<string | null>(null);
+
   return (
     <div className="flex flex-col p-3">
       <h2 className="text-white font-semibold mb-3 text-center text-4xl py-2">Fonts</h2>
@@ -26,7 +30,13 @@ export default function FontPanel() {
             <li 
               key={font}
               style={{fontFamily:font}}
-              className="flex justify-center border border-[#e6d1f8] py-2 rounded-md hover:cursor-pointer hover:bg-[#1d0d27] hover:scale-102 transition-all duration-300">
+              onClick={() => setSelectedFont(font)}
+              className={`flex justify-center border border-[#e6d1f8] py-2 rounded-md hover:cursor-pointer hover:bg-[#1d0d27] hover:scale-102 transition-all duration-300
+              ${selectedFont === font
+                ? "border-[#bb83ec] bg-[#9D2CFA]"
+                : "border-[#e6d1f8] hover:bg-[#1d0d27]"
+              }`}
+              >
               {font}
             </li>
           )
