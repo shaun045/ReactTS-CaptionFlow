@@ -6,6 +6,9 @@ import { IoSettings } from "react-icons/io5";
 import { BsFonts } from "react-icons/bs";
 import FontPanel from "./Panels/FontPanel";
 import ColorsPanel from "./Panels/ColorsPanel";
+import StylesPanel from "./Panels/StylesPanel";
+
+
 
 export default function SideBar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -45,7 +48,7 @@ export default function SideBar() {
         <div className="w-100 bg-[#291336]">
           {activePanel === 'fonts' && <FontPanel />}
           {activePanel === 'colors' && <ColorsPanel/>}
-          {activePanel === 'styles' && <div>STYLES PANEL</div>}
+          {activePanel === 'styles' && <StylesPanel/>}
         </div>
       </div>
     </div>

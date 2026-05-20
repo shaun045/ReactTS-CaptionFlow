@@ -7,7 +7,7 @@ import logo from "../assets/logo/Logo-bgremoved.png";
 export default function EditorPage() {
   return (
     <div className='flex flex-col text-white items-center'>
-      <div className="flex w-full py-1 bg-[#13111C]">
+      <div className="flex w-full py-2 bg-[#1d0d27]">
         <img src={logo} alt="logo" className="w-10"/>
         <h1 className="flex text-xl font-bold items-center">
           CAPTION FLOW
