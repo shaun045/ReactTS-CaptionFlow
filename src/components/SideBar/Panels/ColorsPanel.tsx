@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { FaPlus } from "react-icons/fa";
+import ColorPickerModal from "./ColorPickerModal";
 
 const solidColors: string[] = [
   "#000000", "#4a4a4a", "#717171", "#a0a0a0", "#c8c8c8", "#ffffff",
@@ -41,10 +42,11 @@ export default function ColorsPanel() {
 
   return (
     <div className="flex flex-col p-3 gap-10">
+      
       <div>
         <h1 className="text-white text-xl font-semibold mb-2">Custom colors</h1>
         <div className="flex flex-wrap gap-2">
-  
+          
           {customColors.map((color) => (
             <div
               key={color}
@@ -52,6 +54,12 @@ export default function ColorsPanel() {
               className="w-11 h-11 rounded-full cursor-pointer hover:scale-110 transition-all duration-200"
             />
           ))}
+          {showColorPicker && (
+            <ColorPickerModal 
+              onAddColor={handleAddColor}
+              onClose={() => setShowColorPicker(false)}
+            />
+          )}
 
           {/* + button sits in the same row */}
           <div 
