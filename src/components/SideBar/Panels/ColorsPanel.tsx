@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { FaPlus } from "react-icons/fa";
 
 const solidColors: string[] = [
   "#000000", "#4a4a4a", "#717171", "#a0a0a0", "#c8c8c8", "#ffffff",
@@ -30,22 +31,51 @@ const gradientColors: string[] = [
 
 export default function ColorsPanel() {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [customColors, setCustomColors] = useState<string[]>([]);
+
+  const handleAddColor = (color: string) => {
+    setCustomColors([...customColors, color])
+    setShowColorPicker(false);
+  }
 
   return (
-    <div className="flex flex-col p-3 gap-15">
+    <div className="flex flex-col p-3 gap-10">
       <div>
-        <h1>Custom colors</h1>
+        <h1 className="text-white text-xl font-semibold mb-2">Custom colors</h1>
+        <div className="flex flex-wrap gap-2">
+  
+          {customColors.map((color) => (
+            <div
+              key={color}
+              style={{ background: color }}
+              className="w-11 h-11 rounded-full cursor-pointer hover:scale-110 transition-all duration-200"
+            />
+          ))}
+
+          {/* + button sits in the same row */}
+          <div 
+            className="w-11 h-11 rounded-full p-0.5 cursor-pointer"
+            style={{ background: "linear-gradient(to right, #ff00ff, #00ffff)" }}
+            onClick={() => setShowColorPicker(!showColorPicker)}
+          >
+            <div className="w-full h-full rounded-full bg-[#131212] flex items-center justify-center">
+              <FaPlus className="text-white" />
+            </div>
+          </div>
+
+        </div>
       </div>
 
       <div>
         <h1 className="text-white text-xl font-semibold mb-2">Default solid colors</h1>
-        <div className="grid grid-cols-8 gap-2">
+        <div className="grid grid-cols-6 gap-2">
           {solidColors.map((color) => (
             <div 
               key={color}
               onClick={() => setSelectedColor(color)}
               style={{backgroundColor: color}}
-              className={`w-8 h-8 rounded-full cursor-pointer transition-all duration-200
+              className={`w-11 h-11 rounded-full cursor-pointer transition-all duration-200
                 ${selectedColor === color ? "scale-110 ring-2 ring-white" : "hover:scale-110"}`}
             />
           ))}
@@ -54,13 +84,13 @@ export default function ColorsPanel() {
       </div>
       <div>
         <h1 className="text-white text-xl font-semibold mb-2">Default gradient colors</h1>
-        <div className="grid grid-cols-8 gap-2">
+        <div className="grid grid-cols-6 gap-2">
           {gradientColors.map((gradient) => (
             <div 
               key={gradient}
               onClick={() => setSelectedColor(gradient)}
               style={{background: gradient}}
-              className={`w-8 h-8 rounded-full cursor-pointer transition-all duration-200
+              className={`w-11 h-11 rounded-full cursor-pointer transition-all duration-200
                 ${selectedColor === gradient ? "scale-110 ring-2 ring-white" : "hover:scale-110"}`}
             />
           ))}
