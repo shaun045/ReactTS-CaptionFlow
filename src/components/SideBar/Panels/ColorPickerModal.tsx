@@ -17,6 +17,7 @@ export default function ColorPickerModal({
   })
 
   const [selectedColor, setSelectedColor] = useState('#ff0000');
+  const [hue, setHue] = useState(0);
 
   return (
     <div className="bg-[#1a1a2e] border border-gray-700 rounded-lg p-4 w-64 flex flex-col absolute z-50 m-7">
@@ -41,12 +42,12 @@ export default function ColorPickerModal({
       </div>
       <div>
         <div 
-        className="w-full h-36 rounded-md cursor-crosshair"
-        style={{ 
-          background: `linear-gradient(to bottom, transparent, #000), 
-                       linear-gradient(to right, #fff, #ff0000)` 
-        }}
-      />
+          className="w-full h-36 rounded-md cursor-crosshair"
+          style={{ 
+            background: `linear-gradient(to bottom, transparent, #000), 
+                        linear-gradient(to right, #fff, hsl(${hue}, 100%, 50%))` 
+          }}
+        />
       </div>
 
       <div>
@@ -54,9 +55,15 @@ export default function ColorPickerModal({
           type="range"
           min="0"
           max="360"
+          value={hue}
+          onChange={(e) => setHue(Number(e.target.value))}
           className="w-full cursor-pointer"
           style={{
-            background: "linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)"
+            appearance: "none",
+            WebkitAppearance: "none",
+            background: "linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)",
+            height: "12px",
+            borderRadius: "6px",
           }}
         />
       </div>
