@@ -1,3 +1,4 @@
+import { useState } from "react"
 
 interface ColorPickerModalProps {
   onAddColor: (color: string) => void
@@ -6,15 +7,37 @@ interface ColorPickerModalProps {
 
 export default function ColorPickerModal({
   onAddColor, 
-  onClose
 }: ColorPickerModalProps) {
 
+  const rings = ['ring1', 'ring2']
+  const [selectedRing, setSelectedRing] = useState<string>('ring1');
+  const [ringColors, setRingColors] = useState<Record<string, string>>({
+    ring1: '#ffffff', 
+    ring2: '#ffffff'   
+  })
+
+  const [selectedColor, setSelectedColor] = useState('#ff0000');
 
   return (
     <div className="bg-[#1a1a2e] border border-gray-700 rounded-lg p-4 w-64 flex flex-col absolute z-50 m-7">
-      <div className="flex">
-        <p>div circle</p>
-        <p>div circle</p>
+      <div className="flex mb-3 justify-between">
+        <div className="flex gap-1">
+          {rings.map((ring) => (
+            <div
+              key={ring}
+              onClick={() => setSelectedRing(ring)}
+              className={`w-8 h-8 rounded-full cursor-pointer border-2 transition-all duration-200
+                ${selectedRing === ring ? "border-white border-2 scale-110" : "border-gray-600"}`}
+              style={{ backgroundColor: ringColors[ring] }}
+            />
+          ))}
+          
+        </div>
+        <button className="border px-2 rounded-md hover:cursor-pointer"
+          onClick={() => onAddColor(selectedColor)}
+        >
+          Save
+        </button>
       </div>
       <div>
         <div 
@@ -46,7 +69,7 @@ export default function ColorPickerModal({
         <input 
           type="text"
           value="#ff0000"
-          className="flex-1 bg-[#2a2a3e] text-white p-2 rounded-md text-sm border border-gray-600 outline-none"
+          className="flex-1 bg-[#2a2a3e] text-white p-2 rounded-md text-sm border border-gray-600 outline-none w-1"
           placeholder="#FFFFFF"
         />
       </div>

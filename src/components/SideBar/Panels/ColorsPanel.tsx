@@ -55,13 +55,18 @@ export default function ColorsPanel() {
             />
           ))}
           {showColorPicker && (
-            <ColorPickerModal 
-              onAddColor={handleAddColor}
-              onClose={() => setShowColorPicker(false)}
-            />
+            <>
+              <div 
+                className="fixed inset-0 z-40"
+                onClick={() => setShowColorPicker(false)}
+              />
+              <ColorPickerModal 
+                onAddColor={handleAddColor}
+                onClose={() => setShowColorPicker(false)}
+              />
+            </>
           )}
 
-          {/* + button sits in the same row */}
           <div 
             className="w-11 h-11 rounded-full p-0.5 cursor-pointer"
             style={{ background: "linear-gradient(to right, #ff00ff, #00ffff)" }}
