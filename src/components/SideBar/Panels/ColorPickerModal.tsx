@@ -19,6 +19,11 @@ export default function ColorPickerModal({
   const [selectedColor, setSelectedColor] = useState('#ff0000');
   const [hue, setHue] = useState(0);
 
+  const handleColorChange = (newColor: string) => {
+    setRingColors({...ringColors, [selectedRing]: newColor})
+  }
+
+
   return (
     <div className="bg-[#1a1a2e] border border-gray-700 rounded-lg p-4 w-64 flex flex-col absolute z-50 m-7">
       <div className="flex mb-3 justify-between">
@@ -56,7 +61,11 @@ export default function ColorPickerModal({
           min="0"
           max="360"
           value={hue}
-          onChange={(e) => setHue(Number(e.target.value))}
+          onChange={(e) => {
+            const newHue = Number(e.target.value)
+            setHue(newHue)
+            handleColorChange(`hsl(${newHue}, 100%, 50%)`)
+          }}
           className="w-full cursor-pointer"
           style={{
             appearance: "none",
