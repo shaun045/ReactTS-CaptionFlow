@@ -13,8 +13,8 @@ export default function ColorPickerModal({
   const rings = ['ring1', 'ring2']
   const [selectedRing, setSelectedRing] = useState<string>('ring1');
   const [ringColors, setRingColors] = useState<Record<string, string>>({
-    ring1: `hsl(0, 100%, 50%)`, 
-    ring2: `hsl(0, 100%, 50%)`
+    ring1: '#ff0000', 
+    ring2: '#ff0000'
   })
 
   const [hue, setHue] = useState(0);
@@ -23,9 +23,20 @@ export default function ColorPickerModal({
     setRingColors({...ringColors, [selectedRing]: newColor})
   }
 
+  const hsvToHex = (h: number, s: number, v: number): string => {
+    s /= 100;
+    v /= 100;
+    const f = (n: number) => {
+      const k = (n + h / 60) % 6;
+      const value = v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
+      return Math.round(255 * value).toString(16).padStart(2, '0');
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
+  };
+
   const shadeBoxRef = useRef<HTMLDivElement>(null);
   const [saturation, setSaturation] = useState(100);
-  const [lightness, setLightness] = useState(50);
+  const [brightness, setBrightness] = useState(100);
 
   const [isDragging, setIsDragging] = useState(false);
 
@@ -40,11 +51,13 @@ export default function ColorPickerModal({
     const rect = shadeBoxRef.current.getBoundingClientRect()
     const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100))
     const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100))
+
     const newSaturation = Math.round(x)
-    const newLightness = Math.round(100 - y)
+    const newBrightness = Math.round(100 - y)
     setSaturation(newSaturation)
-    setLightness(newLightness)
-    handleColorChange(`hsl(${hue}, ${newSaturation}%, ${newLightness}%)`)
+    setBrightness(newBrightness)
+    const hexColor = hsvToHex(hue, newSaturation, newBrightness)
+    handleColorChange(hexColor)
   }
 
 
@@ -85,7 +98,7 @@ export default function ColorPickerModal({
           className="w-full h-36 rounded-md cursor-crosshair relative"
           style={{ 
             background: `linear-gradient(to bottom, transparent, #000), 
-                        linear-gradient(to right, #fff, hsl(${hue}, 100%, 50%))` 
+                        linear-gradient(to right, #fff, ${hsvToHex(hue, 100, 100)})` 
           }}
         >
           {/* Crosshair indicator */}
@@ -93,7 +106,7 @@ export default function ColorPickerModal({
             className="absolute w-3 h-3 rounded-full border-2 border-white -translate-x-1/2 -translate-y-1/2 pointer-events-none"
             style={{ 
               left: `${saturation}%`, 
-              top: `${100 - lightness}%` 
+              top: `${100 - brightness}%` 
             }}
           />
         </div>
@@ -108,13 +121,22 @@ export default function ColorPickerModal({
           onChange={(e) => {
             const newHue = Number(e.target.value)
             setHue(newHue)
-            handleColorChange(`hsl(${newHue}, ${saturation}%, ${lightness}%)`)
+            handleColorChange(hsvToHex(newHue, saturation, brightness))
           }}
           className="w-full cursor-pointer"
           style={{
             appearance: "none",
             WebkitAppearance: "none",
-            background: "linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)",
+            background: `linear-gradient(
+                  to right, 
+                  ${hsvToHex(0, 100, 100)},
+                  ${hsvToHex(60, 100, 100)},
+                  ${hsvToHex(120, 100, 100)},
+                  ${hsvToHex(180, 100, 100)},
+                  ${hsvToHex(240, 100, 100)},
+                  ${hsvToHex(300, 100, 100)},
+                  ${hsvToHex(360, 100, 100)}
+            )`,
             height: "12px",
             borderRadius: "6px",
           }}
