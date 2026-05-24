@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa";
 import ColorPickerModal from "./ColorPickerModal";
 
@@ -33,12 +33,27 @@ const gradientColors: string[] = [
 export default function ColorsPanel() {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [customColors, setCustomColors] = useState<string[]>([]);
+  const [customColors, setCustomColors] = useState<string[]>(() => {
+    const saved = localStorage.getItem('customColors')
+      if (saved) {
+        return JSON.parse(saved)
+      }
+      return []
+    });
 
   const handleAddColor = (color: string) => {
     setCustomColors([...customColors, color])
     setShowColorPicker(false);
   }
+
+  const deleteCustomColor = (colorToDelete: string) => {
+    setCustomColors(customColors.filter((color) => color !== colorToDelete))
+  }
+
+  useEffect(() => {
+    localStorage.setItem('customColors', JSON.stringify(customColors));
+  }, [customColors]);
+
 
   return (
     <div className="flex flex-col p-3 gap-10">
@@ -48,11 +63,25 @@ export default function ColorsPanel() {
         <div className="flex flex-wrap gap-2">
           
           {customColors.map((color) => (
+            <div key={color} className="relative group">
+    
+            {/* Color circle */}
             <div
-              key={color}
               style={{ background: color }}
-              className="w-11 h-11 rounded-full cursor-pointer hover:scale-110 transition-all duration-200"
+              className="w-11 h-11 rounded-full cursor-pointer hover:scale-110 transition-all duration-200 border"
             />
+
+            {/* Delete button - shows on hover */}
+            <button
+              onClick={() => deleteCustomColor(color)}
+              className="absolute -top-1 -right-1 bg-red-500 rounded-full w-4 h-4 
+                        text-white text-xs items-center justify-center
+                        hidden group-hover:flex hover:cursor-pointer"
+            >
+              ×
+            </button>
+
+          </div>
           ))}
           {showColorPicker && (
             <>
