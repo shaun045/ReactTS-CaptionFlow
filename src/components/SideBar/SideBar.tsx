@@ -15,7 +15,7 @@ export default function SideBar() {
   const [activePanel, setActivePanel] = useState<string | null>(null);
 
   return (
-    <aside className={`flex flex-col h-screen transition-all duration-500 ${isCollapsed ? "w-13" : "w-100"} justify-between`}>
+    <aside className={`flex flex-col h-full transition-all duration-500 ${isCollapsed ? "w-13" : "w-100"} justify-between`}>
 
     <div className="flex flex-col flex-1">
       <div className="flex justify-end px-2 py-1 bg-[#1d0d27]">
