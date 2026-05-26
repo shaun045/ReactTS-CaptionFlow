@@ -1,7 +1,9 @@
+import { useState, useRef } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdUpload } from "react-icons/md";
 import { PiExportBold } from "react-icons/pi";
-import { useState, useRef } from "react";
+import { FaWindowClose } from "react-icons/fa";
+
 
 
 export default function MainEditor() {
@@ -12,6 +14,11 @@ export default function MainEditor() {
   const handleFile = (file: File) => {
     if (!file.type.startsWith("video/")) return;
     setVideoURL(URL.createObjectURL(file));
+  }
+
+  function removeVideo() {
+    setVideoURL(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   return (
@@ -38,35 +45,47 @@ export default function MainEditor() {
       </button>
 
 
+      {videoURL
+        ? (<div className="relative group">
+            <video src={videoURL} controls className="rounded-xl max-w-230"/>
+            <button className="absolute top-2 right-2 text-4xl cursor-pointer opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
+            onClick={() => removeVideo()}
+            >
+              <FaWindowClose className="text-red-400 hover:text-red-500"/>
+            </button>
+          </div>)
+        : (<div 
+            onDragOver={(e) => {e.preventDefault(); setIsDragging(true);}}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={
+              (e) => {
+                e.preventDefault(); 
+                setIsDragging(false); 
+                const file = e.dataTransfer.files[0];
+                if (file) handleFile(file);
+              }}
+            onClick={() => fileInputRef.current?.click()}
+            className={`flex justify-center items-center h-50 w-50 bg-[#13111C] rounded-xl border-2 transition-colors duration-200
+              ${isDragging ? "border-purple-500 bg-[#1e1530]" : "border-transparent"}`}
+            >
+              <FaPlus className="text-5xl text-gray-600"/>
+          </div>)
+      }
 
-      <div 
-        onDragOver={(e) => {e.preventDefault(); setIsDragging(true);}}
-        onDragLeave={() => setIsDragging(false)}
-        onDrop={
-          (e) => {
-            e.preventDefault(); 
-            setIsDragging(false); 
-            const file = e.dataTransfer.files[0];
-            if (file) handleFile(file);
-          }}
-        className={`flex justify-center items-center h-100 w-100 bg-[#13111C] rounded-xl border-2 transition-colors duration-200
-          ${isDragging ? "border-purple-500 bg-[#1e1530]" : "border-transparent"}`}
-        >
-        {videoURL
-          ? <video src={videoURL} controls className="h-full w-full rounded-xl object-contain"/>
-          : <FaPlus className="text-5xl text-gray-600"/>
-        }
-        
-      </div>
-
-      <button className="flex py-2 w-100 items-center justify-center gap-1 rounded-md mt-5 hover:cursor-pointer bg-[#241f38]"
-        onClick={() => fileInputRef.current?.click()}
-      >
-        <MdUpload className="text-xl"/>
-        <span className="font-medium text-lg">
-          Upload
-        </span>
-      </button>
+      {videoURL 
+        ? <div></div>
+        : (
+          <button className="flex py-2 w-100 items-center justify-center gap-1 rounded-md mt-5 hover:cursor-pointer bg-[#241f38]"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <MdUpload className="text-xl"/>
+            <span className="font-medium text-lg">
+              Upload
+            </span>
+          </button>
+        )
+      }
+      
     </main>
   )
 }

@@ -1,7 +1,7 @@
 
 export default function Timeline() {
   return(
-    <div>
+    <div className="h-60">
       TIMELINE
     </div>
   )

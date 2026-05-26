@@ -17,7 +17,7 @@ export default function SideBar() {
   return (
     <aside className={`flex flex-col h-full transition-all duration-500 ${isCollapsed ? "w-13" : "w-100"} justify-between`}>
 
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 min-h-0">
       <div className="flex justify-end px-2 py-1 bg-[#1d0d27]">
         <FaAngleDoubleLeft className={`cursor-pointer transition-all duration-500 ${isCollapsed ? "rotate-180" : ""}`}
           onClick={() => {
@@ -27,7 +27,7 @@ export default function SideBar() {
         />
       </div>
 
-      <div className="flex h-full">
+      <div className="flex h-full min-h-0">
         <ul className="flex flex-col items-start p-2 gap-2 bg-[#1d0d27]">
           <li>
             <BsFonts className="text-4xl cursor-pointer rounded-sm p-1 hover:bg-[#201c31] transition-colors duration-200"
@@ -45,7 +45,7 @@ export default function SideBar() {
             />
           </li>
         </ul>
-        <div className="w-100 bg-[#291336]">
+        <div className="w-100 bg-[#291336] h-full min-h-0 overflow-x-hidden">
           {activePanel === 'fonts' && <FontPanel />}
           {activePanel === 'colors' && <ColorsPanel/>}
           {activePanel === 'styles' && <StylesPanel/>}

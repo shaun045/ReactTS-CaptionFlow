@@ -23,3 +23,21 @@ input[type='range']::-webkit-slider-thumb {
   cursor: pointer;
   border: 2px solid #ccc;
 }
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a2e70;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7c5cbf;
+}
