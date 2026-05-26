@@ -4,12 +4,15 @@ import { MdUpload } from "react-icons/md";
 import { PiExportBold } from "react-icons/pi";
 import { FaWindowClose } from "react-icons/fa";
 
+interface MainEditorProps {
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  videoURL: string | null;
+  setVideoURL: (url: string | null) => void;
+}
 
-
-export default function MainEditor() {
+export default function MainEditor({videoRef, videoURL, setVideoURL}: MainEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [videoURL, setVideoURL] = useState<string | null>(null);
 
   const handleFile = (file: File) => {
     if (!file.type.startsWith("video/")) return;
@@ -47,7 +50,7 @@ export default function MainEditor() {
 
       {videoURL
         ? (<div className="relative group">
-            <video src={videoURL} controls className="rounded-xl max-w-230"/>
+            <video ref={videoRef} src={videoURL} controls className="rounded-xl max-w-230"/>
             <button className="absolute top-2 right-2 text-4xl cursor-pointer opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
             onClick={() => removeVideo()}
             >
