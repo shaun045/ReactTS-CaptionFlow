@@ -1,6 +1,8 @@
 import { PiScissorsBold } from "react-icons/pi";
 import { MdZoomIn, MdZoomOut } from "react-icons/md";
 import { IoPlaySharp } from "react-icons/io5";
+import { IoPauseSharp } from "react-icons/io5";
+import { useState } from "react";
 
 interface TimelineProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -8,6 +10,20 @@ interface TimelineProps {
 }
 
 export default function Timeline({videoRef, videoURL}: TimelineProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  function togglePlay() {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isPlaying) {
+      video.pause();
+    } else {
+      video.play();
+    }
+    setIsPlaying(!isPlaying);
+  }
+
   return(
     <div className="flex flex-col w-full h-60 bg-[#1a1025] border-t border-[#2e1f40]">
 
@@ -19,8 +35,11 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
 
         <div className="flex items-center gap-3">
           <span className="text-xs text-[#a89bc0] tabular-nums">0:00:00</span>
-          <button className="flex items-center justify-center w-8 h-8 rounded-full bg-[#e2d9f3] text-[#1a1025] hover:bg-white transition-colors">
-            <IoPlaySharp className="text-sm"/>
+          <button className="flex items-center justify-center w-8 h-8 rounded-full bg-[#e2d9f3] text-[#1a1025] hover:bg-white transition-colors hover:cursor-pointer"
+          onClick={togglePlay}
+          disabled={!videoURL}
+          >
+            {isPlaying ? <IoPauseSharp className="text-sm ml-1"/> : <IoPlaySharp className="text-sm ml-1"/>}
           </button>
           <span className="text-xs text-[#a89bc0] tabular-nums">0:00:00</span>
         </div>
