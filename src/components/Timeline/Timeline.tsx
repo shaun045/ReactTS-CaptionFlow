@@ -1,8 +1,10 @@
+import { useState, useEffect, useRef } from "react";
 import { PiScissorsBold } from "react-icons/pi";
 import { MdZoomIn, MdZoomOut } from "react-icons/md";
 import { IoPlaySharp } from "react-icons/io5";
 import { IoPauseSharp } from "react-icons/io5";
-import { useState } from "react";
+import { BiSolidDownArrow } from "react-icons/bi";
+
 
 interface TimelineProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -10,6 +12,7 @@ interface TimelineProps {
 }
 
 export default function Timeline({videoRef, videoURL}: TimelineProps) {
+
   const [isPlaying, setIsPlaying] = useState(false);
 
   function togglePlay() {
@@ -24,6 +27,54 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
     setIsPlaying(!isPlaying);
   }
 
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  function formatTime(seconds: number) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  }
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) {
+      setIsPlaying(false);
+      setCurrentTime(0);
+      setDuration(0);
+      return;
+    }
+
+    const handleTimeUpdate = () => setCurrentTime(video.currentTime);
+    const handleLoadedMetadata = () => setDuration(video.duration);
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    return () => {
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoURL]);
+
+  const rulerRef = useRef<HTMLDivElement>(null);
+
+  function handleRulerClick(e: React.MouseEvent<HTMLDivElement>) {
+    const ruler = rulerRef.current;
+    const video = videoRef.current;
+    if (!ruler || !video || !duration) return;
+
+    const rect = ruler.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const percent = clickX / rect.width;
+    const seekTime = percent * duration;
+
+    video.currentTime = seekTime;
+    setCurrentTime(seekTime);
+  }
+
   return(
     <div className="flex flex-col w-full h-60 bg-[#1a1025] border-t border-[#2e1f40]">
 
@@ -34,14 +85,14 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-xs text-[#a89bc0] tabular-nums">0:00:00</span>
+          <span className="text-xs text-[#a89bc0] tabular-nums">{formatTime(currentTime)}</span>
           <button className="flex items-center justify-center w-8 h-8 rounded-full bg-[#e2d9f3] text-[#1a1025] hover:bg-white transition-colors hover:cursor-pointer"
           onClick={togglePlay}
           disabled={!videoURL}
           >
-            {isPlaying ? <IoPauseSharp className="text-sm ml-1"/> : <IoPlaySharp className="text-sm ml-1"/>}
+            {isPlaying ? <IoPauseSharp className="text-sm"/> : <IoPlaySharp className="text-sm ml-1"/>}
           </button>
-          <span className="text-xs text-[#a89bc0] tabular-nums">0:00:00</span>
+          <span className="text-xs text-[#a89bc0] tabular-nums">{formatTime(duration)}</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -51,7 +102,10 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
       </div>
 
       {/* Ruler */}
-      <div className="relative h-6 mx-3 mb-1">
+      <div className="relative flex flex-col flex-1 mx-3 mb-3">
+  
+      {/* Ruler */}
+      <div ref={rulerRef} onClick={handleRulerClick} className="relative h-6 mb-1 cursor-pointer">
         <div className="flex items-end h-full gap-0">
           {Array.from({ length: 13 }).map((_, i) => (
             <div key={i} className="flex flex-col items-start" style={{ flex: 1 }}>
@@ -63,7 +117,7 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
       </div>
 
       {/* Track area */}
-      <div className="flex-1 mx-3 mb-3 bg-[#120c1c] rounded-lg border border-[#2e1f40] flex items-center justify-center">
+      <div className="flex-1 bg-[#120c1c] rounded-lg border border-[#2e1f40] flex items-center justify-center">
         {videoURL
           ? (
             <div className="w-full h-full px-2 py-2 flex items-center">
@@ -75,6 +129,18 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
           : <span className="text-sm text-[#4a3660]">+ Add media to this project</span>
         }
       </div>
+
+      {/* Single playhead spanning ruler + track */}
+      {videoURL && (
+        <div
+          className="absolute top-0 bottom-0 w-0.5 bg-[#7c5cbf] pointer-events-none"
+          style={{ left: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
+        >
+          <BiSolidDownArrow className="absolute -top-1 left-1/2 -translate-x-1/2 text-sm text-[#7c5cbf]"/>
+        </div>
+      )}
+
+    </div>
 
     </div>
   )

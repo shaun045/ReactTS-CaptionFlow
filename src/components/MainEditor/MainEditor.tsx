@@ -24,6 +24,7 @@ export default function MainEditor({videoRef, videoURL, setVideoURL}: MainEditor
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
+
   return (
     <main className="relative flex justify-center items-center flex-col h-full flex-1">
 
@@ -50,7 +51,8 @@ export default function MainEditor({videoRef, videoURL, setVideoURL}: MainEditor
 
       {videoURL
         ? (<div className="relative group">
-            <video ref={videoRef} src={videoURL} controls className="rounded-xl max-w-230"/>
+            <video ref={videoRef} src={videoURL} className="rounded-xl max-w-230"
+            />
             <button className="absolute top-2 right-2 text-4xl cursor-pointer opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
             onClick={() => removeVideo()}
             >
