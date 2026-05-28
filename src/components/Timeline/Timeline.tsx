@@ -75,6 +75,46 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
     setCurrentTime(seekTime);
   }
 
+  const interval = duration <= 60 ? 5 : duration <= 300 ? 10 : duration <= 600 ? 30 : 60;
+
+  const [isDraggingPlayhead, setIsDraggingPlayhead] = useState(false);
+
+  function handlePlayheadMouseDown(e: React.MouseEvent) {
+    e.preventDefault();
+    setIsDraggingPlayhead(true);
+  }
+
+  useEffect(() => {
+    function handleMouseMove(e: MouseEvent) {
+      if (!isDraggingPlayhead) return;
+
+      const ruler = rulerRef.current;
+      const video = videoRef.current;
+      if (!ruler || !video || !duration) return;
+
+      const rect = ruler.getBoundingClientRect();
+      const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+      const percent = x / rect.width;
+      const seekTime = percent * duration;
+
+      video.currentTime = seekTime;
+      setCurrentTime(seekTime);
+    }
+    function handleMouseUp() {
+      setIsDraggingPlayhead(false);
+    }
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDraggingPlayhead, duration]);
+
+  
+  
   return(
     <div className="flex flex-col w-full h-60 bg-[#1a1025] border-t border-[#2e1f40]">
 
@@ -106,13 +146,23 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
   
       {/* Ruler */}
       <div ref={rulerRef} onClick={handleRulerClick} className="relative h-6 mb-1 cursor-pointer">
-        <div className="flex items-end h-full gap-0">
-          {Array.from({ length: 13 }).map((_, i) => (
-            <div key={i} className="flex flex-col items-start" style={{ flex: 1 }}>
-              <span className="text-[10px] text-[#6b5a80]">{i === 0 ? "0s" : `${i * 5}s`}</span>
-              <div className="w-px h-2.5 bg-[#5a4070]"/>
-            </div>
-          ))}
+        <div className="relative w-full h-full">
+
+          {duration > 0 && Array.from({ length: Math.floor(duration / interval) + 1 }).map((_, i) => {
+            const timeAtTick = i * interval;
+            const percent = (timeAtTick / duration) * 100;
+            if (percent > 100) return null;
+            return (
+              <div key={i} className="absolute flex flex-col items-start bottom-0" style={{ left: `${percent}%` }}>
+                <span className="text-[10px] text-[#6b5a80]">
+                  {timeAtTick >= 60
+                    ? `${Math.floor(timeAtTick / 60)}m${timeAtTick % 60 > 0 ? `${timeAtTick % 60}s` : ""}`
+                    : `${timeAtTick}s`}
+                </span>
+                <div className="w-px h-2.5 bg-[#5a4070]"/>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -136,8 +186,10 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
           className="absolute top-0 bottom-0 w-0.5 bg-[#7c5cbf] pointer-events-none"
           style={{ left: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
         >
-          <BiSolidDownArrow className="absolute -top-1 left-1/2 -translate-x-1/2 text-sm text-[#7c5cbf]"/>
-        </div>
+          <BiSolidDownArrow 
+          onMouseDown={handlePlayheadMouseDown}
+          className={`absolute -top-1 left-1/2 -translate-x-1/2 text-sm text-[#7c5cbf] pointer-events-auto ${isDraggingPlayhead ? "cursor-grabbing" : "cursor-grab"}`}/>
+        </div> 
       )}
 
     </div>
