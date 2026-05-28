@@ -111,6 +111,7 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDraggingPlayhead, duration]);
 
   
@@ -141,58 +142,57 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
         </div>
       </div>
 
-      {/* Ruler */}
-      <div className="relative flex flex-col flex-1 mx-3 mb-3">
-  
-      {/* Ruler */}
-      <div ref={rulerRef} onClick={handleRulerClick} className="relative h-6 mb-1 cursor-pointer">
-        <div className="relative w-full h-full">
+        {/* Ruler */}
+        <div className="relative flex flex-col flex-1 mx-3 mb-3">
+    
+        <div ref={rulerRef} onClick={handleRulerClick} className="relative h-6 mb-1 cursor-pointer">
+          <div className="relative w-full h-full">
 
-          {duration > 0 && Array.from({ length: Math.floor(duration / interval) + 1 }).map((_, i) => {
-            const timeAtTick = i * interval;
-            const percent = (timeAtTick / duration) * 100;
-            if (percent > 100) return null;
-            return (
-              <div key={i} className="absolute flex flex-col items-start bottom-0" style={{ left: `${percent}%` }}>
-                <span className="text-[10px] text-[#6b5a80]">
-                  {timeAtTick >= 60
-                    ? `${Math.floor(timeAtTick / 60)}m${timeAtTick % 60 > 0 ? `${timeAtTick % 60}s` : ""}`
-                    : `${timeAtTick}s`}
-                </span>
-                <div className="w-px h-2.5 bg-[#5a4070]"/>
-              </div>
-            );
-          })}
+            {duration > 0 && Array.from({ length: Math.floor(duration / interval) + 1 }).map((_, i) => {
+              const timeAtTick = i * interval;
+              const percent = (timeAtTick / duration) * 100;
+              if (percent > 100) return null;
+              return (
+                <div key={i} className="absolute flex flex-col items-start bottom-0" style={{ left: `${percent}%` }}>
+                  <span className="text-[10px] text-[#6b5a80]">
+                    {timeAtTick >= 60
+                      ? `${Math.floor(timeAtTick / 60)}m${timeAtTick % 60 > 0 ? `${timeAtTick % 60}s` : ""}`
+                      : `${timeAtTick}s`}
+                  </span>
+                  <div className="w-px h-2.5 bg-[#5a4070]"/>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      {/* Track area */}
-      <div className="flex-1 bg-[#120c1c] rounded-lg border border-[#2e1f40] flex items-center justify-center">
-        {videoURL
-          ? (
-            <div className="w-full h-full px-2 py-2 flex items-center">
-              <div className="h-8 flex-1 bg-[#2e1a4a] rounded-md border border-[#4a2e70] flex items-center px-3 gap-2">
-                <span className="text-xs text-[#c4a8e8]">video.mp4</span>
+        {/* Track area */}
+        <div className="flex-1 bg-[#120c1c] rounded-lg border border-[#2e1f40] flex items-center justify-center">
+          {videoURL
+            ? (
+              <div className="w-full h-full px-2 py-2 flex items-center">
+                <div className="h-8 flex-1 bg-[#2e1a4a] rounded-md border border-[#4a2e70] flex items-center px-3 gap-2">
+                  <span className="text-xs text-[#c4a8e8]">video.mp4</span>
+                </div>
               </div>
-            </div>
-          )
-          : <span className="text-sm text-[#4a3660]">+ Add media to this project</span>
-        }
+            )
+            : <span className="text-sm text-[#4a3660]">+ Add media to this project</span>
+          }
+        </div>
+
+        {/* Single playhead spanning ruler + track */}
+        {videoURL && (
+          <div
+            className="absolute top-0 bottom-0 w-0.5 bg-[#7c5cbf] pointer-events-none"
+            style={{ left: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
+          >
+            <BiSolidDownArrow 
+            onMouseDown={handlePlayheadMouseDown}
+            className={`absolute -top-1 left-1/2 -translate-x-1/2 text-sm text-[#7c5cbf] pointer-events-auto ${isDraggingPlayhead ? "cursor-grabbing" : "cursor-grab"}`}/>
+          </div> 
+        )}
+
       </div>
-
-      {/* Single playhead spanning ruler + track */}
-      {videoURL && (
-        <div
-          className="absolute top-0 bottom-0 w-0.5 bg-[#7c5cbf] pointer-events-none"
-          style={{ left: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-        >
-          <BiSolidDownArrow 
-          onMouseDown={handlePlayheadMouseDown}
-          className={`absolute -top-1 left-1/2 -translate-x-1/2 text-sm text-[#7c5cbf] pointer-events-auto ${isDraggingPlayhead ? "cursor-grabbing" : "cursor-grab"}`}/>
-        </div> 
-      )}
-
-    </div>
 
     </div>
   )
