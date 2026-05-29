@@ -1,4 +1,8 @@
 
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+
+
 export default function SubtitlePanel() {
   return(
     <div className="flex flex-col h-full w-100">
@@ -12,9 +16,13 @@ export default function SubtitlePanel() {
             minute
           </span>
           <p>Subtitle</p>
-          <div>
-            <button>edit</button>
-            <button>delete</button>
+          <div className="flex gap-2">
+            <button>
+              <FaEdit/>
+            </button>
+            <button>
+              <MdDelete />
+            </button>
           </div>
         </li>
         
