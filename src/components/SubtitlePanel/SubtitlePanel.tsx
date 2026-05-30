@@ -1,14 +1,30 @@
 
+import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
 
 export default function SubtitlePanel() {
+  const [subtitles, setSubtitles] = useState<string []>([]);
+   
+  function addSubtitle() {
+    const newSubtitle = {
+      id: Date.now(),
+      subtitle: "subtitle"
+    }
+    setSubtitles([
+      ...subtitles,
+      newSubtitle
+    ])
+  }
+
   return(
     <div className="flex flex-col h-full w-100">
       <div className="bg-[#1b1431] flex p-3 justify-between">
         <h1 className="text-xl">Subtitle Panel</h1>
-        <button className="flex p-1 px-3 rounded-md bg-[#9D2CFA] hover:cursor-pointer">
+        <button className="flex p-1 px-3 rounded-md bg-[#9D2CFA] hover:cursor-pointer"
+        onClick={() => addSubtitle()}
+        >
           Add
         </button>
       </div>
