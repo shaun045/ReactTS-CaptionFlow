@@ -5,22 +5,25 @@ import { MdDelete } from "react-icons/md";
 
 
 export default function SubtitlePanel() {
-  const [subtitles, setSubtitles] = useState<string []>([]);
+  const [subtitles, setSubtitles] = useState<{id: number, text: string, startTime: number, endTime: number}[]>([]);
    
   function addSubtitle() {
     const newSubtitle = {
       id: Date.now(),
-      subtitle: "subtitle"
+      subtitle: "subtitle",
+      startTime: null,
+      endTime: null
     }
     setSubtitles([
       ...subtitles,
       newSubtitle
     ])
+    console.log("subtitle added");
   }
 
   return(
     <div className="flex flex-col h-full w-100">
-      <div className="bg-[#1b1431] flex p-3 justify-between">
+      <div className="bg-[#1b1431] flex p-3` justify-between">
         <h1 className="text-xl">Subtitle Panel</h1>
         <button className="flex p-1 px-3 rounded-md bg-[#9D2CFA] hover:cursor-pointer"
         onClick={() => addSubtitle()}
@@ -29,23 +32,20 @@ export default function SubtitlePanel() {
         </button>
       </div>
       <ul className="flex flex-col h-full bg-[#151027] p-2">
-        <li className="flex border border-gray-600 p-2 w-full h-10 justify-between mb-1 rounded-sm items-center align-center">
-          <span className="flex text-xs text-align w-48">
-            0:01:00 - 0:02:00
-          </span>
-          <p className="flex w-full px-2">
-            Subtitle
-          </p>
-          <div className="flex gap-2">
-            <button className="hover:cursor-pointer">
-              <FaEdit/>
-            </button>
-            <button className="hover:cursor-pointer">
-              <MdDelete />
-            </button>
-          </div>
-        </li>
-        
+        {subtitles.map((subtitle) => (
+    <li key={subtitle.id} className="flex border border-gray-600 p-2 w-full h-10 justify-between mb-1 rounded-sm items-center">
+      <span className="flex text-xs w-48">
+        0:00:00 - 0:00:00
+      </span>
+      <p className="flex w-full px-2">
+        {subtitle.text}
+      </p>
+      <div className="flex gap-2">
+        <button className="hover:cursor-pointer"><FaEdit/></button>
+        <button className="hover:cursor-pointer"><MdDelete/></button>
+      </div>
+    </li>
+  ))}
       </ul>
     </div>
   )
