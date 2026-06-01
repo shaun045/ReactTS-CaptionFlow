@@ -2,11 +2,22 @@
 import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { FaCheck } from "react-icons/fa";
 
+interface Subtitle {
+  id: number;
+  text: string;
+  startTime: number;
+  endTime: number;
+}
 
-export default function SubtitlePanel() {
-  const [subtitles, setSubtitles] = useState<{id: number, text: string, startTime: number, endTime: number}[]>([]);
-   
+interface SubtitlePanelProps {
+  subtitles: Subtitle[];
+  setSubtitles: (subtitles: Subtitle[]) => void;
+}
+
+export default function SubtitlePanel({subtitles, setSubtitles}: SubtitlePanelProps) {
+
   function addSubtitle() {
     const newSubtitle = {
       id: Date.now(),
@@ -24,6 +35,13 @@ export default function SubtitlePanel() {
     setSubtitles(subtitles.filter(sub => id !== sub.id))
   }
 
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  function updateSubtitle(id: number, text: string) {
+    setSubtitles(subtitles.map(sub => sub.id === id ? {...sub, text} : sub));
+  }
+   
+
   return(
     <div className="flex flex-col h-full w-100">
       <div className="bg-[#1b1431] flex p-3s justify-between items-center">
@@ -40,13 +58,35 @@ export default function SubtitlePanel() {
             <span className="flex text-xs w-48">
               0:00:00 - 0:00:00
             </span>
-            <p className="flex w-full px-2">
-              {subtitle.text}
-            </p>
+
+            {editingId === subtitle.id
+              ? <input 
+                  type="text" 
+                  autoFocus
+                  className="flex w-full px-2 bg-transparent border-b border-purple-500 outline-none text-sm"
+                  value={subtitle.text}
+                  onChange={(e) => updateSubtitle(subtitle.id, e.target.value)}
+                  onBlur={() => setEditingId(null)}
+                  onKeyDown={(e) => e.key === "Enter" && setEditingId(null)}
+                />
+              : <p className="flex w-full px-2 text-sm truncate">
+                  {subtitle.text || "Empty subtitle"}
+                </p>
+            }
+
+
             <div className="flex gap-2">
-              <button className="hover:cursor-pointer"><FaEdit/></button>
+              {editingId === subtitle.id
+                ? <button><FaCheck /></button>
+                : <button className="hover:cursor-pointer"
+                    onClick={() => setEditingId(subtitle.id)}
+                  >
+                    <FaEdit/>
+                  </button>
+              }
+              
               <button className="hover:cursor-pointer"
-              onClick={() => deleteSubtitle(subtitle.id)}
+                onClick={() => deleteSubtitle(subtitle.id)}
               >
                 <MdDelete/>
               </button>
