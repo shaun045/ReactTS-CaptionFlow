@@ -14,6 +14,7 @@ interface Subtitle {
 interface SubtitlePanelProps {
   subtitles: Subtitle[];
   setSubtitles: (subtitles: Subtitle[]) => void;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
 }
 
 export default function SubtitlePanel({subtitles, setSubtitles}: SubtitlePanelProps) {
@@ -40,6 +41,7 @@ export default function SubtitlePanel({subtitles, setSubtitles}: SubtitlePanelPr
   function updateSubtitle(id: number, text: string) {
     setSubtitles(subtitles.map(sub => sub.id === id ? {...sub, text} : sub));
   }
+
    
 
   return(
