@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
+import { transcribeVideo } from "../../utils/transcribe";
 
 interface Subtitle {
   id: number;
@@ -15,9 +16,10 @@ interface SubtitlePanelProps {
   subtitles: Subtitle[];
   setSubtitles: (subtitles: Subtitle[]) => void;
   videoRef: React.RefObject<HTMLVideoElement | null>;
+  videoURL: string | null;
 }
 
-export default function SubtitlePanel({subtitles, setSubtitles}: SubtitlePanelProps) {
+export default function SubtitlePanel({subtitles, setSubtitles, videoRef, videoURL}: SubtitlePanelProps) {
 
   function addSubtitle() {
     const newSubtitle = {
@@ -42,18 +44,36 @@ export default function SubtitlePanel({subtitles, setSubtitles}: SubtitlePanelPr
     setSubtitles(subtitles.map(sub => sub.id === id ? {...sub, text} : sub));
   }
 
+  const [isTranscribing, setIsTranscribing] = useState(false);
+
+  async function handleTranscribe() {
+    if (!videoURL) return;
+    setIsTranscribing(true);
+    const results = await transcribeVideo(videoURL);
+    setSubtitles(results);
+    setIsTranscribing(false);
+;  }
+
    
 
   return(
     <div className="flex flex-col h-full w-100">
       <div className="bg-[#1b1431] flex p-3s justify-between items-center">
         <h1 className="text-xl p-2">Subtitle Panel</h1>
+        <button
+          onClick={handleTranscribe}
+          disabled={!videoURL || isTranscribing}
+          className="flex p-1 px-3 rounded-md items-center bg-[#7c5cbf] hover:cursor-pointer disabled:opacity-50"
+        >
+          {isTranscribing ? "Transcribing..." : "Auto"}
+        </button>
         <button className="flex p-1 px-3 rounded-md items-center bg-[#9D2CFA] mr-3 hover:cursor-pointer"
         onClick={() => addSubtitle()}
         >
           Add
         </button>
       </div>
+      
       <ul className="flex flex-col h-full bg-[#151027] p-2">
         {subtitles.map((subtitle) => (
           <li key={subtitle.id} className="flex border border-gray-600 p-2 w-full h-10 justify-between mb-1 rounded-sm items-center">
