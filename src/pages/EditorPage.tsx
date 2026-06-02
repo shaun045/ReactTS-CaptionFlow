@@ -25,6 +25,7 @@ export default function EditorPage() {
           videoRef={videoRef} 
           videoURL={videoURL} 
           setVideoURL={setVideoURL}
+          subtitles={subtitles}
         />
         <SubtitlePanel 
           videoRef={videoRef}

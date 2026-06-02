@@ -8,9 +8,18 @@ interface MainEditorProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   videoURL: string | null;
   setVideoURL: (url: string | null) => void;
+  subtitles: Subtitle[];
 }
 
-export default function MainEditor({videoRef, videoURL, setVideoURL}: MainEditorProps) {
+interface Subtitle {
+  id: number;
+  text: string;
+  startTime: number;
+  endTime: number;
+}
+
+
+export default function MainEditor({videoRef, videoURL, setVideoURL, subtitles}: MainEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -22,6 +31,22 @@ export default function MainEditor({videoRef, videoURL, setVideoURL}: MainEditor
   function removeVideo() {
     setVideoURL(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  const [currentSubtitle, setCurrentSubtitle] = useState("");
+
+  function updateCurrentSubtitle() {
+    if (!videoRef.current) return;
+
+    const currentTime = videoRef.current.currentTime;
+
+    const activeSubtitle = subtitles.find(
+      (subtitle) =>
+        currentTime >= subtitle.startTime &&
+        currentTime <= subtitle.endTime
+    );
+    setCurrentSubtitle(activeSubtitle?.text ?? "");
+    console.log(activeSubtitle?.text);
   }
 
 
@@ -49,9 +74,11 @@ export default function MainEditor({videoRef, videoURL, setVideoURL}: MainEditor
       </button>
 
 
+
       {videoURL
         ? (<div className="relative group">
             <video ref={videoRef} src={videoURL} className="rounded-xl max-w-230"
+            onTimeUpdate={updateCurrentSubtitle}
             />
             <button className="absolute top-2 right-2 text-4xl cursor-pointer opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
             onClick={() => removeVideo()}

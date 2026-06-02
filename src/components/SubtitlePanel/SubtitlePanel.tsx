@@ -19,7 +19,7 @@ interface SubtitlePanelProps {
   videoURL: string | null;
 }
 
-export default function SubtitlePanel({subtitles, setSubtitles, videoRef, videoURL}: SubtitlePanelProps) {
+export default function SubtitlePanel({subtitles, setSubtitles, videoURL}: SubtitlePanelProps) {
 
   function addSubtitle() {
     const newSubtitle = {
@@ -52,7 +52,7 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoRef, videoU
     const results = await transcribeVideo(videoURL);
     setSubtitles(results);
     setIsTranscribing(false);
-;  }
+  }
 
    
 
@@ -65,7 +65,7 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoRef, videoU
           disabled={!videoURL || isTranscribing}
           className="flex p-1 px-3 rounded-md items-center bg-[#7c5cbf] hover:cursor-pointer disabled:opacity-50"
         >
-          {isTranscribing ? "Transcribing..." : "Auto"}
+          {isTranscribing ? "Transcribing..." : "Transcribe"}
         </button>
         <button className="flex p-1 px-3 rounded-md items-center bg-[#9D2CFA] mr-3 hover:cursor-pointer"
         onClick={() => addSubtitle()}
