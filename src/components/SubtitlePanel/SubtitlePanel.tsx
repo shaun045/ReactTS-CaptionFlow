@@ -34,6 +34,13 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL}: Subti
     ])
   }
 
+  function formatTime(seconds: number) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  }
+
   function deleteSubtitle(id: number) {
     setSubtitles(subtitles.filter(sub => id !== sub.id))
   }
@@ -78,7 +85,9 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL}: Subti
         {subtitles.map((subtitle) => (
           <li key={subtitle.id} className="flex border border-gray-600 p-2 w-full h-10 justify-between mb-1 rounded-sm items-center">
             <span className="flex text-xs w-48">
-              0:00:00 - 0:00:00
+              {formatTime(subtitle.startTime)}
+              {" - "}
+              {formatTime(subtitle.endTime)}
             </span>
 
             {editingId === subtitle.id

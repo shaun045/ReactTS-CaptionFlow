@@ -8,7 +8,14 @@ import logo from "../assets/logo/Logo-bgremoved.png";
 export default function EditorPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoURL, setVideoURL] = useState<string | null>(null);
-  const [subtitles, setSubtitles] = useState<{id: number, text: string, startTime: number, endTime: number}[]>([]);
+  const [subtitles, setSubtitles] = useState<{id: number, text: string, startTime: number, endTime: number}[]>([
+    {
+      id: 1,
+      text: "Hello CaptionFlow!",
+      startTime: 0,
+      endTime: 5
+    }
+  ]);
 
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>

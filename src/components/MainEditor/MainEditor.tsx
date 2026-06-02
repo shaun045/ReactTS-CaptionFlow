@@ -80,6 +80,13 @@ export default function MainEditor({videoRef, videoURL, setVideoURL, subtitles}:
             <video ref={videoRef} src={videoURL} className="rounded-xl max-w-230"
             onTimeUpdate={updateCurrentSubtitle}
             />
+            {currentSubtitle && (
+              <div className="absolute bottom-8 left-0 w-full flex justify-center">
+                <p className="bg-black/50 px-4 py-2 rounded text-white text-xl font-semibold">
+                  {currentSubtitle}
+                </p>
+              </div>
+            )}
             <button className="absolute top-2 right-2 text-4xl cursor-pointer opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
             onClick={() => removeVideo()}
             >
