@@ -19,7 +19,7 @@ interface SubtitlePanelProps {
   videoURL: string | null;
 }
 
-export default function SubtitlePanel({subtitles, setSubtitles, videoURL}: SubtitlePanelProps) {
+export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoRef}: SubtitlePanelProps) {
 
   function addSubtitle() {
     const newSubtitle = {
@@ -61,6 +61,12 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL}: Subti
     setIsTranscribing(false);
   }
 
+  function seekToSubtitle(startTime: number) {
+    if (!videoRef.current) return;
+
+    videoRef.current.currentTime = startTime;
+  }
+
    
 
   return(
@@ -83,7 +89,9 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL}: Subti
       
       <ul className="flex flex-col h-full bg-[#151027] p-2">
         {subtitles.map((subtitle) => (
-          <li key={subtitle.id} className="flex border border-gray-600 p-2 w-full h-10 justify-between mb-1 rounded-sm items-center">
+          <li key={subtitle.id} className="flex border border-gray-600 p-2 w-full h-10 justify-between mb-1 rounded-sm items-center"
+          onClick={() => seekToSubtitle(subtitle.startTime)}
+          >
             <span className="flex text-xs w-48">
               {formatTime(subtitle.startTime)}
               {" - "}
