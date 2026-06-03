@@ -42,6 +42,7 @@ export default function EditorPage() {
           videoURL={videoURL}
           subtitles={subtitles}
           setSubtitles={setSubtitles}
+          videoFile={videoFile}
         />
       </div>
 

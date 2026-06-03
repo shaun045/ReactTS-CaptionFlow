@@ -3,7 +3,8 @@ import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
-import { transcribeVideo } from "../../utils/transcribe";
+import { transcribeAudio } from "../../utils/transcribe";
+import { extractAudio } from "../../utils/extractAudio";
 
 interface Subtitle {
   id: number;
@@ -17,9 +18,10 @@ interface SubtitlePanelProps {
   setSubtitles: (subtitles: Subtitle[]) => void;
   videoRef: React.RefObject<HTMLVideoElement | null>;
   videoURL: string | null;
+  videoFile: File | null;
 }
 
-export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoRef}: SubtitlePanelProps) {
+export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoRef, videoFile}: SubtitlePanelProps) {
 
   function addSubtitle() {
     const currentTime = videoRef.current?.currentTime ?? 0;
@@ -56,11 +58,22 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
   const [isTranscribing, setIsTranscribing] = useState(false);
 
   async function handleTranscribe() {
-    if (!videoURL) return;
-    setIsTranscribing(true);
-    const results = await transcribeVideo(videoURL);
-    setSubtitles(results);
-    setIsTranscribing(false);
+    if (!videoURL || !videoFile) return;
+    try {
+      setIsTranscribing(true);
+
+      const audioBlob = await extractAudio(videoFile);
+
+      const results = await transcribeAudio(audioBlob);
+
+      console.log(results);
+
+      setSubtitles(results);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsTranscribing(false);
+    }
   }
 
   function seekToSubtitle(startTime: number) {

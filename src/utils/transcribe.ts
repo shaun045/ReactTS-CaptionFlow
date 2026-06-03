@@ -15,11 +15,9 @@ interface VerboseTranscription {
   segments: TranscriptionSegment[];
 }
 
-export async function transcribeVideo(videoURL: string) {
-  const response = await fetch(videoURL);
-  const blob = await response.blob();
+export async function transcribeAudio(audioBlob: Blob) {
 
-  const file = new File([blob], "audio.mp4", {type: "audio/mp4"});
+  const file = new File([audioBlob], "audio.mp3", {type: "audio/mpeg"});
 
   const transcription = await groq.audio.transcriptions.create({
     file,
