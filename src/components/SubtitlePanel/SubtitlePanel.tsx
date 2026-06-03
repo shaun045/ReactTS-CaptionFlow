@@ -22,11 +22,13 @@ interface SubtitlePanelProps {
 export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoRef}: SubtitlePanelProps) {
 
   function addSubtitle() {
+    const currentTime = videoRef.current?.currentTime ?? 0;
+
     const newSubtitle = {
       id: Date.now(),
       text: "",
-      startTime: 0,
-      endTime: 0
+      startTime: currentTime,
+      endTime: currentTime + 3
     }
     setSubtitles([
       ...subtitles,

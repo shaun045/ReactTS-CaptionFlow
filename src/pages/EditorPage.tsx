@@ -16,6 +16,7 @@ export default function EditorPage() {
       endTime: 5
     }
   ]);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
 
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>
@@ -33,6 +34,8 @@ export default function EditorPage() {
           videoURL={videoURL} 
           setVideoURL={setVideoURL}
           subtitles={subtitles}
+          videoFile={videoFile}
+          setVideoFile={setVideoFile}
         />
         <SubtitlePanel 
           videoRef={videoRef}

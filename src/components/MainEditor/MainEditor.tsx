@@ -9,6 +9,8 @@ interface MainEditorProps {
   videoURL: string | null;
   setVideoURL: (url: string | null) => void;
   subtitles: Subtitle[];
+  videoFile: File | null;
+  setVideoFile: (file: File | null) => void;
 }
 
 interface Subtitle {
@@ -19,13 +21,14 @@ interface Subtitle {
 }
 
 
-export default function MainEditor({videoRef, videoURL, setVideoURL, subtitles}: MainEditorProps) {
+export default function MainEditor({videoRef, videoURL, setVideoURL, subtitles, setVideoFile}: MainEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleFile = (file: File) => {
     if (!file.type.startsWith("video/")) return;
     setVideoURL(URL.createObjectURL(file));
+    setVideoFile(file);
   }
 
   function removeVideo() {
@@ -48,7 +51,6 @@ export default function MainEditor({videoRef, videoURL, setVideoURL, subtitles}:
     setCurrentSubtitle(activeSubtitle?.text ?? "");
     console.log(activeSubtitle?.text);
   }
-
 
   return (
     <main className="relative flex justify-center items-center flex-col h-full flex-1">
