@@ -114,7 +114,7 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
             {editingId === subtitle.id ? (
               <span className="flex text-xs w-48">
                 <input 
-                  className="flex w-full px-2 bg-transparent outline-none text-sm"
+                  className="flex w-15 px-2 bg-transparent outline-none text-sm border"
                   type="number"
                   value={subtitle.startTime}
                   onChange={(e) => updateTimeStamp(
@@ -124,7 +124,7 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
                   )}
                 />
                 <input 
-                  className="flex w-full px-2 bg-transparent outline-none text-sm"
+                  className="flex w-15 px-2 bg-transparent outline-none text-sm border"
                   type="number"
                   value={subtitle.endTime} 
                   onChange={(e) => updateTimeStamp(
@@ -150,7 +150,7 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
                   className="flex w-full px-2 bg-transparent border-b border-purple-500 outline-none text-sm"
                   value={subtitle.text}
                   onChange={(e) => updateSubtitle(subtitle.id, e.target.value)}
-                  onBlur={() => setEditingId(null)}
+                  // onBlur={() => setEditingId(null)}
                   onKeyDown={(e) => e.key === "Enter" && setEditingId(null)}
                 />)
               : (
@@ -162,7 +162,11 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
 
             <div className="flex gap-2">
               {editingId === subtitle.id
-                ? <button><FaCheck /></button>
+                ? <button
+                  onClick={() => setEditingId(null)}
+                  >
+                    <FaCheck />
+                  </button>
                 : <button className="hover:cursor-pointer"
                     onClick={() => setEditingId(subtitle.id)}
                   >
