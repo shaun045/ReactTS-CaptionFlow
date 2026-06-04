@@ -55,6 +55,10 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
     setSubtitles(subtitles.map(sub => sub.id === id ? {...sub, text} : sub));
   }
 
+  function updateTimeStamp(id: number, startTime: number, endTime: number) {
+    setSubtitles(subtitles.map(sub => sub.id === id ? {...sub, startTime, endTime} : sub));
+  }
+
   const [isTranscribing, setIsTranscribing] = useState(false);
 
   async function handleTranscribe() {
@@ -107,14 +111,40 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
           <li key={subtitle.id} className="flex border border-gray-600 p-2 w-full h-10 justify-between mb-1 rounded-sm items-center"
           onClick={() => seekToSubtitle(subtitle.startTime)}
           >
-            <span className="flex text-xs w-48">
-              {formatTime(subtitle.startTime)}
-              {" - "}
-              {formatTime(subtitle.endTime)}
-            </span>
+            {editingId === subtitle.id ? (
+              <span className="flex text-xs w-48">
+                <input 
+                  className="flex w-full px-2 bg-transparent outline-none text-sm"
+                  type="number"
+                  value={subtitle.startTime}
+                  onChange={(e) => updateTimeStamp(
+                    subtitle.id, 
+                    Number(e.target.value), 
+                    subtitle.endTime
+                  )}
+                />
+                <input 
+                  className="flex w-full px-2 bg-transparent outline-none text-sm"
+                  type="number"
+                  value={subtitle.endTime} 
+                  onChange={(e) => updateTimeStamp(
+                    subtitle.id, 
+                    subtitle.startTime,
+                    Number(e.target.value)
+                  )}
+                />
+              </span>
+            ) : (
+              <span className="flex text-xs w-48">
+                {formatTime(subtitle.startTime)}
+                {" - "}
+                {formatTime(subtitle.endTime)}
+              </span>
+            )}
+            
 
             {editingId === subtitle.id
-              ? <input 
+              ? (<input 
                   type="text" 
                   autoFocus
                   className="flex w-full px-2 bg-transparent border-b border-purple-500 outline-none text-sm"
@@ -122,11 +152,12 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
                   onChange={(e) => updateSubtitle(subtitle.id, e.target.value)}
                   onBlur={() => setEditingId(null)}
                   onKeyDown={(e) => e.key === "Enter" && setEditingId(null)}
-                />
-              : <p className="flex w-full px-2 text-sm truncate">
+                />)
+              : (
+                <p className="flex w-full px-2 text-sm truncate">
                   {subtitle.text || "Empty subtitle"}
                 </p>
-            }
+              )}
 
 
             <div className="flex gap-2">
