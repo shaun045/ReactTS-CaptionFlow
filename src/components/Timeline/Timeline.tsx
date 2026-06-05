@@ -125,7 +125,7 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
   
   
   return(
-    <div className="flex flex-col w-full h-60 bg-[#1a1025] border-t border-[#2e1f40]">
+    <div className="flex flex-col w-full h-70 bg-[#1a1025] border-t border-[#2e1f40]">
 
       {/* Toolbar */}
       <div className="flex items-center justify-between px-3 py-2">
@@ -175,36 +175,48 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
         </div>
 
         {/* Track area */}
-        <div className="flex-1 bg-[#120c1c] rounded-lg border border-[#2e1f40] flex items-center justify-center">
+        <div className="flex-1 bg-[#120c1c] rounded-lg border border-[#2e1f40] overflow-x-auto">
           {videoURL
             ? (
-              <div className="w-full h-full px-2 py-2 flex items-center">
-                <div className="relative h-8 flex-1 bg-[#2e1a4a] rounded-md border border-[#4a2e70] flex items-center px-3 gap-2">
-                  {subtitles.map((subtitle) => {
-                    const left = 
-                      duration > 0
-                        ? (subtitle.startTime / duration) * 100
-                        : 0;
-                    const width =
-                      duration > 0
-                        ? ((subtitle.endTime - subtitle.startTime) / duration) * 100
-                        : 0;
-                    
-                    return (
-                      <div
-                        key={subtitle.id}
-                        className="absolute top-0 h-full bg-purple-500 rounded text-xs px-2 flex items-center overflow-hidden whitespace-nowrap"
-                        style={{
-                          left: `${left}%`,
-                          width: `${width}%`
-                        }}
-                      >
-                        {subtitle.text}
-                      </div>
-                    );
-                  })}
-                  <span className="text-xs text-[#c4a8e8]">video.mp4</span>
+              <div className="w-full h-full px-2 py-2"
+                style={{ width: `${duration * 100}px` }}
+              >
+
+              {/* Subtitle Track */}
+              <div className="relative h-12 bg-[#2e1a4a] rounded-md border border-[#4a2e70] mb-2">
+                {subtitles.map((subtitle) => {
+                  const left =
+                    duration > 0
+                      ? (subtitle.startTime / duration) * 100
+                      : 0;
+
+                  const width =
+                    duration > 0
+                      ? Math.max(((subtitle.endTime - subtitle.startTime) / duration) * 100, 5)
+                      : 5;
+
+                  return (
+                    <div
+                      key={subtitle.id}
+                      className="absolute top-0 h-full bg-purple-500 rounded text-xs px-2 flex items-center overflow-hidden whitespace-nowrap"
+                      style={{
+                        left: `${left}%`,
+                        width: `${width}%`
+                      }}
+                    >
+                      {subtitle.text}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Video Track */}
+              <div className="relative h-12 bg-[#1e2f5c] rounded border border-blue-700">
+                <div className="absolute inset-0 flex items-center px-2">
+                  video.mp4
                 </div>
+              </div>
+              
               </div>
             )
             : <span className="text-sm text-[#4a3660]">+ Add media to this project</span>
