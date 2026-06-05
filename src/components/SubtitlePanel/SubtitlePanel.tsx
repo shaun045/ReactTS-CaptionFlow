@@ -80,6 +80,8 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
     }
   }
 
+  const [selectedSub, setSelectedSub] = useState<number | null>(null);
+
   function seekToSubtitle(startTime: number) {
     if (!videoRef.current) return;
 
@@ -108,8 +110,14 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
       
       <ul className="flex flex-col h-full bg-[#151027] p-2">
         {subtitles.map((subtitle) => (
-          <li key={subtitle.id} className="flex border border-gray-600 p-2 w-full h-10 justify-between mb-1 rounded-sm items-center"
-          onClick={() => seekToSubtitle(subtitle.startTime)}
+          <li key={subtitle.id} 
+          className={`flex border p-2 w-full h-10 justify-between mb-1 rounded-sm items-center 
+            ${selectedSub === subtitle.id ? "border-purple-500" : "border-gray-600" }
+          `}
+          onClick={() => (
+            seekToSubtitle(subtitle.startTime),
+            setSelectedSub(subtitle.id)
+          )}
           >
             {editingId === subtitle.id ? (
               <span className="flex text-xs w-48">

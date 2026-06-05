@@ -49,6 +49,7 @@ export default function EditorPage() {
       <Timeline 
         videoRef={videoRef}
         videoURL={videoURL}
+        subtitles={subtitles}
       />
 
     </div>

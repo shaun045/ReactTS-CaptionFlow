@@ -9,9 +9,17 @@ import { BiSolidDownArrow } from "react-icons/bi";
 interface TimelineProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   videoURL: string | null;
+  subtitles: Subtitle[];
 }
 
-export default function Timeline({videoRef, videoURL}: TimelineProps) {
+interface Subtitle {
+  id: number;
+  text: string;
+  startTime: number;
+  endTime: number;
+}
+
+export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps) {
 
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -171,7 +179,30 @@ export default function Timeline({videoRef, videoURL}: TimelineProps) {
           {videoURL
             ? (
               <div className="w-full h-full px-2 py-2 flex items-center">
-                <div className="h-8 flex-1 bg-[#2e1a4a] rounded-md border border-[#4a2e70] flex items-center px-3 gap-2">
+                <div className="relative h-8 flex-1 bg-[#2e1a4a] rounded-md border border-[#4a2e70] flex items-center px-3 gap-2">
+                  {subtitles.map((subtitle) => {
+                    const left = 
+                      duration > 0
+                        ? (subtitle.startTime / duration) * 100
+                        : 0;
+                    const width =
+                      duration > 0
+                        ? ((subtitle.endTime - subtitle.startTime) / duration) * 100
+                        : 0;
+                    
+                    return (
+                      <div
+                        key={subtitle.id}
+                        className="absolute top-0 h-full bg-purple-500 rounded text-xs px-2 flex items-center overflow-hidden whitespace-nowrap"
+                        style={{
+                          left: `${left}%`,
+                          width: `${width}%`
+                        }}
+                      >
+                        {subtitle.text}
+                      </div>
+                    );
+                  })}
                   <span className="text-xs text-[#c4a8e8]">video.mp4</span>
                 </div>
               </div>
