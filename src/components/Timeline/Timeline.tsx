@@ -122,6 +122,16 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDraggingPlayhead, duration]);
 
+
+  const [zoom, setZoom] = useState(100);
+
+  function zoomIn() {
+    setZoom(prev => prev + 50);
+  }
+
+  function zoomOut() {
+    setZoom(prev => Math.max(50, prev -  50));
+  }
   
   
   return(
@@ -145,8 +155,14 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
         </div>
 
         <div className="flex items-center gap-2">
-          <MdZoomOut className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"/>
-          <MdZoomIn className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"/>
+
+          <MdZoomOut className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"
+            onClick={zoomOut}
+          />
+
+          <MdZoomIn className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"
+            onClick={zoomIn}
+          />
         </div>
       </div>
 
@@ -179,7 +195,7 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
           {videoURL
             ? (
               <div className="w-full h-full px-2 py-2"
-                style={{ width: `${duration * 100}px` }}
+                style={{ width: `${duration * zoom}px` }}
               >
 
               {/* Subtitle Track */}
