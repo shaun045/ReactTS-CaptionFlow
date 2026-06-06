@@ -35,29 +35,30 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
       duration={duration}
       setZoom={setZoom}
     />
+    <div className="relative">
+      {/* Ruler */}
+      <TimelineRuler 
+        videoRef={videoRef}
+        videoURL={videoURL}
+        duration={duration}
+        currentTime={currentTime}
+        setCurrentTime={setCurrentTime}
+        zoom={zoom}
+        rulerRef={rulerRef}
+      />
 
-    {/* Ruler */}
-    <TimelineRuler 
-      videoRef={videoRef}
-      videoURL={videoURL}
-      duration={duration}
-      currentTime={currentTime}
-      setCurrentTime={setCurrentTime}
-      zoom={zoom}
-      rulerRef={rulerRef}
-    />
-
-    {/* Track area */}
-    <TrackArea 
-      videoRef={videoRef}
-      videoURL={videoURL}
-      subtitles={subtitles}
-      rulerRef={rulerRef}
-      currentTime={currentTime}
-      setCurrentTime={setCurrentTime}
-      duration={duration}
-      zoom={zoom}
-    />
+      {/* Track area */}
+      <TrackArea 
+        videoRef={videoRef}
+        videoURL={videoURL}
+        subtitles={subtitles}
+        rulerRef={rulerRef}
+        currentTime={currentTime}
+        setCurrentTime={setCurrentTime}
+        duration={duration}
+        zoom={zoom}
+      />
+    </div>
 
     </div>
   )

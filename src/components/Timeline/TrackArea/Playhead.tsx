@@ -18,7 +18,7 @@ export default function Playhead({
     zoom,
     duration
   }: PlayheadProps) {
-  // const timelineWidth = duration * zoom;
+  
   const playheadLeft = currentTime * zoom;
 
   function handlePlayheadMouseDown(e: React.MouseEvent) {
@@ -38,8 +38,8 @@ export default function Playhead({
 
       const rect = ruler.getBoundingClientRect();
       const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
-      const percent = x / rect.width;
-      const seekTime = percent * duration;
+      // const percent = x / rect.width;
+      const seekTime = x / zoom;
 
       video.currentTime = seekTime;
       setCurrentTime(seekTime);
@@ -61,7 +61,7 @@ export default function Playhead({
   return (
     <div
       className="absolute top-0 bottom-0 w-0.5 bg-[#7c5cbf] pointer-events-none"
-      style={{ left: `${playheadLeft}` }}
+      style={{ left: `${playheadLeft}px` }}
     >
       <BiSolidDownArrow 
       onMouseDown={handlePlayheadMouseDown}

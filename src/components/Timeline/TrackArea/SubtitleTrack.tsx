@@ -13,20 +13,22 @@ interface SubtitleTrackProps {
 
 export default function SubtitleTrack({subtitles, zoom}: SubtitleTrackProps) {
   return (
-    <div className="relative h-15 bg-[#2e1a4a] rounded-md border border-[#4a2e70] mb-2">
+    <div className="relative h-15 rounded-md mb-2">
       {subtitles.map((subtitle) => {
         
         const pixelsPerSecond = zoom;
         const left = subtitle.startTime * pixelsPerSecond;
+        const subEndTime = subtitle.endTime - 0.05;
 
         const width = Math.max(
-          (subtitle.endTime - subtitle.startTime) * pixelsPerSecond, 50
+          (subEndTime - subtitle.startTime) * pixelsPerSecond, 50
         )
 
         return (
           <div
             key={subtitle.id}
-            className="absolute
+            className="
+              absolute
               top-1
               bottom-1
               bg-purple-500
@@ -36,7 +38,8 @@ export default function SubtitleTrack({subtitles, zoom}: SubtitleTrackProps) {
               flex
               items-center
               overflow-hidden
-              text-ellipsis"
+              text-ellipsis
+              "
             style={{
               left: `${left}px`,
               width: `${width}px`

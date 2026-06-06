@@ -32,10 +32,10 @@ export default function TrackArea({
   }: TrackAreaProps) {
 
   return (
-    <div className="flex-1 bg-[#120c1c] rounded-lg border border-[#2e1f40] overflow-x-auto">
+    <div className="flex bg-[#120c1c] rounded-lg border border-[#2e1f40] overflow-x-auto h-50">
       {videoURL
         ? (
-          <div className="h-full px-2 py-2"
+          <div className="h-full px-3 py-2"
             style={{ width: `${duration * zoom}px` }}
           >
 

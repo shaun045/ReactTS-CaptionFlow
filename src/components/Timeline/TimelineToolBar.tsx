@@ -77,31 +77,31 @@ export default function TimelineToolBar({
 
   return (
     <div className="flex items-center justify-between px-3 py-2">
-    <div className="flex items-center gap-2">
-      <PiScissorsBold className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"/>
-    </div>
+      <div className="flex items-center gap-2">
+        <PiScissorsBold className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"/>
+      </div>
 
-    <div className="flex items-center gap-3">
-      <span className="text-xs text-[#a89bc0] tabular-nums">{formatTime(currentTime)}</span>
-      <button className="flex items-center justify-center w-8 h-8 rounded-full bg-[#e2d9f3] text-[#1a1025] hover:bg-white transition-colors hover:cursor-pointer"
-      onClick={togglePlay}
-      disabled={!videoURL}
-      >
-        {isPlaying ? <IoPauseSharp className="text-sm"/> : <IoPlaySharp className="text-sm ml-1"/>}
-      </button>
-      <span className="text-xs text-[#a89bc0] tabular-nums">{formatTime(duration)}</span>
-    </div>
+      <div className="flex items-center gap-3">
+        <span className="text-xs text-[#a89bc0] tabular-nums">{formatTime(currentTime)}</span>
+        <button className="flex items-center justify-center w-8 h-8 rounded-full bg-[#e2d9f3] text-[#1a1025] hover:bg-white transition-colors hover:cursor-pointer"
+        onClick={togglePlay}
+        disabled={!videoURL}
+        >
+          {isPlaying ? <IoPauseSharp className="text-sm"/> : <IoPlaySharp className="text-sm ml-1"/>}
+        </button>
+        <span className="text-xs text-[#a89bc0] tabular-nums">{formatTime(duration)}</span>
+      </div>
 
-    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
 
-      <MdZoomOut className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"
-        onClick={zoomOut}
-      />
+        <MdZoomOut className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"
+          onClick={zoomOut}
+        />
 
-      <MdZoomIn className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"
-        onClick={zoomIn}
-      />
-    </div>
+        <MdZoomIn className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"
+          onClick={zoomIn}
+        />
+      </div>
   </div>
   )
 }
