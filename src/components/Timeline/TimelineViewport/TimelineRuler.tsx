@@ -39,7 +39,7 @@ export default function TimelineRuler({
     <div 
       ref={rulerRef} 
       onClick={handleRulerClick} 
-      className="relative h-6 mb-1 cursor-pointer overflow-x-hidden">
+      className="relative h-8 mb-1 cursor-pointer overflow-x-hidden">
       <div className="relative h-full"
         style={{ width: `${duration * zoom}px` }}
       >

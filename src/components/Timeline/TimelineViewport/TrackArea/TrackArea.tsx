@@ -51,22 +51,24 @@ export default function TrackArea({
               video.mp4
             </div>
           </div>
+
+          {/* Single playhead spanning ruler + track */}
+          {videoURL && (
+            <Playhead 
+              videoRef={videoRef}
+              rulerRef={rulerRef}
+              currentTime={currentTime}
+              setCurrentTime={setCurrentTime}
+              zoom={zoom}
+              duration={duration}
+            />
+          )}
           
           </div>
         )
         : <span className="text-sm text-[#4a3660]">+ Add media to this project</span>
       }
-      {/* Single playhead spanning ruler + track */}
-      {videoURL && (
-        <Playhead 
-          videoRef={videoRef}
-          rulerRef={rulerRef}
-          currentTime={currentTime}
-          setCurrentTime={setCurrentTime}
-          zoom={zoom}
-          duration={duration}
-        />
-      )}
+      
     </div>
   )
 }

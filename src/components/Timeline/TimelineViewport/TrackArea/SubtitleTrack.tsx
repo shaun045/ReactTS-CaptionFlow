@@ -18,7 +18,7 @@ export default function SubtitleTrack({subtitles, zoom}: SubtitleTrackProps) {
         
         const pixelsPerSecond = zoom;
         const left = subtitle.startTime * pixelsPerSecond;
-        const subEndTime = subtitle.endTime - 0.05;
+        const subEndTime = subtitle.endTime - 0.01;
 
         const width = Math.max(
           (subEndTime - subtitle.startTime) * pixelsPerSecond, 50
@@ -34,11 +34,11 @@ export default function SubtitleTrack({subtitles, zoom}: SubtitleTrackProps) {
               bg-purple-500
               rounded-md
               text-xs
-              px-3
+              px-2
               flex
               items-center
               overflow-hidden
-              text-ellipsis
+              text-ellipsis 
               "
             style={{
               left: `${left}px`,

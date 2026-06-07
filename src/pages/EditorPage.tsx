@@ -46,11 +46,13 @@ export default function EditorPage() {
         />
       </div>
 
-      <Timeline 
-        videoRef={videoRef}
-        videoURL={videoURL}
-        subtitles={subtitles}
-      />
+      <div className="flex flex-col w-full h-70 overflow-hidden">
+        <Timeline 
+          videoRef={videoRef}
+          videoURL={videoURL}
+          subtitles={subtitles}
+        />
+      </div>
 
     </div>
 )

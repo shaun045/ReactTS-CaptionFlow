@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
-import TimelineRuler from "./TimelineRuler";
-import TimelineToolBar from "./TimelineToolBar";
-import TrackArea from "./TrackArea/TrackArea";
+import TimelineToolBar from "./TimelineToolBar"
+import TimelineViewport from "./TimelineViewport/TimelineViewport";
 
 interface TimelineProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -35,30 +34,17 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
       duration={duration}
       setZoom={setZoom}
     />
-    <div className="relative">
-      {/* Ruler */}
-      <TimelineRuler 
-        videoRef={videoRef}
-        videoURL={videoURL}
-        duration={duration}
-        currentTime={currentTime}
-        setCurrentTime={setCurrentTime}
-        zoom={zoom}
-        rulerRef={rulerRef}
-      />
 
-      {/* Track area */}
-      <TrackArea 
-        videoRef={videoRef}
-        videoURL={videoURL}
-        subtitles={subtitles}
-        rulerRef={rulerRef}
-        currentTime={currentTime}
-        setCurrentTime={setCurrentTime}
-        duration={duration}
-        zoom={zoom}
-      />
-    </div>
+    <TimelineViewport 
+      videoRef={videoRef}
+      videoURL={videoURL}
+      subtitles={subtitles}
+      currentTime={currentTime}
+      setCurrentTime={setCurrentTime}
+      duration={duration}
+      rulerRef={rulerRef}
+      zoom={zoom}
+    />
 
     </div>
   )
