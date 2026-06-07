@@ -38,7 +38,7 @@ export default function SubtitleTrack({subtitles, zoom}: SubtitleTrackProps) {
               flex
               items-center
               overflow-hidden
-              text-ellipsis 
+              text-ellipsis
               "
             style={{
               left: `${left}px`,

@@ -32,39 +32,39 @@ export default function TrackArea({
   }: TrackAreaProps) {
 
   return (
-    <div className="flex bg-[#120c1c] rounded-lg border border-[#2e1f40] overflow-x-auto h-50">
+    <div className="flex bg-[#120c1c] rounded-lg border border-[#2e1f40] h-50 overflow-hidden">
       {videoURL
         ? (
-          <div className="h-full px-3 py-2"
-            style={{ width: `${duration * zoom}px` }}
-          >
+            <div className="h-full px-3 py-2"
+              style={{ width: `${duration * zoom}px` }}
+            >
 
-          {/* Subtitle Track */}
-          <SubtitleTrack 
-            subtitles={subtitles}
-            zoom={zoom}
-          />
-
-          {/* Video Track */}
-          <div className="relative h-12 bg-[#1e2f5c] rounded border border-blue-700">
-            <div className="absolute inset-0 flex items-center px-2">
-              video.mp4
-            </div>
-          </div>
-
-          {/* Single playhead spanning ruler + track */}
-          {videoURL && (
-            <Playhead 
-              videoRef={videoRef}
-              rulerRef={rulerRef}
-              currentTime={currentTime}
-              setCurrentTime={setCurrentTime}
+            {/* Subtitle Track */}
+            <SubtitleTrack 
+              subtitles={subtitles}
               zoom={zoom}
-              duration={duration}
             />
-          )}
-          
-          </div>
+
+            {/* Video Track */}
+            <div className="relative h-12 bg-[#1e2f5c] rounded border border-blue-700">
+              <div className="absolute inset-0 flex items-center px-2">
+                video.mp4
+              </div>
+            </div>
+
+            {/* Single playhead spanning ruler + track */}
+            {videoURL && (
+              <Playhead 
+                videoRef={videoRef}
+                rulerRef={rulerRef}
+                currentTime={currentTime}
+                setCurrentTime={setCurrentTime}
+                zoom={zoom}
+                duration={duration}
+              />
+            )}
+            
+            </div>
         )
         : <span className="text-sm text-[#4a3660]">+ Add media to this project</span>
       }
