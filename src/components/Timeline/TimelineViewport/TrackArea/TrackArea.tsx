@@ -1,5 +1,6 @@
 import SubtitleTrack from "./SubtitleTrack";
 import Playhead from "./Playhead";
+import VideoThumbnail from "./VideoThumbnail";
 
 interface Subtitle {
   id: number;
@@ -18,7 +19,6 @@ interface TrackAreaProps {
   duration: number;
   zoom: number;
 }
-
 
 export default function TrackArea({
       videoRef,
@@ -47,9 +47,13 @@ export default function TrackArea({
 
             {/* Video Track */}
             <div className="relative h-12 bg-[#1e2f5c] rounded border border-blue-700">
-              <div className="absolute inset-0 flex items-center px-2">
+              {/* <div className="absolute inset-0 flex items-center px-2">
                 video.mp4
-              </div>
+              </div> */}
+              <VideoThumbnail 
+                videoRef={videoRef}
+                videoURL={videoURL}
+              />
             </div>
 
             {/* Single playhead spanning ruler + track */}

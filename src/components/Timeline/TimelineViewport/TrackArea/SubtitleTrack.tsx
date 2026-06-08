@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 interface Subtitle {
   id: number;
   text: string;
@@ -12,13 +12,17 @@ interface SubtitleTrackProps {
 }
 
 export default function SubtitleTrack({subtitles, zoom}: SubtitleTrackProps) {
+
+  const [selectedSub, setSelectedSub] = useState<number | null>(null);
+
+
   return (
-    <div className="relative h-15 rounded-md mb-2">
+    <div className="relative h-15 rounded-lg mb-2 overflow-hidden">
       {subtitles.map((subtitle) => {
         
         const pixelsPerSecond = zoom;
         const left = subtitle.startTime * pixelsPerSecond;
-        const subEndTime = subtitle.endTime - 0.01;
+        const subEndTime = subtitle.endTime - 0.02;
 
         const width = Math.max(
           (subEndTime - subtitle.startTime) * pixelsPerSecond, 50
@@ -27,7 +31,8 @@ export default function SubtitleTrack({subtitles, zoom}: SubtitleTrackProps) {
         return (
           <div
             key={subtitle.id}
-            className="
+            onClick={() => setSelectedSub(subtitle.id)}
+            className={`
               absolute
               top-1
               bottom-1
@@ -39,7 +44,12 @@ export default function SubtitleTrack({subtitles, zoom}: SubtitleTrackProps) {
               items-center
               overflow-hidden
               text-ellipsis
-              "
+              hover: cursor-pointer
+              ${subtitle.id === selectedSub 
+                ? "border-2 border-white"
+                : ""
+              }
+              `}
             style={{
               left: `${left}px`,
               width: `${width}px`
