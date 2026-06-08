@@ -8,21 +8,35 @@ interface VideoThumbnail {
 interface VideoThumbnailProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   videoURL: string;
+  duration: number;
+  zoom: number;
 }
 
 
 export default function VideoThumbnail({
     videoRef,
-    videoURL
+    videoURL,
+    duration,
+    zoom
   }: VideoThumbnailProps) {
-    
-  console.log("VideoThumbnail rendered");
+
   const [thumbnails, setThumbnails] = useState<VideoThumbnail[]>([]); 
   
   async function generateThumbnails(
     video: HTMLVideoElement,
-    duration: number
+    videoDuration: number
   ) {
+    const clipWidth = videoDuration * zoom;
+    const thumbnailWidth = 80;
+    const thumbnailCount = Math.ceil(clipWidth / thumbnailWidth);
+    console.log("thumbnailCount =", thumbnailCount)
+
+    const timeStep = videoDuration / thumbnailCount;
+
+    console.log("Timestep =", timeStep);
+
+
+
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d")!;
   
@@ -31,19 +45,15 @@ export default function VideoThumbnail({
   
     const thumbs = [];
   
-    for (let t = 0; t < duration; t += 5) {
-      console.log("Seeking to", t);
-
+    for (let i = 0; i < thumbnailCount; i++) {
+      const t = i * timeStep;
       video.currentTime = t;
   
       await new Promise((resolve) => {
         video.onseeked = () => {
-          console.log("Seeked to", t);
           resolve(null);
         };
       });
-
-      console.log("Drawing", t);
   
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
   
@@ -57,32 +67,38 @@ export default function VideoThumbnail({
   
 
   useEffect(() => {
-    console.log("VideoThumbnail effect fired");
+    const videoElement = videoRef.current;
+
+    if (!videoElement || !videoURL) return;
 
     async function loadThumbnails() {
-      console.log("loadThumbnails called");
-
-      const video = videoRef.current;
-
-      console.log("videoRef.current =", video);
-    
-      if (!video) return;
-    
-      console.log("video.duration =", video.duration)
-
       const thumbs = await generateThumbnails(
-        video,
-        video.duration
+        videoElement!,
+        videoElement!.duration
       );
 
-      console.log("thumbs =", thumbs.length);
-    
-      setThumbnails(thumbs)
+      setThumbnails(thumbs);
     }
 
-    if (videoURL) {
+    const handleLoadedMetadata = () => {
       loadThumbnails();
+    };
+
+    if (!Number.isNaN(videoElement.duration) && videoElement.duration > 0) {
+      loadThumbnails();
+    } else {
+      videoElement.addEventListener(
+        "loadedmetadata",
+        handleLoadedMetadata
+      );
     }
+
+    return () => {
+      videoElement.removeEventListener(
+        "loadedmetadata",
+        handleLoadedMetadata
+      );
+    };
   }, [videoURL, videoRef]) 
   
   return (
@@ -91,7 +107,8 @@ export default function VideoThumbnail({
         <img 
           src={thumb.dataURL} 
           key={thumb.time}
-          className="h-full w-auto object-cover flex shrink-0"
+          className="h-full object-cover shrink-0"
+          style={{ width: "80px" }}
         />
       ))}
     </div>

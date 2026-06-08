@@ -53,6 +53,8 @@ export default function TrackArea({
               <VideoThumbnail 
                 videoRef={videoRef}
                 videoURL={videoURL}
+                duration={duration}
+                zoom={zoom}
               />
             </div>
 
