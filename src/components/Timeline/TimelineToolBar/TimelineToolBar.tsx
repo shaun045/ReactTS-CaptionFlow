@@ -4,6 +4,7 @@ import { MdZoomIn, MdZoomOut } from "react-icons/md";
 import { IoPlaySharp } from "react-icons/io5";
 import { IoPauseSharp } from "react-icons/io5";
 
+
 interface TimelineToolBarProps {
   videoRef: React.RefObject<HTMLVideoElement | null>
   videoURL: string | null;
@@ -12,6 +13,8 @@ interface TimelineToolBarProps {
   setDuration: React.Dispatch<React.SetStateAction<number>>;
   duration: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
+  activeTool: "select" | "cut";
+  setActiveTool: React.Dispatch<React.SetStateAction<"select" | "cut">>;
 }
 
 
@@ -22,7 +25,9 @@ export default function TimelineToolBar({
       currentTime,
       setDuration,
       duration,
-      setZoom
+      setZoom,
+      activeTool,
+      setActiveTool
     }: TimelineToolBarProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   
@@ -77,8 +82,12 @@ export default function TimelineToolBar({
 
   return (
     <div className="flex items-center justify-between px-3 py-2">
+
       <div className="flex items-center gap-2">
-        <PiScissorsBold className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"/>
+        <PiScissorsBold 
+          onClick={() => setActiveTool(prev => prev === "cut" ? "select" : "cut")}
+          className={`hover:cursor-pointer ${activeTool === "cut" ? "text-white" : "text-[#a89bc0]"}`}
+        />
       </div>
 
       <div className="flex items-center gap-3">
@@ -92,8 +101,9 @@ export default function TimelineToolBar({
         <span className="text-xs text-[#a89bc0] tabular-nums">{formatTime(duration)}</span>
       </div>
 
-      <div className="flex items-center gap-2">
 
+
+      <div className="flex items-center gap-2">
         <MdZoomOut className="text-xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"
           onClick={zoomOut}
         />

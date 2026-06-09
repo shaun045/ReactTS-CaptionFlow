@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import TimelineToolBar from "./TimelineToolBar"
+import TimelineToolBar from "./TimelineToolBar/TimelineToolBar"
 import TimelineViewport from "./TimelineViewport/TimelineViewport";
 
 interface TimelineProps {
@@ -19,6 +19,7 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [zoom, setZoom] = useState(100);
+  const [activeTool, setActiveTool] = useState<"select" | "cut">("select");
   const rulerRef = useRef<HTMLDivElement>(null);
   
   return(
@@ -33,6 +34,9 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
       setDuration={setDuration}
       duration={duration}
       setZoom={setZoom}
+
+      activeTool={activeTool}
+      setActiveTool={setActiveTool}
     />
 
     <TimelineViewport 
