@@ -21,49 +21,43 @@ export default function VideoThumbnail({
   }: VideoThumbnailProps) {
 
   const [thumbnails, setThumbnails] = useState<VideoThumbnail[]>([]); 
-  
+
+
   async function generateThumbnails(
-    video: HTMLVideoElement,
-    videoDuration: number
-  ) {
-    const clipWidth = videoDuration * zoom;
-    const thumbnailWidth = 80;
-    const thumbnailCount = Math.ceil(clipWidth / thumbnailWidth);
-    console.log("thumbnailCount =", thumbnailCount)
+      video: HTMLVideoElement,
+      videoDuration: number
+    ) {
+      const FIXED_COUNT = 20;
 
-    const timeStep = videoDuration / thumbnailCount;
-
-    console.log("Timestep =", timeStep);
-
-
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d")!;
-  
-    canvas.width = 160;
-    canvas.height = 90;
-  
-    const thumbs = [];
-  
-    for (let i = 0; i < thumbnailCount; i++) {
-      const t = i * timeStep;
-      video.currentTime = t;
-  
-      await new Promise((resolve) => {
-        video.onseeked = () => {
-          resolve(null);
-        };
-      });
-  
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-  
-      thumbs.push({
-        time: t,
-        dataURL: canvas.toDataURL(),
-      });
+      const timeStep = videoDuration / FIXED_COUNT;
+      
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d")!;
+    
+      canvas.width = 160;
+      canvas.height = 90;
+    
+      const thumbs: VideoThumbnail[] = [];
+    
+      for (let i = 0; i < FIXED_COUNT; i++) {
+        const t = i * timeStep;
+        video.currentTime = t;
+    
+        await new Promise((resolve) => {
+          video.onseeked = () => {
+            resolve(null);
+          };
+        });
+    
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+        thumbs.push({
+          time: t,
+          dataURL: canvas.toDataURL(),
+        });
+      }
+      return thumbs;
     }
-    return thumbs;
-  }
   
 
   useEffect(() => {
@@ -100,15 +94,17 @@ export default function VideoThumbnail({
       );
     };
   }, [videoURL, videoRef]) 
-  
+
+  const trackWidth = duration * zoom;
+
   return (
-    <div className="flex h-full">
+    <div className="flex h-full" style={{ width: `${trackWidth}px` }}>
       {thumbnails?.map((thumb) => (
         <img 
           src={thumb.dataURL} 
           key={thumb.time}
-          className="h-full object-cover shrink-0"
-          style={{ width: "80px" }}
+          className="h-full object-cover shrink-0 overflow"
+          style={{ width: `${trackWidth/thumbnails.length}px` }}
         />
       ))}
     </div>

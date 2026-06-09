@@ -46,10 +46,7 @@ export default function TrackArea({
             />
 
             {/* Video Track */}
-            <div className="relative h-12 bg-[#1e2f5c] rounded border border-blue-700">
-              {/* <div className="absolute inset-0 flex items-center px-2">
-                video.mp4
-              </div> */}
+            <div className="relative h-12 bg-[#1e2f5c] rounded border border-blue-700 overflow-hidden">
               <VideoThumbnail 
                 videoRef={videoRef}
                 videoURL={videoURL}
