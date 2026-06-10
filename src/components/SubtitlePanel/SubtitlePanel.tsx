@@ -108,7 +108,7 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
         </button>
       </div>
       
-      <ul className="flex flex-col h-full bg-[#151027] p-2">
+      <ul className="flex flex-col h-full bg-[#151027] p-2 overflow-auto">
         {subtitles.map((subtitle) => (
           <li key={subtitle.id} 
           className={`flex border p-2 w-full h-10 justify-between mb-1 rounded-sm items-center 

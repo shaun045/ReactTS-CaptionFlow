@@ -20,6 +20,12 @@ interface TimelineViewportProps {
   rulerRef: React.RefObject<HTMLDivElement | null>;
   activeTool: "select" | "cut";
   setActiveTool: React.Dispatch<React.SetStateAction<"select" | "cut">>;
+  setSubtitles: React.Dispatch<React.SetStateAction<{
+      id: number;
+      text: string;
+      startTime: number;
+      endTime: number;
+  }[]>>;
 }
 
 export default function TimelineViewport({
@@ -32,7 +38,33 @@ export default function TimelineViewport({
     zoom,
     rulerRef,
     activeTool,
+    setSubtitles
   }:TimelineViewportProps) {
+
+  function getTimeFromClick(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const scrollLeft = e.currentTarget.scrollLeft;
+    const x = e.clientX - rect.left + scrollLeft;
+    const trackWidth = duration * zoom
+    return (x / trackWidth) * duration;
+  }
+
+  function handleCut(time: number) {
+    const target = subtitles.find(
+      (sub) => time >= sub.startTime && time <= sub.endTime
+    );
+
+    if (!target) return;
+
+    setSubtitles(prev => prev.flatMap(sub => 
+      sub.id === target.id
+        ? [
+          {...sub, endTime: time},
+          {...sub, id: Date.now(), startTime: time}
+        ]
+        : [sub]
+    ));
+  }
   
   
   return (
@@ -40,7 +72,8 @@ export default function TimelineViewport({
       style={{cursor: activeTool === "cut" ? RAZOR_CURSOR : "default"}}
         onClick={(e) => {
           if (activeTool !== "cut") return;
-          
+          const time = getTimeFromClick(e);
+          handleCut(time);
         }}
     >
       

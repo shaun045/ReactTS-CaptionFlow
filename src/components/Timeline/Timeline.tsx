@@ -6,6 +6,12 @@ interface TimelineProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   videoURL: string | null;
   subtitles: Subtitle[];
+  setSubtitles: React.Dispatch<React.SetStateAction<{
+      id: number;
+      text: string;
+      startTime: number;
+      endTime: number;
+  }[]>>;
 }
 
 interface Subtitle {
@@ -15,7 +21,7 @@ interface Subtitle {
   endTime: number;
 }
 
-export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps) {
+export default function Timeline({videoRef, videoURL, subtitles, setSubtitles}: TimelineProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [zoom, setZoom] = useState(100);
@@ -51,6 +57,7 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
 
       activeTool={activeTool}
       setActiveTool={setActiveTool}
+      setSubtitles={setSubtitles}
     />
 
     </div>
