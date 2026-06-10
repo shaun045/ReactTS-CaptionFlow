@@ -1,5 +1,6 @@
 import TimelineRuler from "./TimelineRuler";
 import TrackArea from "./TrackArea/TrackArea";
+import { RAZOR_CURSOR } from "../../../utils/cursors";
 
 interface Subtitle {
   id: number;
@@ -17,6 +18,8 @@ interface TimelineViewportProps {
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
   zoom: number;
   rulerRef: React.RefObject<HTMLDivElement | null>;
+  activeTool: "select" | "cut";
+  setActiveTool: React.Dispatch<React.SetStateAction<"select" | "cut">>;
 }
 
 export default function TimelineViewport({
@@ -27,12 +30,20 @@ export default function TimelineViewport({
     currentTime,
     setCurrentTime,
     zoom,
-    rulerRef
+    rulerRef,
+    activeTool,
   }:TimelineViewportProps) {
   
   
   return (
-    <div className="relative overflow-x-auto overflow-y-hidden">
+    <div className="relative overflow-x-auto overflow-y-hidden"
+      style={{cursor: activeTool === "cut" ? RAZOR_CURSOR : "default"}}
+        onClick={(e) => {
+          if (activeTool !== "cut") return;
+          
+        }}
+    >
+      
       <div
         className="min-w-full"
         style={{ width: `${duration * zoom}px` }}

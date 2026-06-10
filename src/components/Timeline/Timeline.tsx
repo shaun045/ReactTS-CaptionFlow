@@ -48,6 +48,9 @@ export default function Timeline({videoRef, videoURL, subtitles}: TimelineProps)
       duration={duration}
       rulerRef={rulerRef}
       zoom={zoom}
+
+      activeTool={activeTool}
+      setActiveTool={setActiveTool}
     />
 
     </div>
