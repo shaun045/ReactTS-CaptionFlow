@@ -10,7 +10,7 @@ interface TimelineToolBarProps {
   videoURL: string | null;
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
   currentTime: number;
-  setDuration: React.Dispatch<React.SetStateAction<number>>;
+  setDuration: (d: number) => void;
   duration: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   activeTool: "select" | "cut";

@@ -10,6 +10,12 @@ interface Subtitle {
   endTime: number;
 }
 
+interface VideoSegment {
+  id: number;
+  startTime: number;
+  endTime: number;
+}
+
 interface TimelineViewportProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   videoURL: string | null;
@@ -27,6 +33,12 @@ interface TimelineViewportProps {
       startTime: number;
       endTime: number;
   }[]>>;
+  videoSegments: VideoSegment[];
+  setVideoSegments: React.Dispatch<React.SetStateAction<{
+      id: number;
+      startTime: number;
+      endTime: number;
+  }[]>>
 }
 
 export default function TimelineViewport({
@@ -39,7 +51,9 @@ export default function TimelineViewport({
     zoom,
     rulerRef,
     activeTool,
-    setSubtitles
+    setSubtitles,
+    videoSegments,
+    setVideoSegments
   }:TimelineViewportProps) {
 
   function getTimeFromClick(e: React.MouseEvent<HTMLDivElement>) {
@@ -67,6 +81,23 @@ export default function TimelineViewport({
     ));
   }
 
+  function handleCutVideo(time: number) {
+    const target = videoSegments.find(
+      (seg) => time >= seg.startTime && time <= seg.endTime
+    );
+
+    if (!target) return;
+
+    setVideoSegments(prev => prev.flatMap(seg =>
+      seg.id === target.id
+        ? [
+          {...seg, endTime: time},
+          {...seg, id: Date.now(), startTime: time}
+        ]
+        : [seg]
+    ));
+  }
+
   const [hoverX, setHoverX] = useState<number | null>(null);
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -79,6 +110,7 @@ export default function TimelineViewport({
   function handleMouseLeave() {
     setHoverX(null);
   }
+
   
   
   return (

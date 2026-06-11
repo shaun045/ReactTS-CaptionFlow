@@ -14,10 +14,10 @@ interface TimelineProps {
   }[]>>;
   videoSegments: VideoSegment[];
   setVideoSegments: React.Dispatch<React.SetStateAction<{
-    id: number;
-    startTime: number;
-    endTime: number;
-}[]>>
+      id: number;
+      startTime: number;
+      endTime: number;
+  }[]>>
 }
 
 interface Subtitle {
@@ -33,12 +33,17 @@ interface VideoSegment {
   endTime: number;
 }
 
-export default function Timeline({videoRef, videoURL, subtitles, setSubtitles}: TimelineProps) {
+export default function Timeline({videoRef, videoURL, subtitles, setSubtitles, videoSegments, setVideoSegments}: TimelineProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [zoom, setZoom] = useState(100);
   const [activeTool, setActiveTool] = useState<"select" | "cut">("select");
   const rulerRef = useRef<HTMLDivElement>(null);
+
+  function handleSetDuration(d: number) {
+    setDuration(d);
+    setVideoSegments([{id: 1, startTime: 0, endTime: d}]);
+  }
   
   return(
     <div className="flex flex-col w-full h-70 bg-[#1a1025] border-t border-[#2e1f40]">
@@ -49,7 +54,7 @@ export default function Timeline({videoRef, videoURL, subtitles, setSubtitles}: 
       videoURL={videoURL}
       setCurrentTime={setCurrentTime}
       currentTime={currentTime}
-      setDuration={setDuration}
+      setDuration={handleSetDuration}
       duration={duration}
       setZoom={setZoom}
 
@@ -70,6 +75,8 @@ export default function Timeline({videoRef, videoURL, subtitles, setSubtitles}: 
       activeTool={activeTool}
       setActiveTool={setActiveTool}
       setSubtitles={setSubtitles}
+      videoSegments={videoSegments}
+      setVideoSegments={setVideoSegments}
     />
 
     </div>
