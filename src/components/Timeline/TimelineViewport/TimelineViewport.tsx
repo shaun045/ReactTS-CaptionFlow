@@ -1,6 +1,7 @@
 import TimelineRuler from "./TimelineRuler";
 import TrackArea from "./TrackArea/TrackArea";
 import { RAZOR_CURSOR } from "../../../utils/cursors";
+import { useState } from "react";
 
 interface Subtitle {
   id: number;
@@ -65,17 +66,38 @@ export default function TimelineViewport({
         : [sub]
     ));
   }
+
+  const [hoverX, setHoverX] = useState<number | null>(null);
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (activeTool !== "cut") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const scrollLeft = e.currentTarget.scrollLeft;
+    setHoverX(e.clientX - rect.left + scrollLeft);
+  }
+
+  function handleMouseLeave() {
+    setHoverX(null);
+  }
   
   
   return (
     <div className="relative overflow-x-auto overflow-y-hidden"
-      style={{cursor: activeTool === "cut" ? RAZOR_CURSOR : "default"}}
+        style={{cursor: activeTool === "cut" ? RAZOR_CURSOR : "default"}}
+        onMouseDown={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
         onClick={(e) => {
           if (activeTool !== "cut") return;
           const time = getTimeFromClick(e);
           handleCut(time);
         }}
     >
+    {activeTool === "cut" && hoverX !== null && (
+      <div
+        className="absolute top-0 bottom-0 w-px bg-red-400 pointer-events-none z-50"
+        style={{ left: `${hoverX}px` }}
+      />
+    )}
       
       <div
         className="min-w-full"
@@ -90,6 +112,7 @@ export default function TimelineViewport({
           setCurrentTime={setCurrentTime}
           zoom={zoom}
           rulerRef={rulerRef}
+          activeTool={activeTool}
         />
 
         {/* Track area */}
@@ -102,6 +125,7 @@ export default function TimelineViewport({
           setCurrentTime={setCurrentTime}
           duration={duration}
           zoom={zoom}
+          activeTool={activeTool}
         />
       </div>
     </div>

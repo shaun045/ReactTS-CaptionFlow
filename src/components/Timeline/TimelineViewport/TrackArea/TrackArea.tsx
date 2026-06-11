@@ -18,6 +18,7 @@ interface TrackAreaProps {
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
   duration: number;
   zoom: number;
+  activeTool: "select" | "cut";
 }
 
 export default function TrackArea({
@@ -28,7 +29,8 @@ export default function TrackArea({
       currentTime,
       setCurrentTime,
       duration,
-      zoom
+      zoom,
+      activeTool
   }: TrackAreaProps) {
 
   return (
@@ -43,6 +45,7 @@ export default function TrackArea({
             <SubtitleTrack 
               subtitles={subtitles}
               zoom={zoom}
+              activeTool={activeTool}
             />
 
             {/* Video Track */}

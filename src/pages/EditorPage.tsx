@@ -8,6 +8,7 @@ import logo from "../assets/logo/Logo-bgremoved.png";
 export default function EditorPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoURL, setVideoURL] = useState<string | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
   const [subtitles, setSubtitles] = useState<{id: number, text: string, startTime: number, endTime: number}[]>([
     {
       id: 1,
@@ -16,7 +17,8 @@ export default function EditorPage() {
       endTime: 5
     }
   ]);
-  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoSegments, setVideoSegments] = useState<{id: number, startTime: number, endTime: number}[]>([]);
+  
 
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>
@@ -52,6 +54,8 @@ export default function EditorPage() {
           videoURL={videoURL}
           subtitles={subtitles}
           setSubtitles={setSubtitles}
+          videoSegments={videoSegments}
+          setVideoSegments={setVideoSegments}
         />
       </div>
 

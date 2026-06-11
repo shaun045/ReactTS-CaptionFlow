@@ -12,11 +12,23 @@ interface TimelineProps {
       startTime: number;
       endTime: number;
   }[]>>;
+  videoSegments: VideoSegment[];
+  setVideoSegments: React.Dispatch<React.SetStateAction<{
+    id: number;
+    startTime: number;
+    endTime: number;
+}[]>>
 }
 
 interface Subtitle {
   id: number;
   text: string;
+  startTime: number;
+  endTime: number;
+}
+
+interface VideoSegment {
+  id: number;
   startTime: number;
   endTime: number;
 }

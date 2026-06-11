@@ -9,9 +9,10 @@ interface Subtitle {
 interface SubtitleTrackProps {
   subtitles: Subtitle[];
   zoom: number;
+  activeTool: "select" | "cut";
 }
 
-export default function SubtitleTrack({subtitles, zoom}: SubtitleTrackProps) {
+export default function SubtitleTrack({subtitles, zoom, activeTool}: SubtitleTrackProps) {
 
   const [selectedSub, setSelectedSub] = useState<number | null>(null);
 
@@ -44,7 +45,10 @@ export default function SubtitleTrack({subtitles, zoom}: SubtitleTrackProps) {
               items-center
               overflow-hidden
               text-ellipsis
-              hover: cursor-pointer
+              ${activeTool === "cut"
+                ? ""
+                : "hover:cursor-pointer"
+              }
               ${subtitle.id === selectedSub 
                 ? "border-2 border-white"
                 : ""

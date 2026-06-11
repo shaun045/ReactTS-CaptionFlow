@@ -7,6 +7,7 @@ interface TimelineRulerProps {
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
   zoom: number;
   rulerRef: React.RefObject<HTMLDivElement | null>;
+  activeTool: "select" | "cut";
 }
 
 
@@ -15,7 +16,8 @@ export default function TimelineRuler({
       duration, 
       setCurrentTime,
       rulerRef,
-      zoom
+      zoom,
+      activeTool
   }: TimelineRulerProps) {
   
   const interval = duration <= 60 ? 5 : duration <= 300 ? 10 : duration <= 600 ? 30 : 60;
@@ -39,7 +41,7 @@ export default function TimelineRuler({
     <div 
       ref={rulerRef} 
       onClick={handleRulerClick} 
-      className="relative h-8 mb-1 cursor-pointer overflow-x-hidden">
+      className={`relative h-8 mb-1 overflow-x-hidden ${activeTool === "cut" ? "" : "cursor-pointer"}`}>
       <div className="relative h-full"
         style={{ width: `${duration * zoom}px` }}
       >
