@@ -38,7 +38,9 @@ interface TimelineViewportProps {
       id: number;
       startTime: number;
       endTime: number;
-  }[]>>
+  }[]>>;
+  deleteSubtitle: (id: number) => void;
+  deleteVideoSegment: (id: number) => void;
 }
 
 export default function TimelineViewport({
@@ -53,7 +55,9 @@ export default function TimelineViewport({
     activeTool,
     setSubtitles,
     videoSegments,
-    setVideoSegments
+    setVideoSegments,
+    deleteSubtitle,
+    deleteVideoSegment,
   }:TimelineViewportProps) {
 
   function getTimeFromClick(e: React.MouseEvent<HTMLDivElement>) {
@@ -160,6 +164,9 @@ export default function TimelineViewport({
           zoom={zoom}
           activeTool={activeTool}
           videoSegments={videoSegments}
+
+          deleteSubtitle={deleteSubtitle}
+          deleteVideoSegment={deleteVideoSegment}
         />
       </div>
     </div>

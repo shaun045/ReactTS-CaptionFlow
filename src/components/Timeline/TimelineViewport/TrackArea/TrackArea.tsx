@@ -26,6 +26,8 @@ interface TrackAreaProps {
   zoom: number;
   activeTool: "select" | "cut";
   videoSegments: VideoSegment[];
+  deleteSubtitle: (id: number) => void;
+  deleteVideoSegment: (id: number) => void;
 }
 
 export default function TrackArea({
@@ -38,7 +40,9 @@ export default function TrackArea({
       duration,
       zoom,
       activeTool,
-      videoSegments
+      videoSegments,
+      deleteSubtitle,
+      deleteVideoSegment
   }: TrackAreaProps) {
 
   return (
@@ -54,6 +58,7 @@ export default function TrackArea({
               subtitles={subtitles}
               zoom={zoom}
               activeTool={activeTool}
+              deleteSubtitle={deleteSubtitle}
             />
 
             {/* Video Track */}
@@ -65,6 +70,7 @@ export default function TrackArea({
                 zoom={zoom}
                 activeTool={activeTool}
                 videoSegments={videoSegments}
+                deleteVideoSegment={deleteVideoSegment}
               />
             </div>
 

@@ -17,7 +17,9 @@ interface TimelineProps {
       id: number;
       startTime: number;
       endTime: number;
-  }[]>>
+  }[]>>;
+  deleteSubtitle: (id: number) => void;
+  deleteVideoSegment: (id: number) => void;
 }
 
 interface Subtitle {
@@ -33,7 +35,16 @@ interface VideoSegment {
   endTime: number;
 }
 
-export default function Timeline({videoRef, videoURL, subtitles, setSubtitles, videoSegments, setVideoSegments}: TimelineProps) {
+export default function Timeline({
+    videoRef, 
+    videoURL, 
+    subtitles, 
+    setSubtitles, 
+    videoSegments, 
+    setVideoSegments,
+    deleteSubtitle,
+    deleteVideoSegment
+  }: TimelineProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [zoom, setZoom] = useState(100);
@@ -77,6 +88,9 @@ export default function Timeline({videoRef, videoURL, subtitles, setSubtitles, v
       setSubtitles={setSubtitles}
       videoSegments={videoSegments}
       setVideoSegments={setVideoSegments}
+
+      deleteSubtitle={deleteSubtitle}
+      deleteVideoSegment={deleteVideoSegment}
     />
 
     </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 interface Subtitle {
   id: number;
   text: string;
@@ -10,6 +11,7 @@ interface SubtitleTrackProps {
   subtitles: Subtitle[];
   zoom: number;
   activeTool: "select" | "cut";
+  deleteSubtitle: (id: number) => void;
 }
 
 export default function SubtitleTrack({subtitles, zoom, activeTool}: SubtitleTrackProps) {

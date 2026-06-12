@@ -18,6 +18,7 @@ interface VideoThumbnailProps {
   zoom: number;
   activeTool: "select" | "cut";
   videoSegments: VideoSegment[];
+  deleteVideoSegment: (id: number) => void;
 }
 
 
@@ -114,9 +115,6 @@ export default function VideoThumbnail({
         const thumbnailWidth = trackWidth / thumbnails.length;
         const offset = seg.startTime * zoom
 
-        // const visibleThumbs = thumbnails.filter(
-        //   (thumb) => thumb.time >= seg.startTime && thumb.time <= seg.endTime
-        // );
 
         return (
           <div 

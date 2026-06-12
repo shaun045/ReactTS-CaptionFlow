@@ -19,6 +19,13 @@ export default function EditorPage() {
   ]);
   const [videoSegments, setVideoSegments] = useState<{id: number, startTime: number, endTime: number}[]>([]);
   
+  function deleteSubtitle(id: number) {
+    setSubtitles(prev => prev.filter(sub => sub.id !== id));
+  }
+
+  function deleteVideoSegment(id: number) {
+    setVideoSegments(prev => prev.filter(seg => seg.id !== id));
+  }
 
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>
@@ -56,6 +63,8 @@ export default function EditorPage() {
           setSubtitles={setSubtitles}
           videoSegments={videoSegments}
           setVideoSegments={setVideoSegments}
+          deleteSubtitle={deleteSubtitle}
+          deleteVideoSegment={deleteVideoSegment}
         />
       </div>
 
