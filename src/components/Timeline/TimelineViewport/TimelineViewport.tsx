@@ -122,6 +122,7 @@ export default function TimelineViewport({
           if (activeTool !== "cut") return;
           const time = getTimeFromClick(e);
           handleCut(time);
+          handleCutVideo(time);
         }}
     >
     {activeTool === "cut" && hoverX !== null && (
@@ -158,6 +159,7 @@ export default function TimelineViewport({
           duration={duration}
           zoom={zoom}
           activeTool={activeTool}
+          videoSegments={videoSegments}
         />
       </div>
     </div>

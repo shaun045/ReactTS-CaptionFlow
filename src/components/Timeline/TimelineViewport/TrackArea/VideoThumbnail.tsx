@@ -5,11 +5,19 @@ interface VideoThumbnail {
     dataURL: string;
   }
 
+interface VideoSegment {
+  id: number;
+  startTime: number;
+  endTime: number;
+}
+
 interface VideoThumbnailProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   videoURL: string;
   duration: number;
   zoom: number;
+  activeTool: "select" | "cut";
+  videoSegments: VideoSegment[];
 }
 
 
@@ -17,7 +25,8 @@ export default function VideoThumbnail({
     videoRef,
     videoURL,
     duration,
-    zoom
+    zoom,
+    videoSegments
   }: VideoThumbnailProps) {
 
   const [thumbnails, setThumbnails] = useState<VideoThumbnail[]>([]); 
@@ -98,15 +107,41 @@ export default function VideoThumbnail({
   const trackWidth = duration * zoom;
 
   return (
-    <div className="flex h-full" style={{ width: `${trackWidth}px` }}>
-      {thumbnails?.map((thumb) => (
-        <img 
-          src={thumb.dataURL} 
-          key={thumb.time}
-          className="h-full object-cover shrink-0 overflow"
-          style={{ width: `${trackWidth/thumbnails.length}px` }}
-        />
-      ))}
-    </div>
+    <>
+      {videoSegments.map((seg) => {
+        const left = seg.startTime * zoom;
+        const width = (seg.endTime - seg.startTime) * zoom;
+        const thumbnailWidth = trackWidth / thumbnails.length;
+        const offset = seg.startTime * zoom
+
+        // const visibleThumbs = thumbnails.filter(
+        //   (thumb) => thumb.time >= seg.startTime && thumb.time <= seg.endTime
+        // );
+
+        return (
+          <div 
+            key={seg.id}
+            className="fabsolute h-full overflow-hidden flex rounded-sm border border-blue-400 bg-[#1e2f5c]" 
+            style={{ left: `${left + 1}px`, width: `${width - 2}px` }}
+          >
+            <div className="flex h-full shrink-0"
+              style={{
+                transform: `translateX(-${offset}px)`,
+                left: `${left + 1}px`, width: `${width - 2}px`
+            }}
+            >
+              {thumbnails.map((thumb) => (
+                <img 
+                  src={thumb.dataURL} 
+                  key={thumb.time}
+                  className="h-full object-cover shrink-0"
+                  style={{ width: `${thumbnailWidth}px` }}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </>
   )
 }

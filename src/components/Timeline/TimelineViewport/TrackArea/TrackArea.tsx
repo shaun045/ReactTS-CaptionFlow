@@ -9,6 +9,12 @@ interface Subtitle {
   endTime: number;
 }
 
+interface VideoSegment {
+  id: number;
+  startTime: number;
+  endTime: number;
+}
+
 interface TrackAreaProps {
   videoRef: React.RefObject<HTMLVideoElement | null>
   videoURL: string | null;
@@ -19,6 +25,7 @@ interface TrackAreaProps {
   duration: number;
   zoom: number;
   activeTool: "select" | "cut";
+  videoSegments: VideoSegment[];
 }
 
 export default function TrackArea({
@@ -30,7 +37,8 @@ export default function TrackArea({
       setCurrentTime,
       duration,
       zoom,
-      activeTool
+      activeTool,
+      videoSegments
   }: TrackAreaProps) {
 
   return (
@@ -49,12 +57,14 @@ export default function TrackArea({
             />
 
             {/* Video Track */}
-            <div className="relative h-12 bg-[#1e2f5c] rounded border border-blue-700 overflow-hidden">
+            <div className="relative h-12 flex overflow-hidden gap-1">
               <VideoThumbnail 
                 videoRef={videoRef}
                 videoURL={videoURL}
                 duration={duration}
                 zoom={zoom}
+                activeTool={activeTool}
+                videoSegments={videoSegments}
               />
             </div>
 
