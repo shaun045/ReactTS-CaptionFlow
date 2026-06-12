@@ -20,7 +20,7 @@ export default function EditorPage() {
   const [videoSegments, setVideoSegments] = useState<{id: number, startTime: number, endTime: number}[]>([]);
 
   const [selectedSub, setSelectedSub] = useState<number | null>(null);
-
+  const [selectedSeg, setSelectedSeg] = useState<number | null>(null);
 
   function deleteSubtitle(id: number) {
     setSubtitles(prev => prev.filter(sub => sub.id !== id));
@@ -71,6 +71,8 @@ export default function EditorPage() {
           deleteVideoSegment={deleteVideoSegment}
           selectedSub={selectedSub}
           setSelectedSub={setSelectedSub}
+          selectedSeg={selectedSeg}
+          setSelectedSeg={setSelectedSeg}
         />
       </div>
 

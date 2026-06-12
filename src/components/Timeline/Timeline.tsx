@@ -22,6 +22,8 @@ interface TimelineProps {
   deleteVideoSegment: (id: number) => void;
   selectedSub: number | null;
   setSelectedSub: React.Dispatch<React.SetStateAction<number | null>>;
+  selectedSeg: number | null;
+  setSelectedSeg: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 interface Subtitle {
@@ -47,7 +49,9 @@ export default function Timeline({
     deleteSubtitle,
     deleteVideoSegment,
     selectedSub,
-    setSelectedSub
+    setSelectedSub,
+    selectedSeg,
+    setSelectedSeg
   }: TimelineProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -97,6 +101,8 @@ export default function Timeline({
       deleteVideoSegment={deleteVideoSegment}
       selectedSub={selectedSub}
       setSelectedSub={setSelectedSub}
+      selectedSeg={selectedSeg}
+      setSelectedSeg={setSelectedSeg}
     />
 
     </div>

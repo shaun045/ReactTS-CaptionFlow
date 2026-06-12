@@ -19,6 +19,8 @@ interface VideoThumbnailProps {
   activeTool: "select" | "cut";
   videoSegments: VideoSegment[];
   deleteVideoSegment: (id: number) => void;
+  selectedSeg: number | null;
+  setSelectedSeg: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 
@@ -27,10 +29,29 @@ export default function VideoThumbnail({
     videoURL,
     duration,
     zoom,
-    videoSegments
+    videoSegments,
+    selectedSeg,
+    setSelectedSeg,
+    deleteVideoSegment
   }: VideoThumbnailProps) {
 
   const [thumbnails, setThumbnails] = useState<VideoThumbnail[]>([]); 
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+        const tag = (e.target as HTMLElement).tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA") return;
+
+        if (e.key === "Delete" || e.key === "Backspace") {
+          if (selectedSeg !== null) {
+            deleteVideoSegment(selectedSeg);
+            setSelectedSeg(null);
+          }
+        }
+      }
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [selectedSeg])
 
 
   async function generateThumbnails(
@@ -119,8 +140,9 @@ export default function VideoThumbnail({
         return (
           <div 
             key={seg.id}
-            className="fabsolute h-full overflow-hidden flex rounded-sm border border-blue-400 bg-[#1e2f5c]" 
             style={{ left: `${left + 1}px`, width: `${width - 2}px` }}
+            onClick={() => setSelectedSeg(seg.id)}
+            className={`fabsolute h-full overflow-hidden flex rounded-sm border bg-[#1e2f5c] ${selectedSeg === seg.id ? "border-white" : "border-blue-400"}`}
           >
             <div className="flex h-full shrink-0"
               style={{
