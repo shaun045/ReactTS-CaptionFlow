@@ -19,9 +19,10 @@ interface SubtitlePanelProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   videoURL: string | null;
   videoFile: File | null;
+  deleteSubtitle: (id: number) => void;
 }
 
-export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoRef, videoFile}: SubtitlePanelProps) {
+export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoRef, videoFile, deleteSubtitle}: SubtitlePanelProps) {
 
   function addSubtitle() {
     const currentTime = videoRef.current?.currentTime ?? 0;
@@ -43,10 +44,6 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
     const secs = Math.floor(seconds % 60);
 
     return `${mins}:${secs.toString().padStart(2, "0")}`;
-  }
-
-  function deleteSubtitle(id: number) {
-    setSubtitles(subtitles.filter(sub => id !== sub.id))
   }
 
   const [editingId, setEditingId] = useState<number | null>(null);

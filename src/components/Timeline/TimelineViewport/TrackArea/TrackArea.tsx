@@ -28,6 +28,8 @@ interface TrackAreaProps {
   videoSegments: VideoSegment[];
   deleteSubtitle: (id: number) => void;
   deleteVideoSegment: (id: number) => void;
+  selectedSub: number | null;
+  setSelectedSub: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 export default function TrackArea({
@@ -42,7 +44,9 @@ export default function TrackArea({
       activeTool,
       videoSegments,
       deleteSubtitle,
-      deleteVideoSegment
+      deleteVideoSegment,
+      selectedSub,
+      setSelectedSub
   }: TrackAreaProps) {
 
   return (
@@ -59,6 +63,8 @@ export default function TrackArea({
               zoom={zoom}
               activeTool={activeTool}
               deleteSubtitle={deleteSubtitle}
+              selectedSub={selectedSub}
+              setSelectedSub={setSelectedSub}
             />
 
             {/* Video Track */}

@@ -41,6 +41,8 @@ interface TimelineViewportProps {
   }[]>>;
   deleteSubtitle: (id: number) => void;
   deleteVideoSegment: (id: number) => void;
+  selectedSub: number | null;
+  setSelectedSub:  React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 export default function TimelineViewport({
@@ -58,6 +60,8 @@ export default function TimelineViewport({
     setVideoSegments,
     deleteSubtitle,
     deleteVideoSegment,
+    selectedSub,
+    setSelectedSub
   }:TimelineViewportProps) {
 
   function getTimeFromClick(e: React.MouseEvent<HTMLDivElement>) {
@@ -167,6 +171,8 @@ export default function TimelineViewport({
 
           deleteSubtitle={deleteSubtitle}
           deleteVideoSegment={deleteVideoSegment}
+          selectedSub={selectedSub}
+          setSelectedSub={setSelectedSub}
         />
       </div>
     </div>
