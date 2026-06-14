@@ -1,4 +1,3 @@
-import { useState } from "react"
 
 const fonts: string[] = [
   "Inter",
@@ -18,8 +17,12 @@ const fonts: string[] = [
   "Dancing Script"
 ]
 
-export default function FontPanel() {
-  const [selectedFont, setSelectedFont] = useState<string | null>(null);
+interface FontPanelProps {
+  selectedFont: string | null;
+  setSelectedFont: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export default function FontPanel({ selectedFont, setSelectedFont }: FontPanelProps) {
 
   return (
     <div className="flex flex-col h-full p-3">

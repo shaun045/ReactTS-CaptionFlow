@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import MainEditor from "../components/MainEditor/MainEditor";
 import SideBar from "../components/SideBar/SideBar";
 import SubtitlePanel from "../components/SubtitlePanel/SubtitlePanel";
@@ -21,6 +21,7 @@ export default function EditorPage() {
 
   const [selectedSub, setSelectedSub] = useState<number | null>(null);
   const [selectedSeg, setSelectedSeg] = useState<number | null>(null);
+  const [selectedFont, setSelectedFont] = useState<string | null>(null);
 
   function deleteSubtitle(id: number) {
     setSubtitles(prev => prev.filter(sub => sub.id !== id));
@@ -29,6 +30,39 @@ export default function EditorPage() {
   function deleteVideoSegment(id: number) {
     setVideoSegments(prev => prev.filter(seg => seg.id !== id));
   }
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === "TEXTAREA") return;
+
+      if (e.key === "Delete" || e.key === "Backspace") {
+        if (selectedSub !== null) {
+          deleteSubtitle(selectedSub);
+          setSelectedSub(null);
+        }
+        if (selectedSeg !== null) {
+          deleteVideoSegment(selectedSeg);
+          setSelectedSeg(null);
+        }
+      
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedSub, selectedSeg])
+
+  useEffect(() => {
+    if (!selectedFont) return;
+
+    const existingLink = document.querySelector(`link[href*="${selectedFont.replace(/ /g, "+")}"]`);
+    if (existingLink) return;
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = `https://fonts.googleapis.com/css2?family=${selectedFont.replace(/ /g, "+")}`;
+    document.head.appendChild(link);
+  }, [selectedFont]);
 
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>
@@ -40,7 +74,12 @@ export default function EditorPage() {
       </div>
 
       <div className='flex flex-1 overflow-hidden w-full h-screen'>
-        <SideBar />
+
+        <SideBar 
+          selectedFont={selectedFont}
+          setSelectedFont={setSelectedFont}
+        />
+
         <MainEditor 
           videoRef={videoRef} 
           videoURL={videoURL} 
@@ -48,6 +87,7 @@ export default function EditorPage() {
           subtitles={subtitles}
           videoFile={videoFile}
           setVideoFile={setVideoFile}
+          selectedFont={selectedFont}
         />
         <SubtitlePanel 
           videoRef={videoRef}

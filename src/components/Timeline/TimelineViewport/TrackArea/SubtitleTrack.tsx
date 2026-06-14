@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+
 
 interface Subtitle {
   id: number;
@@ -16,24 +16,7 @@ interface SubtitleTrackProps {
   setSelectedSub: React.Dispatch<React.SetStateAction<number | null>>
 }
 
-export default function SubtitleTrack({subtitles, zoom, activeTool, selectedSub, setSelectedSub, deleteSubtitle}: SubtitleTrackProps) {
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      const tag = (e.target as HTMLElement).tagName;
-      if (tag === 'INPUT' || tag === "TEXTAREA") return;
-
-      if (e.key === "Delete" || e.key === "Backspace") {
-        if (selectedSub !== null) {
-          deleteSubtitle(selectedSub);
-          setSelectedSub(null);
-        }
-      
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedSub])
+export default function SubtitleTrack({subtitles, zoom, activeTool, selectedSub, setSelectedSub}: SubtitleTrackProps) {
 
 
   return (
@@ -51,7 +34,7 @@ export default function SubtitleTrack({subtitles, zoom, activeTool, selectedSub,
         return (
           <div
             key={subtitle.id}
-            onClick={() => setSelectedSub(subtitle.id)}
+            onClick={() => setSelectedSub(prev => prev === subtitle.id ? null : subtitle.id)}
             className={`
               absolute
               top-1

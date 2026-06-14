@@ -31,27 +31,10 @@ export default function VideoThumbnail({
     zoom,
     videoSegments,
     selectedSeg,
-    setSelectedSeg,
-    deleteVideoSegment
+    setSelectedSeg
   }: VideoThumbnailProps) {
 
   const [thumbnails, setThumbnails] = useState<VideoThumbnail[]>([]); 
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-        const tag = (e.target as HTMLElement).tagName;
-        if (tag === "INPUT" || tag === "TEXTAREA") return;
-
-        if (e.key === "Delete" || e.key === "Backspace") {
-          if (selectedSeg !== null) {
-            deleteVideoSegment(selectedSeg);
-            setSelectedSeg(null);
-          }
-        }
-      }
-      window.addEventListener("keydown", handleKeyDown);
-      return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [selectedSeg])
 
 
   async function generateThumbnails(
@@ -141,7 +124,7 @@ export default function VideoThumbnail({
           <div 
             key={seg.id}
             style={{ left: `${left + 1}px`, width: `${width - 2}px` }}
-            onClick={() => setSelectedSeg(seg.id)}
+            onClick={() => setSelectedSeg(prev => prev === seg.id ? null : seg.id)}
             className={`fabsolute h-full overflow-hidden flex rounded-sm border bg-[#1e2f5c] ${selectedSeg === seg.id ? "border-white" : "border-blue-400"}`}
           >
             <div className="flex h-full shrink-0"

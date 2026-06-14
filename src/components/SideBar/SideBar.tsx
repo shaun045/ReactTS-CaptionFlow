@@ -8,9 +8,12 @@ import FontPanel from "./Panels/FontPanel";
 import ColorsPanel from "./Panels/ColorsPanel";
 import StylesPanel from "./Panels/StylesPanel";
 
+interface FontPanelProps {
+  selectedFont: string | null;
+  setSelectedFont: React.Dispatch<React.SetStateAction<string | null>>;
+}
 
-
-export default function SideBar() {
+export default function SideBar({ selectedFont, setSelectedFont }: FontPanelProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activePanel, setActivePanel] = useState<string | null>(null);
 
@@ -46,7 +49,12 @@ export default function SideBar() {
           </li>
         </ul>
         <div className="w-100 bg-[#291336] h-full min-h-0 overflow-x-hidden">
-          {activePanel === 'fonts' && <FontPanel />}
+          {
+            activePanel === 'fonts' 
+              && <FontPanel 
+                    selectedFont={selectedFont} 
+                    setSelectedFont={setSelectedFont} 
+          />}
           {activePanel === 'colors' && <ColorsPanel/>}
           {activePanel === 'styles' && <StylesPanel/>}
         </div>
