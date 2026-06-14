@@ -64,6 +64,8 @@ export default function EditorPage() {
     document.head.appendChild(link);
   }, [selectedFont]);
 
+  const [fontSize, setFontSize] = useState<number>(24);
+
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>
       <div className="flex w-full py-2 bg-[#1d0d27]">
@@ -78,6 +80,8 @@ export default function EditorPage() {
         <SideBar 
           selectedFont={selectedFont}
           setSelectedFont={setSelectedFont}
+          fontSize={fontSize}
+          setFontSize={setFontSize}
         />
 
         <MainEditor 
@@ -88,7 +92,9 @@ export default function EditorPage() {
           videoFile={videoFile}
           setVideoFile={setVideoFile}
           selectedFont={selectedFont}
+          fontSize={fontSize}
         />
+
         <SubtitlePanel 
           videoRef={videoRef}
           videoURL={videoURL}
