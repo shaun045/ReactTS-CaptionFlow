@@ -65,6 +65,9 @@ export default function EditorPage() {
   }, [selectedFont]);
 
   const [fontSize, setFontSize] = useState<number>(24);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
+
 
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>
@@ -82,6 +85,8 @@ export default function EditorPage() {
           setSelectedFont={setSelectedFont}
           fontSize={fontSize}
           setFontSize={setFontSize}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
         />
 
         <MainEditor 
@@ -93,6 +98,7 @@ export default function EditorPage() {
           setVideoFile={setVideoFile}
           selectedFont={selectedFont}
           fontSize={fontSize}
+          selectedColor={selectedColor}
         />
 
         <SubtitlePanel 

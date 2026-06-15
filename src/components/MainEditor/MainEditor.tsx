@@ -13,6 +13,7 @@ interface MainEditorProps {
   setVideoFile: (file: File | null) => void;
   selectedFont: string | null;
   fontSize: number;
+  selectedColor: string | null;
 }
 
 interface Subtitle {
@@ -30,7 +31,8 @@ export default function MainEditor({
     subtitles, 
     setVideoFile,
     selectedFont,
-    fontSize
+    fontSize,
+    selectedColor
   }: MainEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -97,7 +99,10 @@ export default function MainEditor({
               <div className="absolute bottom-8 left-0 w-full flex justify-center">
                 <p 
                   className="px-4 py-2 rounded text-white text-xl font-semibold"
-                  style={{fontFamily: selectedFont ?? undefined, fontSize: `${fontSize}px`}}
+                  style={{
+                    fontFamily: selectedFont ?? undefined, 
+                    fontSize: `${fontSize}px`, 
+                    color: selectedColor ?? "white"}}
                   >
                   {currentSubtitle}
                 </p>

@@ -13,9 +13,18 @@ interface FontPanelProps {
   setSelectedFont: React.Dispatch<React.SetStateAction<string | null>>;
   fontSize: number;
   setFontSize: React.Dispatch<React.SetStateAction<number>>;
+  selectedColor: string | null;
+  setSelectedColor: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export default function SideBar({ selectedFont, setSelectedFont, fontSize, setFontSize }: FontPanelProps) {
+export default function SideBar({ 
+    selectedFont, 
+    setSelectedFont, 
+    fontSize, 
+    setFontSize,
+    selectedColor,
+    setSelectedColor
+  }: FontPanelProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activePanel, setActivePanel] = useState<string | null>(null);
 
@@ -59,7 +68,11 @@ export default function SideBar({ selectedFont, setSelectedFont, fontSize, setFo
                     fontSize={fontSize}
                     setFontSize={setFontSize} 
           />}
-          {activePanel === 'colors' && <ColorsPanel/>}
+          {activePanel === 'colors' 
+              && <ColorsPanel
+                    selectedColor={selectedColor}
+                    setSelectedColor={setSelectedColor}
+          />}
           {activePanel === 'styles' && <StylesPanel/>}
         </div>
       </div>

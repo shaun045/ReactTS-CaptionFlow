@@ -2,6 +2,11 @@ import { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa";
 import ColorPickerModal from "./ColorPickerModal";
 
+interface ColorsPanelProps {
+  selectedColor: string | null;
+  setSelectedColor: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
 const solidColors: string[] = [
   "#000000", "#4a4a4a", "#717171", "#a0a0a0", "#c8c8c8", "#ffffff",
   "#ff0000", "#ff4d4d", "#ff66b2", "#cc66ff", "#9966ff", "#6600ff",
@@ -30,8 +35,7 @@ const gradientColors: string[] = [
   "linear-gradient(to right, #f6d365, #fda085)",
 ]
 
-export default function ColorsPanel() {
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+export default function ColorsPanel({ selectedColor, setSelectedColor }: ColorsPanelProps) {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [customColors, setCustomColors] = useState<string[]>(() => {
     const saved = localStorage.getItem('customColors')
