@@ -34,6 +34,7 @@ export default function MainEditor({
     fontSize,
     selectedColor
   }: MainEditorProps) {
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -64,6 +65,22 @@ export default function MainEditor({
     console.log(activeSubtitle?.text);
   }
 
+  const isGradient = selectedColor?.includes("linear-gradient") || selectedColor?.includes("radial-gradient");
+  const subtitleStyle: React.CSSProperties = {
+    fontFamily: selectedFont ?? undefined,
+    fontSize: `${fontSize}px`
+  };
+
+  if (isGradient) {
+    subtitleStyle.backgroundImage = selectedColor ?? undefined;
+    subtitleStyle.WebkitBackgroundClip = "text";
+    subtitleStyle.WebkitTextFillColor = "transparent";
+  } else {
+    subtitleStyle.color = selectedColor ?? "white";
+    subtitleStyle.backgroundImage = "none";
+    subtitleStyle.WebkitBackgroundClip = "border-box";
+    subtitleStyle.WebkitTextFillColor = "unset";
+  }
 
   return (
     <main className="relative flex justify-center items-center flex-col h-full flex-1">
@@ -98,11 +115,8 @@ export default function MainEditor({
             {currentSubtitle && (
               <div className="absolute bottom-8 left-0 w-full flex justify-center">
                 <p 
-                  className="px-4 py-2 rounded text-white text-xl font-semibold"
-                  style={{
-                    fontFamily: selectedFont ?? undefined, 
-                    fontSize: `${fontSize}px`, 
-                    color: selectedColor ?? "white"}}
+                  className="px-4 py-2 rounded text-xl font-semibold"
+                  style={subtitleStyle}
                   >
                   {currentSubtitle}
                 </p>

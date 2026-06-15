@@ -67,17 +67,22 @@ export default function ColorsPanel({ selectedColor, setSelectedColor }: ColorsP
         <div className="flex flex-wrap gap-2">
           
           {customColors.map((color) => (
-            <div key={color} className="relative group">
+            <div key={color} className="relative group"
+            >
     
             {/* Color circle */}
             <div
               style={{ background: color }}
               className="w-11 h-11 rounded-full cursor-pointer hover:scale-110 transition-all duration-200 border"
+              onClick={() => setSelectedColor(color)}
             />
 
             {/* Delete button - shows on hover */}
             <button
-              onClick={() => deleteCustomColor(color)}
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteCustomColor(color)
+              }}
               className="absolute -top-1 -right-1 bg-red-500 rounded-full w-4 h-4 
                         text-white text-xs items-center justify-center
                         hidden group-hover:flex hover:cursor-pointer"
