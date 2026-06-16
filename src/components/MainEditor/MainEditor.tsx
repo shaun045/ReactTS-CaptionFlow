@@ -14,6 +14,8 @@ interface MainEditorProps {
   selectedFont: string | null;
   fontSize: number;
   selectedColor: string | null;
+  selectedStyle: string | null;
+  setSelectedStyle: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 interface Subtitle {

@@ -67,6 +67,8 @@ export default function EditorPage() {
   const [fontSize, setFontSize] = useState<number>(24);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
+
 
 
   return (
@@ -87,6 +89,8 @@ export default function EditorPage() {
           setFontSize={setFontSize}
           selectedColor={selectedColor}
           setSelectedColor={setSelectedColor}
+          selectedStyle={selectedStyle}
+          setSelectedStyle={setSelectedStyle}
         />
 
         <MainEditor 
@@ -99,6 +103,9 @@ export default function EditorPage() {
           selectedFont={selectedFont}
           fontSize={fontSize}
           selectedColor={selectedColor}
+
+          selectedStyle={selectedStyle}
+          setSelectedStyle={setSelectedStyle}
         />
 
         <SubtitlePanel 
