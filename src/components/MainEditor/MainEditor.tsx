@@ -34,7 +34,8 @@ export default function MainEditor({
     setVideoFile,
     selectedFont,
     fontSize,
-    selectedColor
+    selectedColor,
+    selectedStyle
   }: MainEditorProps) {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -70,7 +71,8 @@ export default function MainEditor({
   const isGradient = selectedColor?.includes("linear-gradient") || selectedColor?.includes("radial-gradient");
   const subtitleStyle: React.CSSProperties = {
     fontFamily: selectedFont ?? undefined,
-    fontSize: `${fontSize}px`
+    fontSize: `${fontSize}px`,
+    ...getStyleCSS(selectedStyle),
   };
 
   if (isGradient) {
@@ -82,6 +84,16 @@ export default function MainEditor({
     subtitleStyle.backgroundImage = "none";
     subtitleStyle.WebkitBackgroundClip = "border-box";
     subtitleStyle.WebkitTextFillColor = "unset";
+  }
+
+  function getStyleCSS(style: string | null): React.CSSProperties {
+    switch(style) {
+      case "shadow": return {textShadow: "3px 3px 4px rgba(0,0,0,0.8)"};
+      case "glow": return {textShadow: "0 0 10px #cc66ff, 0 0 20px #cc66ff"};
+      case "background": return {backgroundColor: "rgba(0,0,0,0.6)", padding: "4px 12px", borderRadius: "6px"};
+      case "outline": return {WebkitTextStroke: "1px white"};
+      default: return {};
+    }
   }
 
   return (
