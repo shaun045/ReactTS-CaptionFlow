@@ -33,13 +33,13 @@ interface Subtitle {
   endTime: number;
 }
 
-function getPositionCSS(position: "center" | "bottom" | "top"): string {
-  switch(position) {
-    case "top": return "top-8";
-    case "center": return "top 1/2 - translate-y-1/2";
-    case "bottom": return "bottom-8";
-  }
-}
+// function getPositionCSS(position: "center" | "bottom" | "top"): string {
+//   switch(position) {
+//     case "top": return "top-8";
+//     case "center": return "top 1/2 - translate-y-1/2";
+//     case "bottom": return "bottom-8";
+//   }
+// }
 
 
 export default function MainEditor({
@@ -52,7 +52,8 @@ export default function MainEditor({
     fontSize,
     selectedColor,
     selectedStyle,
-    subtitlePos
+    subtitlePos,
+    setSubtitlePos
   }: MainEditorProps) {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -139,18 +140,30 @@ export default function MainEditor({
 
 
       {videoURL
-        ? (<div className="relative group">
+        ? (<div className="relative group overflow-hidden">
             <video ref={videoRef} src={videoURL} className="rounded-xl max-w-230"
             onTimeUpdate={updateCurrentSubtitle}
             />
             {currentSubtitle && (
                 <p 
-                  className="absolute cursor-move px-4 py-2 rounded font-semibold"
+                  className="absolute cursor-move px-4 py-2 rounded font-semibold whitespace-nowrap overflow-hidden"
                   style={{
                     left: `${subtitlePos.x}%`,
                     top: `${subtitlePos.y}%`,
                     transform: "translate(-50%, -50%)",
                     ...subtitleStyle
+                  }}
+                  draggable
+                  onDragEnd={(e) => {
+                    const videoEl = videoRef.current;
+                    if (!videoEl) return;
+                    const rect = videoEl.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    setSubtitlePos({ 
+                      x: Math.min(Math.max(x, 0), 100), 
+                      y: Math.min(Math.max(y, 0), 100)  
+                    });
                   }}
                   >
                   {currentSubtitle}
