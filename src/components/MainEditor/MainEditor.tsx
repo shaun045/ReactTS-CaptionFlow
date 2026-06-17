@@ -16,13 +16,29 @@ interface MainEditorProps {
   selectedColor: string | null;
   selectedStyle: string | null;
   setSelectedStyle: React.Dispatch<React.SetStateAction<string | null>>;
-}
+  subtitlePos:  {
+                      x: number;
+                      y: number;
+                  }
+  setSubtitlePos: React.Dispatch<React.SetStateAction<{
+                    x: number;
+                    y: number;
+                }>>
+  }
 
 interface Subtitle {
   id: number;
   text: string;
   startTime: number;
   endTime: number;
+}
+
+function getPositionCSS(position: "center" | "bottom" | "top"): string {
+  switch(position) {
+    case "top": return "top-8";
+    case "center": return "top 1/2 - translate-y-1/2";
+    case "bottom": return "bottom-8";
+  }
 }
 
 
@@ -35,7 +51,8 @@ export default function MainEditor({
     selectedFont,
     fontSize,
     selectedColor,
-    selectedStyle
+    selectedStyle,
+    subtitlePos
   }: MainEditorProps) {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -127,14 +144,17 @@ export default function MainEditor({
             onTimeUpdate={updateCurrentSubtitle}
             />
             {currentSubtitle && (
-              <div className="absolute bottom-8 left-0 w-full flex justify-center">
                 <p 
-                  className="px-4 py-2 rounded text-xl font-semibold"
-                  style={subtitleStyle}
+                  className="absolute cursor-move px-4 py-2 rounded font-semibold"
+                  style={{
+                    left: `${subtitlePos.x}%`,
+                    top: `${subtitlePos.y}%`,
+                    transform: "translate(-50%, -50%)",
+                    ...subtitleStyle
+                  }}
                   >
                   {currentSubtitle}
-                </p>
-              </div>
+                </p>    
             )}
             <button className="absolute top-2 right-2 text-4xl cursor-pointer opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
             onClick={() => removeVideo()}

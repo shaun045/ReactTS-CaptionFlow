@@ -69,7 +69,7 @@ export default function EditorPage() {
 
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
 
-
+  const [subtitlePos, setSubtitlePos] = useState<{x: number, y: number}>({ x: 50, y: 80 });
 
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>
@@ -106,6 +106,8 @@ export default function EditorPage() {
 
           selectedStyle={selectedStyle}
           setSelectedStyle={setSelectedStyle}
+          subtitlePos={subtitlePos}
+          setSubtitlePos={setSubtitlePos}
         />
 
         <SubtitlePanel 
