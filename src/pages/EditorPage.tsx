@@ -4,12 +4,13 @@ import SideBar from "../components/SideBar/SideBar";
 import SubtitlePanel from "../components/SubtitlePanel/SubtitlePanel";
 import Timeline from "../components/Timeline/Timeline";
 import logo from "../assets/logo/Logo-bgremoved.png";
+import type { EditorState, Subtitle, VideoSegment, SubtitlePos } from "../utils/types";
 
 export default function EditorPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoURL, setVideoURL] = useState<string | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [subtitles, setSubtitles] = useState<{id: number, text: string, startTime: number, endTime: number}[]>([
+  const [subtitles, setSubtitles] = useState<Subtitle[]>([
     {
       id: 1,
       text: "Hello CaptionFlow!",
@@ -17,17 +18,29 @@ export default function EditorPage() {
       endTime: 5
     }
   ]);
-  const [videoSegments, setVideoSegments] = useState<{id: number, startTime: number, endTime: number}[]>([]);
-
+  const [videoSegments, setVideoSegments] = useState<VideoSegment[]>([]);
   const [selectedSub, setSelectedSub] = useState<number | null>(null);
   const [selectedSeg, setSelectedSeg] = useState<number | null>(null);
   const [selectedFont, setSelectedFont] = useState<string | null>(null);
+  const [fontSize, setFontSize] = useState<number>(24);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
+  const [subtitlePos, setSubtitlePos] = useState<SubtitlePos>({ x: 50, y: 80 });
+  const [history, setHistory] = useState<EditorState[]>([]);
+  const [future, setFuture] = useState<EditorState[]>([]);
+
+  function pushHistory() {
+    setHistory(prev => [...prev, {subtitles, videoSegments, subtitlePos}]);
+    setFuture([]);
+  }
 
   function deleteSubtitle(id: number) {
+    pushHistory();
     setSubtitles(prev => prev.filter(sub => sub.id !== id));
   }
 
   function deleteVideoSegment(id: number) {
+    pushHistory();
     setVideoSegments(prev => prev.filter(seg => seg.id !== id));
   }
 
@@ -47,10 +60,31 @@ export default function EditorPage() {
         }
       
       }
+
+      if (e.ctrlKey && e.key === "z") {
+        const prev = history[history.length - 1];
+        if (!prev) return;
+        setFuture(f => [...f, {subtitles, videoSegments, subtitlePos}]);
+        setHistory(h => h.slice(0, -1));
+        setSubtitles(prev.subtitles);
+        setVideoSegments(prev.videoSegments);
+        setSubtitlePos(prev.subtitlePos);
+      }
+
+      if (e.ctrlKey && e.key === "y" || e.ctrlKey && e.shiftKey && e.key === "z") {
+        const next = future[future.length - 1];
+        if (!next) return;
+        setHistory(h => [...h, {subtitles, videoSegments, subtitlePos}]);
+        setFuture(f => f.slice(0, -1));
+        setSubtitles(next.subtitles);
+        setVideoSegments(next.videoSegments);
+        setSubtitlePos(next.subtitlePos);
+      }
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedSub, selectedSeg])
+
+  }, [selectedSub, selectedSeg, history, future, subtitles, videoSegments, subtitlePos, deleteSubtitle, deleteVideoSegment]);
 
   useEffect(() => {
     if (!selectedFont) return;
@@ -64,12 +98,7 @@ export default function EditorPage() {
     document.head.appendChild(link);
   }, [selectedFont]);
 
-  const [fontSize, setFontSize] = useState<number>(24);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
-  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
-
-  const [subtitlePos, setSubtitlePos] = useState<{x: number, y: number}>({ x: 50, y: 80 });
 
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>
@@ -108,6 +137,8 @@ export default function EditorPage() {
           setSelectedStyle={setSelectedStyle}
           subtitlePos={subtitlePos}
           setSubtitlePos={setSubtitlePos}
+
+          pushHistory={pushHistory}
         />
 
         <SubtitlePanel 

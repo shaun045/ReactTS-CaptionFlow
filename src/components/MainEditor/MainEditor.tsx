@@ -3,6 +3,7 @@ import { FaPlus } from "react-icons/fa6";
 import { MdUpload } from "react-icons/md";
 import { PiExportBold } from "react-icons/pi";
 import { FaWindowClose } from "react-icons/fa";
+import type { Subtitle } from "../../utils/types";
 
 interface MainEditorProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -23,23 +24,9 @@ interface MainEditorProps {
   setSubtitlePos: React.Dispatch<React.SetStateAction<{
                     x: number;
                     y: number;
-                }>>
+                }>>;
+  pushHistory: () => void;
   }
-
-interface Subtitle {
-  id: number;
-  text: string;
-  startTime: number;
-  endTime: number;
-}
-
-// function getPositionCSS(position: "center" | "bottom" | "top"): string {
-//   switch(position) {
-//     case "top": return "top-8";
-//     case "center": return "top 1/2 - translate-y-1/2";
-//     case "bottom": return "bottom-8";
-//   }
-// }
 
 
 export default function MainEditor({
@@ -53,7 +40,8 @@ export default function MainEditor({
     selectedColor,
     selectedStyle,
     subtitlePos,
-    setSubtitlePos
+    setSubtitlePos,
+    pushHistory
   }: MainEditorProps) {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -155,6 +143,7 @@ export default function MainEditor({
                   }}
                   draggable
                   onDragEnd={(e) => {
+                    pushHistory();
                     const videoEl = videoRef.current;
                     if (!videoEl) return;
                     const rect = videoEl.getBoundingClientRect();
