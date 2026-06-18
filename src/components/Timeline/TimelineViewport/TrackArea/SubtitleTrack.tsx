@@ -18,7 +18,6 @@ interface SubtitleTrackProps {
 
 export default function SubtitleTrack({subtitles, zoom, activeTool, selectedSub, setSelectedSub}: SubtitleTrackProps) {
 
-
   return (
     <div className="relative h-15 rounded-lg mb-2 overflow-hidden">
       {subtitles.map((subtitle) => {

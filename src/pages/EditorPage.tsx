@@ -29,6 +29,7 @@ export default function EditorPage() {
   const [history, setHistory] = useState<EditorState[]>([]);
   const [future, setFuture] = useState<EditorState[]>([]);
 
+
   function pushHistory() {
     setHistory(prev => [...prev, {subtitles, videoSegments, subtitlePos}]);
     setFuture([]);
@@ -41,6 +42,26 @@ export default function EditorPage() {
 
   function deleteVideoSegment(id: number) {
     pushHistory();
+    
+    const seg = videoSegments.find(seg => seg.id === id);
+    if (!seg) return;
+
+    const segDuration = seg.endTime - seg.startTime;
+
+    setSubtitles(prev => prev
+      .filter(sub => !(sub.startTime >= seg.startTime && sub.endTime <= seg.endTime))
+      .map(sub => {
+        if (sub.startTime >= seg.endTime) {
+          return {
+            ...sub,
+            startTime: sub.startTime - segDuration,
+            endTime: sub.endTime - segDuration,
+          };
+        }
+        return sub;
+      })
+    )
+
     setVideoSegments(prev => prev.filter(seg => seg.id !== id));
   }
 
@@ -71,7 +92,10 @@ export default function EditorPage() {
         setSubtitlePos(prev.subtitlePos);
       }
 
-      if (e.ctrlKey && e.key === "y" || e.ctrlKey && e.shiftKey && e.key === "z") {
+      if (
+        (e.ctrlKey && e.key === "y") || 
+        (e.ctrlKey && e.shiftKey && e.key === "z")
+      ) {
         const next = future[future.length - 1];
         if (!next) return;
         setHistory(h => [...h, {subtitles, videoSegments, subtitlePos}]);
@@ -84,7 +108,8 @@ export default function EditorPage() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
 
-  }, [selectedSub, selectedSeg, history, future, subtitles, videoSegments, subtitlePos, deleteSubtitle, deleteVideoSegment]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSub, selectedSeg, history, future, subtitles, videoSegments, subtitlePos]);
 
   useEffect(() => {
     if (!selectedFont) return;
@@ -169,5 +194,5 @@ export default function EditorPage() {
       </div>
 
     </div>
-)
+  )
 }
