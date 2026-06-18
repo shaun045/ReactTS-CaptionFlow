@@ -3,6 +3,7 @@ import { FaPlus } from "react-icons/fa6";
 import { MdUpload } from "react-icons/md";
 import { PiExportBold } from "react-icons/pi";
 import { FaWindowClose } from "react-icons/fa";
+import { MdZoomIn, MdZoomOut } from "react-icons/md";
 import type { Subtitle } from "../../utils/types";
 
 interface MainEditorProps {
@@ -128,42 +129,49 @@ export default function MainEditor({
 
 
       {videoURL
-        ? (<div className="relative group overflow-hidden">
-            <video ref={videoRef} src={videoURL} className="rounded-xl max-w-230"
-            onTimeUpdate={updateCurrentSubtitle}
-            />
-            {currentSubtitle && (
-                <p 
-                  className="absolute cursor-move px-4 py-2 rounded font-semibold whitespace-nowrap overflow-hidden"
-                  style={{
-                    left: `${subtitlePos.x}%`,
-                    top: `${subtitlePos.y}%`,
-                    transform: "translate(-50%, -50%)",
-                    ...subtitleStyle
-                  }}
-                  draggable
-                  onDragEnd={(e) => {
-                    pushHistory();
-                    const videoEl = videoRef.current;
-                    if (!videoEl) return;
-                    const rect = videoEl.getBoundingClientRect();
-                    const x = ((e.clientX - rect.left) / rect.width) * 100;
-                    const y = ((e.clientY - rect.top) / rect.height) * 100;
-                    setSubtitlePos({ 
-                      x: Math.min(Math.max(x, 0), 100), 
-                      y: Math.min(Math.max(y, 0), 100)  
-                    });
-                  }}
-                  >
-                  {currentSubtitle}
-                </p>    
-            )}
-            <button className="absolute top-2 right-2 text-4xl cursor-pointer opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
-            onClick={() => removeVideo()}
-            >
-              <FaWindowClose className="text-red-400 hover:text-red-500"/>
-            </button>
-          </div>)
+        ? (<div className="relative group overflow-hidden flex">
+            <div className="flex flex-col gap-2 justify-center px-2">
+              <MdZoomIn className="text-4xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"/>
+              <MdZoomOut className="text-4xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"/>
+            </div>
+            <div className="relative group overflow-hidden">
+                <video ref={videoRef} src={videoURL} className="rounded-xl max-w-230"
+                onTimeUpdate={updateCurrentSubtitle}
+                />
+                {currentSubtitle && (
+                    <p 
+                      className="absolute cursor-move px-4 py-2 rounded font-semibold whitespace-nowrap overflow-hidden"
+                      style={{
+                        left: `${subtitlePos.x}%`,
+                        top: `${subtitlePos.y}%`,
+                        transform: "translate(-50%, -50%)",
+                        ...subtitleStyle
+                      }}
+                      draggable
+                      onDragEnd={(e) => {
+                        pushHistory();
+                        const videoEl = videoRef.current;
+                        if (!videoEl) return;
+                        const rect = videoEl.getBoundingClientRect();
+                        const x = ((e.clientX - rect.left) / rect.width) * 100;
+                        const y = ((e.clientY - rect.top) / rect.height) * 100;
+                        setSubtitlePos({ 
+                          x: Math.min(Math.max(x, 0), 100), 
+                          y: Math.min(Math.max(y, 0), 100)  
+                        });
+                      }}
+                      >
+                      {currentSubtitle}
+                    </p>    
+                )}
+                <button className="absolute top-2 right-2 text-4xl cursor-pointer opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
+                onClick={() => removeVideo()}
+                >
+                  <FaWindowClose className="text-red-400 hover:text-red-500"/>
+                </button>
+              </div>
+            </div>
+          )
         : (<div 
             onDragOver={(e) => {e.preventDefault(); setIsDragging(true);}}
             onDragLeave={() => setIsDragging(false)}
