@@ -103,6 +103,8 @@ export default function MainEditor({
     }
   }
 
+  const [videoZoom, setVideoZoom] = useState(100);
+
   return (
     <main className="relative flex justify-center items-center flex-col h-full flex-1">
 
@@ -129,18 +131,28 @@ export default function MainEditor({
 
 
       {videoURL
-        ? (<div className="relative group overflow-hidden flex">
-            <div className="flex flex-col gap-2 justify-center px-2">
-              <MdZoomIn className="text-4xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"/>
-              <MdZoomOut className="text-4xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"/>
+        ? (
+          <>
+          <div className=" absolute flex flex-col gap-2 px-2 border left-1 top-1"
+            >
+              <MdZoomIn className="text-6xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"
+                onClick={() => setVideoZoom(prev => Math.min(prev + 10, 200))}
+              />
+              <MdZoomOut className="text-6xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"
+                onClick={() => setVideoZoom(prev => Math.min(prev - 10, 50))}
+              />
             </div>
-            <div className="relative group overflow-hidden">
-                <video ref={videoRef} src={videoURL} className="rounded-xl max-w-230"
+          <div className="relative group flex">
+            
+            <div className="relative group overflow-hidden"
+              style={{transform: `scale(${videoZoom / 100})`, transformOrigin: "top center"}}
+            >
+                <video ref={videoRef} src={videoURL} className="relative rounded-xl max-w-230"
                 onTimeUpdate={updateCurrentSubtitle}
                 />
                 {currentSubtitle && (
                     <p 
-                      className="absolute cursor-move px-4 py-2 rounded font-semibold whitespace-nowrap overflow-hidden"
+                      className="absolute cursor-move px-4 py-2 rounded font-semibold overflow-auto"
                       style={{
                         left: `${subtitlePos.x}%`,
                         top: `${subtitlePos.y}%`,
@@ -171,6 +183,7 @@ export default function MainEditor({
                 </button>
               </div>
             </div>
+          </>
           )
         : (<div 
             onDragOver={(e) => {e.preventDefault(); setIsDragging(true);}}
