@@ -136,6 +136,7 @@ export default function MainEditor({
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={() => {isPanning.current = false;}}
+      style={{cursor: isPanning.current ? "grabbing" : "default"}}
     >
 
       {
@@ -175,7 +176,7 @@ export default function MainEditor({
           <div className="relative group flex">
             
             <div className="relative group overflow-hidden"
-              style={{transform: `scale(${videoZoom / 100})`, transformOrigin: "top center"}}
+              style={{transform: `scale(${videoZoom / 100})`, transformOrigin: "top center", translate: `${panOffset.x}px ${panOffset.y}px`}}
             >
                 <video ref={videoRef} src={videoURL} className="relative rounded-xl max-w-230"
                 onTimeUpdate={updateCurrentSubtitle}
