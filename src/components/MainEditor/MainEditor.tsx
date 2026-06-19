@@ -104,9 +104,39 @@ export default function MainEditor({
   }
 
   const [videoZoom, setVideoZoom] = useState(100);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isPanning = useRef(false);
+  const lastMousePos = useRef({x: 0, y: 0});
+  const [panOffset, setPanOffset] = useState({x: 0, y: 0});
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 1) return;
+    e.preventDefault();
+    isPanning.current = true;
+    lastMousePos.current = {x: e.clientX, y: e.clientY};
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isPanning.current) return;
+    const dx = e.clientX - lastMousePos.current.x;
+    const dy = e.clientY - lastMousePos.current.y;
+    lastMousePos.current ={x: e.clientX, y: e.clientY};
+    setPanOffset(prev => ({x: prev.x + dx, y: prev.y + dy}));
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (e.button !== 1) return;
+    isPanning.current = false;
+  }
 
   return (
-    <main className="relative flex justify-center items-center flex-col h-full flex-1">
+    <main className="relative flex justify-center items-center flex-col h-full flex-1"
+      ref={containerRef}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={() => {isPanning.current = false;}}
+    >
 
       {
         <input 
