@@ -79,6 +79,8 @@ export default function MainEditor({
   const subtitleStyle: React.CSSProperties = {
     fontFamily: selectedFont ?? undefined,
     fontSize: `${fontSize}px`,
+    width: "90%",
+    textAlign: "center",
     ...getStyleCSS(selectedStyle),
   };
 
@@ -105,19 +107,19 @@ export default function MainEditor({
 
   const [videoZoom, setVideoZoom] = useState(100);
   const containerRef = useRef<HTMLDivElement>(null);
-  const isPanning = useRef(false);
+  const [isPanning, setIsPanning] = useState(false);
   const lastMousePos = useRef({x: 0, y: 0});
   const [panOffset, setPanOffset] = useState({x: 0, y: 0});
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 1) return;
     e.preventDefault();
-    isPanning.current = true;
+    setIsPanning(true);
     lastMousePos.current = {x: e.clientX, y: e.clientY};
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isPanning.current) return;
+    if (!isPanning) return;
     const dx = e.clientX - lastMousePos.current.x;
     const dy = e.clientY - lastMousePos.current.y;
     lastMousePos.current ={x: e.clientX, y: e.clientY};
@@ -126,7 +128,7 @@ export default function MainEditor({
 
   const handleMouseUp = (e: React.MouseEvent) => {
     if (e.button !== 1) return;
-    isPanning.current = false;
+    setIsPanning(false);
   }
 
   return (
@@ -135,8 +137,8 @@ export default function MainEditor({
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      onMouseLeave={() => {isPanning.current = false;}}
-      style={{cursor: isPanning.current ? "grabbing" : "default"}}
+      onMouseLeave={() => {setIsPanning(false)}}
+      style={{cursor: isPanning ? "grabbing" : "default"}}
     >
 
       {
