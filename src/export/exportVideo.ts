@@ -24,7 +24,7 @@ export async function exportVideo(
   const srtContent = generateSRT(subtitles);
   await ffmpeg.writeFile("subtitles.srt", srtContent);
 
-  const color = selectedColor ?? "white";
+  const color = cssColorToASS(selectedColor ?? "white");
   const size = fontSize ?? 24;
   const fontName = selectedFont ?? "Arial";
   const marginV = Math.round((subtitlePos.y / 100) * 100);
@@ -40,7 +40,7 @@ export async function exportVideo(
   ]);
 
   const data = await ffmpeg.readFile("output.mp4");
-  const blob = new Blob([data], {type: "video/mp4"});
+  const blob = new Blob([data as Uint8Array<ArrayBuffer>], {type: "video/mp4"});
   const url = URL.createObjectURL(blob);
 
   const a = document.createElement("a");
@@ -64,4 +64,16 @@ function formatSRTTime(seconds: number): string {
   const s = Math.floor(seconds % 60).toString().padStart(2, "0");
   const ms = Math.round((seconds % 1) * 1000).toString().padStart(3, "0");
   return `${h}:${m}:${s},${ms}`;
+}
+
+function cssColorToASS(color: string): string {
+  if (color.includes("gradient")) return "&H00FFFFFF";
+
+  const canvas = document.createElement("canvas");
+  canvas.width =  canvas.height = 1;
+  const ctx = canvas.getContext("2d")!;
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, 1, 1);
+  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+  return `&H00${b.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${r.toString(16).padStart(2, "0")}`.toUpperCase();
 }
