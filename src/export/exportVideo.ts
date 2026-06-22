@@ -29,7 +29,7 @@ export async function exportVideo(
   const fontName = selectedFont ?? "Arial";
   const marginV = Math.round((subtitlePos.y / 100) * 100);
 
-  const subtitleFilter = `subtitles=subtitles.srt:force_style='FontName=${fontName},FontSize=${size},PrimaryColour=&H00FFFFFF,MarginV=${marginV}'`;
+  const subtitleFilter = `subtitles=subtitles.srt:force_style='FontName=${fontName},FontSize=${size},PrimaryColour=${color},MarginV=${marginV}'`;
 
   await ffmpeg.exec([
     "-i", "input.mp4",
@@ -48,4 +48,20 @@ export async function exportVideo(
   a.download = "captionflow_export.mp4";
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function generateSRT(subtitles: Subtitle[]): string {
+  return subtitles.map((sub, i) => {
+    const start = formatSRTTime(sub.startTime);
+    const end = formatSRTTime(sub.endTime);
+    return `${i + 1}\n${start} --> ${end}\n${sub.text}\n`;
+  }).join("\n"); 
+}
+
+function formatSRTTime(seconds: number): string {
+  const h = Math.floor(seconds / 3600).toString().padStart(2, "0");
+  const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, "0");
+  const s = Math.floor(seconds % 60).toString().padStart(2, "0");
+  const ms = Math.round((seconds % 1) * 1000).toString().padStart(3, "0");
+  return `${h}:${m}:${s},${ms}`;
 }
