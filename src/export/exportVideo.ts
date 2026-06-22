@@ -1,6 +1,6 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
-import type { Subtitle } from "../utils/types";
+import type { Subtitle, VideoSegment } from "../utils/types";
 
 export async function exportVideo(
   videoFile: File,
@@ -9,6 +9,7 @@ export async function exportVideo(
   fontSize: number,
   selectedFont: string | null,
   selectedColor: string | null,
+  videoSegments: VideoSegment[],
   onProgress?: (progress: number) => void
 ) {
   const ffmpeg = new FFmpeg();
@@ -18,10 +19,27 @@ export async function exportVideo(
   }); 
 
   await ffmpeg.load();
-
   await ffmpeg.writeFile("input.mp4", await fetchFile(videoFile));
 
-  const srtContent = generateSRT(subtitles);
+  const segments = [...videoSegments].sort((a, b) => a.startTime - b.startTime);
+
+  const filterParts: string[] = [];
+  const contactInputs: string[] = [];
+
+  segments.forEach((seg, i) => {
+    filterParts.push(
+      `[0:v]trim=start=${seg.startTime}:end=${seg.endTime},setpts=PTS-STARTPTS[v${i}]`,
+      `[0:a]atrim=start=${seg.startTime}:end=${seg.endTime},asetpts=PTS-STARTPTS[a${i}]`
+    );
+    contactInputs.push(`[v${i}][a${i}]`);
+  });
+
+  filterParts.push(
+    `${contactInputs.join("")}contact=n=${segments.length}:v=1:a=1[outv][outa]`
+  );
+
+  const adjustedSubtitles = adjustedSubtitleTime(subtitles, segments);
+  const srtContent = generateSRT(adjustedSubtitles);
   await ffmpeg.writeFile("subtitles.srt", srtContent);
 
   const color = cssColorToASS(selectedColor ?? "white");
@@ -29,13 +47,17 @@ export async function exportVideo(
   const fontName = selectedFont ?? "Arial";
   const marginV = Math.round((subtitlePos.y / 100) * 100);
 
-  const subtitleFilter = `subtitles=subtitles.srt:force_style='FontName=${fontName},FontSize=${size},PrimaryColour=${color},MarginV=${marginV}'`;
+  filterParts.push(
+    `[outv]subtitles=subtitles.srt:force_style='FontName=${fontName}, FontSize=${size}, PrimaryColour=${color}, MarginV=${marginV}'[finalv]`
+  );
 
   await ffmpeg.exec([
     "-i", "input.mp4",
-    "-vf", subtitleFilter,
-    "-c:a", "copy",
+    "-filter_complex", filterParts.join(";"),
+    "-map", "[finalv]",
+    "-map", "[outa]",
     "-c:v", "libx264",
+    "-c:a", "aac",
     "output.mp4"
   ]);
 
@@ -76,4 +98,28 @@ function cssColorToASS(color: string): string {
   ctx.fillRect(0, 0, 1, 1);
   const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
   return `&H00${b.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${r.toString(16).padStart(2, "0")}`.toUpperCase();
+}
+
+function adjustedSubtitleTime(subtitles: Subtitle[], segments: VideoSegment[]): Subtitle[] {
+  const result: Subtitle[] = [];
+
+  let timeOffset = 0;
+
+  for (const seg of segments) {
+    const segDuration = seg.endTime - seg.startTime;
+
+    const matching = subtitles.filter(
+      sub => sub.startTime >= seg.startTime && sub.endTime <= seg.endTime
+    );
+
+    for (const sub of matching) {
+      result.push({
+        ...sub,
+        startTime: sub.startTime - seg.startTime + timeOffset,
+        endTime: sub.endTime - seg.startTime + timeOffset,
+      });
+    }
+    timeOffset += segDuration;
+  }
+  return result;
 }
