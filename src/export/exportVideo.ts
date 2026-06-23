@@ -24,18 +24,18 @@ export async function exportVideo(
   const segments = [...videoSegments].sort((a, b) => a.startTime - b.startTime);
 
   const filterParts: string[] = [];
-  const contactInputs: string[] = [];
+  const concatInputs: string[] = [];
 
   segments.forEach((seg, i) => {
     filterParts.push(
       `[0:v]trim=start=${seg.startTime}:end=${seg.endTime},setpts=PTS-STARTPTS[v${i}]`,
       `[0:a]atrim=start=${seg.startTime}:end=${seg.endTime},asetpts=PTS-STARTPTS[a${i}]`
     );
-    contactInputs.push(`[v${i}][a${i}]`);
+    concatInputs.push(`[v${i}][a${i}]`);
   });
 
   filterParts.push(
-    `${contactInputs.join("")}contact=n=${segments.length}:v=1:a=1[outv][outa]`
+    `${concatInputs.join("")}concat=n=${segments.length}:v=1:a=1[outv][outa]`
   );
 
   const adjustedSubtitles = adjustedSubtitleTime(subtitles, segments);
@@ -48,7 +48,7 @@ export async function exportVideo(
   const marginV = Math.round((subtitlePos.y / 100) * 100);
 
   filterParts.push(
-    `[outv]subtitles=subtitles.srt:force_style='FontName=${fontName}, FontSize=${size}, PrimaryColour=${color}, MarginV=${marginV}'[finalv]`
+    `[outv]subtitles=subtitles.srt:force_style='FontName=${fontName},FontSize=${size},PrimaryColour=${color}, MarginV=${marginV}'[finalv]`
   );
 
   await ffmpeg.exec([

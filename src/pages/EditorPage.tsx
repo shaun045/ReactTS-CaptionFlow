@@ -157,6 +157,7 @@ export default function EditorPage() {
           selectedFont={selectedFont}
           fontSize={fontSize}
           selectedColor={selectedColor}
+          videoSegments={videoSegments}
 
           selectedStyle={selectedStyle}
           setSelectedStyle={setSelectedStyle}

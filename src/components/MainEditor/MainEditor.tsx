@@ -5,6 +5,13 @@ import { PiExportBold } from "react-icons/pi";
 import { FaWindowClose } from "react-icons/fa";
 import { MdZoomIn, MdZoomOut } from "react-icons/md";
 import type { Subtitle } from "../../utils/types";
+import { exportVideo } from "../../export/exportVideo";
+
+interface VideoSegment {
+  id: number;
+  startTime: number;
+  endTime: number;
+}
 
 interface MainEditorProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -27,6 +34,7 @@ interface MainEditorProps {
                     y: number;
                 }>>;
   pushHistory: () => void;
+  videoSegments: VideoSegment[];
   }
 
 
@@ -42,7 +50,9 @@ export default function MainEditor({
     selectedStyle,
     subtitlePos,
     setSubtitlePos,
-    pushHistory
+    pushHistory,
+    videoSegments,
+    videoFile
   }: MainEditorProps) {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -131,6 +141,27 @@ export default function MainEditor({
     setIsPanning(false);
   }
 
+
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState(0);
+
+  async function handleExport() {
+    if (!videoFile) return;
+    setIsExporting(true);
+    await exportVideo(
+      videoFile,
+      subtitles,
+      subtitlePos,
+      fontSize,
+      selectedFont,
+      selectedColor,
+      videoSegments,
+      (progress) => setExportProgress(progress)
+    );
+    setIsExporting(false);
+  }
+
+
   return (
     <main className="relative flex justify-center items-center flex-col h-full flex-1"
       ref={containerRef}
@@ -154,9 +185,12 @@ export default function MainEditor({
         />
       }
 
-      <button className="absolute top-4 right-4 p-1.5 px-5 text-sm rounded-sm bg-[#1d0d27] flex gap-2 items-center hover:cursor-pointer">
+      <button className="absolute top-4 right-4 p-1.5 px-5 text-sm rounded-sm bg-[#1d0d27] flex gap-2 items-center hover:cursor-pointer"
+      onClick={handleExport}
+      disabled={isExporting}
+      >
         <span>
-          Export
+          {isExporting ? `Exporting ${exportProgress}%` : "Export"}
         </span>
         <PiExportBold className="text-md"/>
       </button>
@@ -166,7 +200,7 @@ export default function MainEditor({
       {videoURL
         ? (
           <>
-          <div className=" absolute flex flex-col gap-2 px-2 border left-1 top-1"
+          <div className=" absolute flex flex-col gap-2 px-2 left-1 top-1"
             >
               <MdZoomIn className="text-6xl text-[#a89bc0] cursor-pointer hover:text-white transition-colors"
                 onClick={() => setVideoZoom(prev => Math.min(prev + 10, 200))}
