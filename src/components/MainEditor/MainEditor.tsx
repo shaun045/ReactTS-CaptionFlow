@@ -108,7 +108,7 @@ export default function MainEditor({
   function getStyleCSS(style: string | null): React.CSSProperties {
     switch(style) {
       case "shadow": return {textShadow: "3px 3px 4px rgba(0,0,0,0.8)"};
-      case "glow": return {textShadow: "0 0 10px #cc66ff, 0 0 20px #cc66ff"};
+      case "glow": return {textShadow: `0 0 10px ${selectedColor}, 0 0 20px ${selectedColor}`};
       case "background": return {backgroundColor: "rgba(0,0,0,0.6)", padding: "4px 12px", borderRadius: "6px"};
       case "outline": return {WebkitTextStroke: "1px white"};
       default: return {};
