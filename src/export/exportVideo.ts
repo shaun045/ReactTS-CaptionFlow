@@ -28,7 +28,15 @@ export async function exportVideo(videoFile: File, subtitles: Subtitle[]) {
     filter,
     "output.mp4"
   ])
-  console.log("Running FFmpeg");
+  
+  const data = await ffmpeg.readFile("output.mp4");
+  
+  const blob = new Blob(
+    [data as Uint8Array<ArrayBuffer>],
+    {type: "video/mp4"}
+  );
+
+  console.log(blob);
 
   console.log("Video exported!");
 }
