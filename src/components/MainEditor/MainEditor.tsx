@@ -141,7 +141,6 @@ export default function MainEditor({
   // const [exportProgress, setExportProgress] = useState(0);
 
   async function handleExport() {
-    console.log("Export started");
     if (!videoFile) return;
     setIsExporting(true);
     await exportVideo(

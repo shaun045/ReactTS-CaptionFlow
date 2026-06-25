@@ -4,22 +4,31 @@ import type { Subtitle } from "../utils/types";
 
 
 export async function exportVideo(videoFile: File, subtitles: Subtitle[]) {
-  console.log("Inside exportVideo");
 
   const ffmpeg = new FFmpeg();
 
+  ffmpeg.on("log", ({message}) => {
+    console.log(message);
+  });
+
   await ffmpeg.load();
-  console.log("Loading FFMPEG");
 
   await ffmpeg.writeFile(
     "input.mp4",
     await fetchFile(videoFile)
   )
-  console.log("Writing file");
+
+  const fontData = await fetchFile("/fonts/Poppins-Regular.ttf");
+  console.log("Font size:", fontData.length);
+
+  await ffmpeg.writeFile(
+    "Poppins-Regular.ttf",
+    fontData
+  );
 
   const instructions = subtitleInstructions(subtitles);
-  console.log("BUilding subtitles");
   const filter = instructions.join(",");
+  console.log(filter);
 
   await ffmpeg.exec([
     "-i",
@@ -30,13 +39,17 @@ export async function exportVideo(videoFile: File, subtitles: Subtitle[]) {
   ])
   
   const data = await ffmpeg.readFile("output.mp4");
+  console.log(data.length);
   
   const blob = new Blob(
     [data as Uint8Array<ArrayBuffer>],
     {type: "video/mp4"}
   );
 
-  console.log(blob);
+  const url = URL.createObjectURL(blob);
+
+  // window.open(url);
+  console.log(url);
 
   console.log("Video exported!");
 }
@@ -45,6 +58,7 @@ function subtitleInstructions(subtitles: Subtitle[]) {
   return subtitles.map(sub => {
     return (
       `drawtext=text='${escapeSub(sub.text)}'` + 
+      `:fontfile=Poppins-Regular.ttf` +
       `:enable='between(t,${sub.startTime},${sub.endTime})'`
     );
   });
