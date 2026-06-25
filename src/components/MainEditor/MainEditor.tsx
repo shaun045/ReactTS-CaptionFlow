@@ -4,14 +4,10 @@ import { MdUpload } from "react-icons/md";
 import { PiExportBold } from "react-icons/pi";
 import { FaWindowClose } from "react-icons/fa";
 import { MdZoomIn, MdZoomOut } from "react-icons/md";
-import type { Subtitle } from "../../utils/types";
+import type { Subtitle, VideoSegment } from "../../utils/types";
 import { exportVideo } from "../../export/exportVideo";
 
-interface VideoSegment {
-  id: number;
-  startTime: number;
-  endTime: number;
-}
+
 
 interface MainEditorProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -51,7 +47,6 @@ export default function MainEditor({
     subtitlePos,
     setSubtitlePos,
     pushHistory,
-    videoSegments,
     videoFile
   }: MainEditorProps) {
   
@@ -143,20 +138,15 @@ export default function MainEditor({
 
 
   const [isExporting, setIsExporting] = useState(false);
-  const [exportProgress, setExportProgress] = useState(0);
+  // const [exportProgress, setExportProgress] = useState(0);
 
   async function handleExport() {
+    console.log("Export started");
     if (!videoFile) return;
     setIsExporting(true);
     await exportVideo(
       videoFile,
-      subtitles,
-      subtitlePos,
-      fontSize,
-      selectedFont,
-      selectedColor,
-      videoSegments,
-      (progress) => setExportProgress(progress)
+      subtitles
     );
     setIsExporting(false);
   }
@@ -190,7 +180,7 @@ export default function MainEditor({
       disabled={isExporting}
       >
         <span>
-          {isExporting ? `Exporting ${exportProgress}%` : "Export"}
+          Export
         </span>
         <PiExportBold className="text-md"/>
       </button>
