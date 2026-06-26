@@ -18,13 +18,16 @@ export async function exportVideo(videoFile: File, subtitles: Subtitle[]) {
     await fetchFile(videoFile)
   )
 
-  const fontData = await fetchFile("/fonts/Poppins-Regular.ttf");
+  const fontData = await fetchFile("/fonts/arial.ttf");
   console.log("Font size:", fontData.length);
 
   await ffmpeg.writeFile(
-    "Poppins-Regular.ttf",
+    "arial.ttf",
     fontData
   );
+
+  const written = await ffmpeg.readFile("arial.ttf");
+  console.log("Written font size:", (written as Uint8Array).length);
 
   const instructions = subtitleInstructions(subtitles);
   const filter = instructions.join(",");
@@ -48,7 +51,7 @@ export async function exportVideo(videoFile: File, subtitles: Subtitle[]) {
 
   const url = URL.createObjectURL(blob);
 
-  // window.open(url);
+  window.open(url);
   console.log(url);
 
   console.log("Video exported!");
@@ -57,8 +60,13 @@ export async function exportVideo(videoFile: File, subtitles: Subtitle[]) {
 function subtitleInstructions(subtitles: Subtitle[]) {
   return subtitles.map(sub => {
     return (
-      `drawtext=text='${escapeSub(sub.text)}'` + 
-      `:fontfile=Poppins-Regular.ttf` +
+      `drawtext=` +
+      `text='${escapeSub(sub.text)}'` +
+      `:fontfile=/arial.ttf` +
+      `:fontsize=48` +
+      `:fontcolor=white` +
+      `:x=(w-text_w)/2` +
+      `:y=h-100` +
       `:enable='between(t,${sub.startTime},${sub.endTime})'`
     );
   });
