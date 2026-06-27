@@ -28,6 +28,7 @@ export default function EditorPage() {
   const [subtitlePos, setSubtitlePos] = useState<SubtitlePos>({ x: 50, y: 80 });
   const [history, setHistory] = useState<EditorState[]>([]);
   const [future, setFuture] = useState<EditorState[]>([]);
+  const [duration, setDuration] = useState(0);
 
 
   function pushHistory() {
@@ -191,6 +192,8 @@ export default function EditorPage() {
           setSelectedSub={setSelectedSub}
           selectedSeg={selectedSeg}
           setSelectedSeg={setSelectedSeg}
+          duration={duration}
+          setDuration={setDuration}
         />
       </div>
 
