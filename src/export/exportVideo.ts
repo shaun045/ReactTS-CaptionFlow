@@ -1,9 +1,16 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
-import type { Subtitle } from "../utils/types";
+import type { Subtitle, VideoSegment } from "../utils/types";
+import { getKeptSegments } from "../utils/videoSegments";
 
 
-export async function exportVideo(videoFile: File, subtitles: Subtitle[]) {
+export async function exportVideo(
+  videoFile: File, 
+  subtitles: Subtitle[],
+  duration: number,
+  videoSegments: VideoSegment[]
+) {
+
 
   const ffmpeg = new FFmpeg();
 
@@ -26,6 +33,15 @@ export async function exportVideo(videoFile: File, subtitles: Subtitle[]) {
     fontData
   );
 
+  const keptSegments = getKeptSegments(
+    duration,
+    videoSegments
+  );
+
+  console.log(keptSegments)
+
+  const first = keptSegments[0];
+
   const written = await ffmpeg.readFile("arial.ttf");
   console.log("Written font size:", (written as Uint8Array).length);
 
@@ -33,15 +49,27 @@ export async function exportVideo(videoFile: File, subtitles: Subtitle[]) {
   const filter = instructions.join(",");
   console.log(filter);
 
+  // await ffmpeg.exec([
+  //   "-i",
+  //   "input.mp4",
+  //   "-vf",
+  //   filter,
+  //   "output.mp4"
+  // ])
+
   await ffmpeg.exec([
+    "-ss",
+    String(first.startTime),
+    "-to",
+    String(first.endTime),
     "-i",
     "input.mp4",
-    "-vf",
-    filter,
-    "output.mp4"
-  ])
+    "segment0.mp4"
+  ]);
   
-  const data = await ffmpeg.readFile("output.mp4");
+  // const data = await ffmpeg.readFile("output.mp4");
+  const data = await ffmpeg.readFile("segment0.mp4");
+
   console.log(data.length);
   
   const blob = new Blob(

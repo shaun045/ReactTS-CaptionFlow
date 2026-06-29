@@ -1,5 +1,4 @@
 import type { VideoSegment } from "./types";
-
 export function getKeptSegments(
   duration: number, 
   removedSegments: VideoSegment[]

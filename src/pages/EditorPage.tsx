@@ -166,6 +166,7 @@ export default function EditorPage() {
           setSubtitlePos={setSubtitlePos}
 
           pushHistory={pushHistory}
+          duration={duration}
         />
 
         <SubtitlePanel 

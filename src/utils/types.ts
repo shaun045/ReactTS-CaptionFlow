@@ -9,9 +9,12 @@ export interface Subtitle {
 
 export interface VideoSegment {
   id: number;
-  startTime: number;
-  endTime: number;
+  sourceStart: number;
+  sourceEnd: number;
+  timelineStart: number;
+  timelineEnd: number;
 }
+
 
 export interface SubtitlePos {
   x: number;

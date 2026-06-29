@@ -31,6 +31,7 @@ interface MainEditorProps {
                 }>>;
   pushHistory: () => void;
   videoSegments: VideoSegment[];
+  duration: number;
   }
 
 
@@ -47,7 +48,9 @@ export default function MainEditor({
     subtitlePos,
     setSubtitlePos,
     pushHistory,
-    videoFile
+    videoFile,
+    duration,
+    videoSegments
   }: MainEditorProps) {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -145,7 +148,9 @@ export default function MainEditor({
     setIsExporting(true);
     await exportVideo(
       videoFile,
-      subtitles
+      subtitles,
+      duration,
+      videoSegments
     );
     setIsExporting(false);
   }

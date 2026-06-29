@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import TimelineToolBar from "./TimelineToolBar/TimelineToolBar"
 import TimelineViewport from "./TimelineViewport/TimelineViewport";
+import type { VideoSegment } from "../../utils/types";
 
 interface TimelineProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -31,12 +32,6 @@ interface TimelineProps {
 interface Subtitle {
   id: number;
   text: string;
-  startTime: number;
-  endTime: number;
-}
-
-interface VideoSegment {
-  id: number;
   startTime: number;
   endTime: number;
 }
