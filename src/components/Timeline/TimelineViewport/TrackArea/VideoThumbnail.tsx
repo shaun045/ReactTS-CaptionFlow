@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
+import type { VideoSegment } from "../../../../utils/types";
 
 interface VideoThumbnail {
     time: number;
     dataURL: string;
   }
-
-interface VideoSegment {
-  id: number;
-  startTime: number;
-  endTime: number;
-}
 
 interface VideoThumbnailProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -114,10 +109,10 @@ export default function VideoThumbnail({
   return (
     <>
       {videoSegments.map((seg) => {
-        const left = seg.startTime * zoom;
-        const width = (seg.endTime - seg.startTime) * zoom;
+        const left = seg.timelineStart * zoom;
+        const width = (seg.timelineEnd - seg.timelineStart) * zoom;
         const thumbnailWidth = trackWidth / thumbnails.length;
-        const offset = seg.startTime * zoom
+        const offset = seg.sourceStart * zoom
 
 
         return (

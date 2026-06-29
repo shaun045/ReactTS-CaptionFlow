@@ -59,9 +59,9 @@ export async function exportVideo(
 
   await ffmpeg.exec([
     "-ss",
-    String(first.startTime),
+    String(first.sourceStart),
     "-to",
-    String(first.endTime),
+    String(first.sourceEnd),
     "-i",
     "input.mp4",
     "segment0.mp4"

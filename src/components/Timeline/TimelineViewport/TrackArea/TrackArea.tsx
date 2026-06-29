@@ -1,16 +1,11 @@
 import SubtitleTrack from "./SubtitleTrack";
 import Playhead from "./Playhead";
 import VideoThumbnail from "./VideoThumbnail";
+import type { VideoSegment } from "../../../../utils/types";
 
 interface Subtitle {
   id: number;
   text: string;
-  startTime: number;
-  endTime: number;
-}
-
-interface VideoSegment {
-  id: number;
   startTime: number;
   endTime: number;
 }

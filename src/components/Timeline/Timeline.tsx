@@ -7,18 +7,9 @@ interface TimelineProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   videoURL: string | null;
   subtitles: Subtitle[];
-  setSubtitles: React.Dispatch<React.SetStateAction<{
-      id: number;
-      text: string;
-      startTime: number;
-      endTime: number;
-  }[]>>;
+  setSubtitles: React.Dispatch<React.SetStateAction<Subtitle[]>>;
   videoSegments: VideoSegment[];
-  setVideoSegments: React.Dispatch<React.SetStateAction<{
-      id: number;
-      startTime: number;
-      endTime: number;
-  }[]>>;
+  setVideoSegments: React.Dispatch<React.SetStateAction<VideoSegment[]>>;
   deleteSubtitle: (id: number) => void;
   deleteVideoSegment: (id: number) => void;
   selectedSub: number | null;
@@ -59,7 +50,15 @@ export default function Timeline({
 
   function handleSetDuration(d: number) {
     setDuration(d);
-    setVideoSegments([{id: 1, startTime: 0, endTime: d}]);
+    setVideoSegments([
+      {
+        id: 1, 
+        sourceStart: 0, 
+        sourceEnd: d,
+        timelineStart: 0,
+        timelineEnd: d,
+      }
+    ]);
   }
   
   return(

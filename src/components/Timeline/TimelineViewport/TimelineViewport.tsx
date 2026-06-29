@@ -2,16 +2,11 @@ import TimelineRuler from "./TimelineRuler";
 import TrackArea from "./TrackArea/TrackArea";
 import { RAZOR_CURSOR } from "../../../utils/cursors";
 import { useState } from "react";
+import type { VideoSegment } from "../../../utils/types";
 
 interface Subtitle {
   id: number;
   text: string;
-  startTime: number;
-  endTime: number;
-}
-
-interface VideoSegment {
-  id: number;
   startTime: number;
   endTime: number;
 }
@@ -34,11 +29,7 @@ interface TimelineViewportProps {
       endTime: number;
   }[]>>;
   videoSegments: VideoSegment[];
-  setVideoSegments: React.Dispatch<React.SetStateAction<{
-      id: number;
-      startTime: number;
-      endTime: number;
-  }[]>>;
+  setVideoSegments: React.Dispatch<React.SetStateAction<VideoSegment[]>>;
   deleteSubtitle: (id: number) => void;
   deleteVideoSegment: (id: number) => void;
   selectedSub: number | null;
@@ -93,9 +84,16 @@ export default function TimelineViewport({
     ));
   }
 
+
+
+
+
+
+  {/*---------------------------NEEDS CHANGES--------------------------*/}
+
   function handleCutVideo(time: number) {
     const target = videoSegments.find(
-      (seg) => time >= seg.startTime && time <= seg.endTime
+      (seg) => time >= seg.timelineStart && time <= seg.timelineEnd
     );
 
     if (!target) return;
@@ -110,6 +108,14 @@ export default function TimelineViewport({
     ));
   }
 
+  {/*------------------------------------------------------------------*/}
+
+
+
+
+
+
+  
   const [hoverX, setHoverX] = useState<number | null>(null);
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {

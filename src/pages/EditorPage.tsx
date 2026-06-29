@@ -47,12 +47,12 @@ export default function EditorPage() {
     const seg = videoSegments.find(seg => seg.id === id);
     if (!seg) return;
 
-    const segDuration = seg.endTime - seg.startTime;
+    const segDuration = seg.timelineEnd - seg.timelineStart;
 
     setSubtitles(prev => prev
-      .filter(sub => !(sub.startTime >= seg.startTime && sub.endTime <= seg.endTime))
+      .filter(sub => !(sub.startTime >= seg.timelineStart && sub.endTime <= seg.timelineEnd))
       .map(sub => {
-        if (sub.startTime >= seg.endTime) {
+        if (sub.startTime >= seg.timelineEnd) {
           return {
             ...sub,
             startTime: sub.startTime - segDuration,
