@@ -60,11 +60,18 @@ export default function TimelineViewport({
   }:TimelineViewportProps) {
 
   function getTimeFromClick(e: React.MouseEvent<HTMLDivElement>) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const scrollLeft = e.currentTarget.scrollLeft;
-    const x = e.clientX - rect.left + scrollLeft;
-    const trackWidth = duration * zoom
-    return (x / trackWidth) * duration;
+    const ruler = rulerRef.current;
+    if (!ruler) return 0;
+    const rect = ruler.getBoundingClientRect();
+    const x = e.clientX - rect.left + ruler.scrollLeft;
+    const trackWidth = duration * zoom;
+    const time = (x / trackWidth) * duration;
+    // console.log("click X:", x);
+    // console.log("Hover x:", hoverX);
+    // console.log({x, time, currentVideoTime: videoRef.current?.currentTime,})
+    // console.log("Viewport left:", e.currentTarget.getBoundingClientRect().left);
+    // console.log("Ruler left:", rulerRef.current?.getBoundingClientRect().left);
+    return time;
   }
 
   function handleCut(time: number) {
