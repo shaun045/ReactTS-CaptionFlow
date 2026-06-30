@@ -85,29 +85,6 @@ export default function TimelineViewport({
   }
 
 
-
-
-
-
-  {/*---------------------------NEEDS CHANGES--------------------------*/}
-
-  // function handleCutVideo(time: number) {
-  //   const target = videoSegments.find(
-  //     (seg) => time >= seg.timelineStart && time <= seg.timelineEnd
-  //   );
-
-  //   if (!target) return;
-
-  //   setVideoSegments(prev => prev.flatMap(seg =>
-  //     seg.id === target.id
-  //       ? [
-  //         {...seg, endTime: time},
-  //         {...seg, id: Date.now(), startTime: time}
-  //       ]
-  //       : [seg]
-  //   ));
-  // }
-
   function handleCutVideo(time: number) {
     const target = videoSegments.find(
       (seg) => time >= seg.timelineStart && time <= seg.timelineEnd
@@ -127,7 +104,7 @@ export default function TimelineViewport({
               },
               {
                 ...seg,
-                id: Date.now(),
+                id: Date.now() + Math.random(),
                 sourceStart: sourceSplit,
                 timelineStart: time
               }
@@ -135,16 +112,11 @@ export default function TimelineViewport({
           : [seg]    
       )
     );
+    
   }
-
-  {/*------------------------------------------------------------------*/}
-
-
-
-
-
-
   
+
+
   const [hoverX, setHoverX] = useState<number | null>(null);
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {

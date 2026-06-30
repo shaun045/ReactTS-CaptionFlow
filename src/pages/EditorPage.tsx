@@ -41,13 +41,17 @@ export default function EditorPage() {
     setSubtitles(prev => prev.filter(sub => sub.id !== id));
   }
 
+
   function deleteVideoSegment(id: number) {
     pushHistory();
+    console.log("Before:", videoSegments)
     
     const seg = videoSegments.find(seg => seg.id === id);
     if (!seg) return;
 
-    const segDuration = seg.timelineEnd - seg.timelineStart;
+    console.log("Deleting segment:", seg)
+
+    const removedDuration = seg.timelineEnd - seg.timelineStart;
 
     setSubtitles(prev => prev
       .filter(sub => !(sub.startTime >= seg.timelineStart && sub.endTime <= seg.timelineEnd))
@@ -55,16 +59,32 @@ export default function EditorPage() {
         if (sub.startTime >= seg.timelineEnd) {
           return {
             ...sub,
-            startTime: sub.startTime - segDuration,
-            endTime: sub.endTime - segDuration,
+            startTime: sub.startTime - removedDuration,
+            endTime: sub.endTime - removedDuration,
           };
         }
         return sub;
       })
     )
 
-    setVideoSegments(prev => prev.filter(seg => seg.id !== id));
+    setVideoSegments(prev => 
+      {const updated = prev
+        .filter(seg => seg.id !== id)
+        .map(segment => {
+          if (segment.timelineStart >= seg.timelineEnd) {
+            return {
+              ...segment,
+              timelineStart: segment.timelineStart - removedDuration,
+              timelineEnd: segment.timelineEnd - removedDuration,
+            };
+          }
+          return segment;
+        });
+      console.log("After:", updated);
+      return updated;
+    });
   }
+
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
