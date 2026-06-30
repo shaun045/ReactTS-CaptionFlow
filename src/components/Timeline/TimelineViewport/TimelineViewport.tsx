@@ -91,6 +91,23 @@ export default function TimelineViewport({
 
   {/*---------------------------NEEDS CHANGES--------------------------*/}
 
+  // function handleCutVideo(time: number) {
+  //   const target = videoSegments.find(
+  //     (seg) => time >= seg.timelineStart && time <= seg.timelineEnd
+  //   );
+
+  //   if (!target) return;
+
+  //   setVideoSegments(prev => prev.flatMap(seg =>
+  //     seg.id === target.id
+  //       ? [
+  //         {...seg, endTime: time},
+  //         {...seg, id: Date.now(), startTime: time}
+  //       ]
+  //       : [seg]
+  //   ));
+  // }
+
   function handleCutVideo(time: number) {
     const target = videoSegments.find(
       (seg) => time >= seg.timelineStart && time <= seg.timelineEnd
@@ -98,14 +115,26 @@ export default function TimelineViewport({
 
     if (!target) return;
 
-    setVideoSegments(prev => prev.flatMap(seg =>
+    const sourceSplit = target.sourceStart + (time - target.timelineStart);
+
+    setVideoSegments(prev => prev.flatMap(seg => 
       seg.id === target.id
-        ? [
-          {...seg, endTime: time},
-          {...seg, id: Date.now(), startTime: time}
-        ]
-        : [seg]
-    ));
+          ? [
+              {
+                ...seg,
+                sourceEnd: sourceSplit,
+                timelineEnd: time
+              },
+              {
+                ...seg,
+                id: Date.now(),
+                sourceStart: sourceSplit,
+                timelineStart: time
+              }
+          ]
+          : [seg]    
+      )
+    );
   }
 
   {/*------------------------------------------------------------------*/}
