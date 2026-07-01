@@ -182,6 +182,7 @@ export default function MainEditor({
       currentTime,
       videoSegments
     );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[currentTime, videoSegments])
 
 
