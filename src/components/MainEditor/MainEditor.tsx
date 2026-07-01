@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdUpload } from "react-icons/md";
 import { PiExportBold } from "react-icons/pi";
@@ -10,28 +10,30 @@ import { exportVideo } from "../../export/exportVideo";
 
 
 interface MainEditorProps {
-  videoRef: React.RefObject<HTMLVideoElement | null>;
-  videoURL: string | null;
-  setVideoURL: (url: string | null) => void;
-  subtitles: Subtitle[];
-  videoFile: File | null;
-  setVideoFile: (file: File | null) => void;
-  selectedFont: string | null;
-  fontSize: number;
-  selectedColor: string | null;
-  selectedStyle: string | null;
-  setSelectedStyle: React.Dispatch<React.SetStateAction<string | null>>;
-  subtitlePos:  {
+    videoRef: React.RefObject<HTMLVideoElement | null>;
+    videoURL: string | null;
+    setVideoURL: (url: string | null) => void;
+    subtitles: Subtitle[];
+    videoFile: File | null;
+    setVideoFile: (file: File | null) => void;
+    selectedFont: string | null;
+    fontSize: number;
+    selectedColor: string | null;
+    selectedStyle: string | null;
+    setSelectedStyle: React.Dispatch<React.SetStateAction<string | null>>;
+    subtitlePos:  {
+                        x: number;
+                        y: number;
+                    }
+    setSubtitlePos: React.Dispatch<React.SetStateAction<{
                       x: number;
                       y: number;
-                  }
-  setSubtitlePos: React.Dispatch<React.SetStateAction<{
-                    x: number;
-                    y: number;
-                }>>;
-  pushHistory: () => void;
-  videoSegments: VideoSegment[];
-  duration: number;
+                  }>>;
+    pushHistory: () => void;
+    videoSegments: VideoSegment[];
+    duration: number;
+    currentTime: number;
+    setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
   }
 
 
@@ -50,7 +52,8 @@ export default function MainEditor({
     pushHistory,
     videoFile,
     duration,
-    videoSegments
+    videoSegments,
+    currentTime
   }: MainEditorProps) {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -154,6 +157,32 @@ export default function MainEditor({
     );
     setIsExporting(false);
   }
+
+  function timelineSourceTime(
+    timelineTime: number, 
+    segments: VideoSegment[]
+  ) {
+    const seg = segments.find(
+      s => 
+        timelineTime >= s.timelineStart && 
+        timelineTime <= s.timelineEnd
+    );
+
+    if (!seg) return 0;
+
+    return seg.sourceStart + (timelineTime - seg.timelineStart);
+  }
+
+  useEffect(() => {
+    const video = videoRef.current;
+
+    if (!video) return;
+
+    video.currentTime = timelineSourceTime(
+      currentTime,
+      videoSegments
+    );
+  },[currentTime, videoSegments])
 
 
   return (

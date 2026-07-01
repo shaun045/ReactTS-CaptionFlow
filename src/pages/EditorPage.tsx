@@ -144,7 +144,7 @@ export default function EditorPage() {
     document.head.appendChild(link);
   }, [selectedFont]);
 
-
+  const [currentTime, setCurrentTime] = useState(0);
 
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>
@@ -187,6 +187,8 @@ export default function EditorPage() {
 
           pushHistory={pushHistory}
           duration={duration}
+          currentTime={currentTime}
+          setCurrentTime={setCurrentTime}
         />
 
         <SubtitlePanel 
@@ -215,6 +217,9 @@ export default function EditorPage() {
           setSelectedSeg={setSelectedSeg}
           duration={duration}
           setDuration={setDuration}
+
+          currentTime={currentTime}
+          setCurrentTime={setCurrentTime}
         />
       </div>
 

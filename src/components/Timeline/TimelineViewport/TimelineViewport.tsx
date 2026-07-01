@@ -66,11 +66,6 @@ export default function TimelineViewport({
     const x = e.clientX - rect.left + ruler.scrollLeft;
     const trackWidth = duration * zoom;
     const time = (x / trackWidth) * duration;
-    // console.log("click X:", x);
-    // console.log("Hover x:", hoverX);
-    // console.log({x, time, currentVideoTime: videoRef.current?.currentTime,})
-    // console.log("Viewport left:", e.currentTarget.getBoundingClientRect().left);
-    // console.log("Ruler left:", rulerRef.current?.getBoundingClientRect().left);
     return time;
   }
 

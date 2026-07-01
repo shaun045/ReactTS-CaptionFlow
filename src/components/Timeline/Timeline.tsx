@@ -18,6 +18,8 @@ interface TimelineProps {
   setSelectedSeg: React.Dispatch<React.SetStateAction<number | null>>;
   duration: number;
   setDuration: React.Dispatch<React.SetStateAction<number>>;
+  currentTime: number;
+  setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface Subtitle {
@@ -41,9 +43,10 @@ export default function Timeline({
     selectedSeg,
     setSelectedSeg,
     duration,
-    setDuration
+    setDuration,
+    currentTime,
+    setCurrentTime
   }: TimelineProps) {
-  const [currentTime, setCurrentTime] = useState(0);
   const [zoom, setZoom] = useState(100);
   const [activeTool, setActiveTool] = useState<"select" | "cut">("select");
   const rulerRef = useRef<HTMLDivElement>(null);
