@@ -53,7 +53,8 @@ export default function MainEditor({
     videoFile,
     duration,
     videoSegments,
-    currentTime
+    currentTime,
+    setCurrentTime
   }: MainEditorProps) {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -186,6 +187,35 @@ export default function MainEditor({
   },[currentTime, videoSegments])
 
 
+
+  function sourceTimelineTime(
+    sourceTime: number,
+    segments: VideoSegment[]
+  ) {
+    const seg = segments.find(
+      s => 
+        sourceTime >= s.sourceStart && 
+        sourceTime <= s.sourceEnd
+    );
+    if (!seg) return sourceTime;
+
+    const offset = sourceTime - seg.sourceStart;
+
+    return seg.timelineStart + offset;
+  }
+
+  function handleTimeUpdate() {
+    if (!videoRef.current) return;
+
+    const sourceTime = videoRef.current.currentTime;
+
+    const timelineTime = sourceTimelineTime(
+      sourceTime,
+      videoSegments
+    );
+    setCurrentTime(timelineTime);
+  }
+  
   return (
     <main className="relative flex justify-center items-center flex-col h-full flex-1"
       ref={containerRef}
@@ -239,7 +269,11 @@ export default function MainEditor({
               style={{transform: `scale(${videoZoom / 100})`, transformOrigin: "top center", translate: `${panOffset.x}px ${panOffset.y}px`}}
             >
                 <video ref={videoRef} src={videoURL} className="relative rounded-xl max-w-230"
-                onTimeUpdate={updateCurrentSubtitle}
+                onTimeUpdate={() => {
+                  updateCurrentSubtitle();
+                  handleTimeUpdate();
+                 }
+                }
                 />
                 {currentSubtitle && (
                     <p 
