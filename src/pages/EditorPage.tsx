@@ -29,6 +29,7 @@ export default function EditorPage() {
   const [history, setHistory] = useState<EditorState[]>([]);
   const [future, setFuture] = useState<EditorState[]>([]);
   const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
 
   function pushHistory() {
@@ -143,8 +144,6 @@ export default function EditorPage() {
     link.href = `https://fonts.googleapis.com/css2?family=${selectedFont.replace(/ /g, "+")}`;
     document.head.appendChild(link);
   }, [selectedFont]);
-
-  const [currentTime, setCurrentTime] = useState(0);
 
   return (
     <div className='flex flex-col text-white items-center w-full h-screen'>

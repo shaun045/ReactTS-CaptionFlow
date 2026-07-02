@@ -159,50 +159,18 @@ export default function MainEditor({
     setIsExporting(false);
   }
 
-  function timelineSourceTime(
-    timelineTime: number, 
-    segments: VideoSegment[]
-  ) {
-    const seg = segments.find(
-      s => 
-        timelineTime >= s.timelineStart && 
-        timelineTime <= s.timelineEnd
-    );
+  // useEffect(() => {
+  //   const video = videoRef.current;
 
-    if (!seg) return 0;
+  //   if (!video) return;
 
-    return seg.sourceStart + (timelineTime - seg.timelineStart);
-  }
+  //   video.currentTime = timelineSourceTime(
+  //     currentTime,
+  //     videoSegments
+  //   );
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[currentTime, videoSegments])
 
-  useEffect(() => {
-    const video = videoRef.current;
-
-    if (!video) return;
-
-    video.currentTime = timelineSourceTime(
-      currentTime,
-      videoSegments
-    );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[currentTime, videoSegments])
-
-
-
-  function sourceTimelineTime(
-    sourceTime: number,
-    segments: VideoSegment[]
-  ) {
-    const seg = segments.find(
-      s => 
-        sourceTime >= s.sourceStart && 
-        sourceTime <= s.sourceEnd
-    );
-    if (!seg) return sourceTime;
-
-    const offset = sourceTime - seg.sourceStart;
-
-    return seg.timelineStart + offset;
-  }
 
   function handleTimeUpdate() {
     if (!videoRef.current) return;
