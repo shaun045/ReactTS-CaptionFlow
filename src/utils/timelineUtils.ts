@@ -47,3 +47,11 @@ export function timelineSourceTime(
     return targetSource
   }
 
+
+  export function getNextSegment(
+    currentSegment: VideoSegment,
+    segments: VideoSegment[]
+  ) {
+    return segments.find(seg => seg.timelineStart === currentSegment.timelineEnd);
+
+  }
