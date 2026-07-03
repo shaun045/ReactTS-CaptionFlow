@@ -3,6 +3,7 @@ import TrackArea from "./TrackArea/TrackArea";
 import { RAZOR_CURSOR } from "../../../utils/cursors";
 import { useState } from "react";
 import type { VideoSegment } from "../../../utils/types";
+import { findSegmentAtTimeline, timelineSourceTime } from "../../../utils/timelineUtils";
 
 interface Subtitle {
   id: number;
@@ -88,13 +89,11 @@ export default function TimelineViewport({
 
 
   function handleCutVideo(time: number) {
-    const target = videoSegments.find(
-      (seg) => time >= seg.timelineStart && time <= seg.timelineEnd
-    );
+    const target = findSegmentAtTimeline(time, videoSegments);
 
     if (!target) return;
 
-    const sourceSplit = target.sourceStart + (time - target.timelineStart);
+    const sourceSplit = timelineSourceTime(time, videoSegments);
 
     setVideoSegments(prev => prev.flatMap(seg => 
       seg.id === target.id

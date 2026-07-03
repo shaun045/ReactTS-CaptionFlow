@@ -4,11 +4,7 @@ export function timelineSourceTime(
     timelineTime: number, 
     segments: VideoSegment[]
   ) {
-    const seg = segments.find(
-      s => 
-        timelineTime >= s.timelineStart && 
-        timelineTime <= s.timelineEnd
-    );
+    const seg = findSegmentAtTimeline(timelineTime, segments);
 
     if (!seg) return 0;
 
@@ -20,11 +16,7 @@ export function timelineSourceTime(
     sourceTime: number,
     segments: VideoSegment[]
   ) {
-    const seg = segments.find(
-      s => 
-        sourceTime >= s.sourceStart && 
-        sourceTime <= s.sourceEnd
-    );
+    const seg = findSegmentAtSource(sourceTime, segments);
     if (!seg) return sourceTime;
 
     const offset = sourceTime - seg.sourceStart;
@@ -43,8 +35,6 @@ export function timelineSourceTime(
     )
     return targetSeg
   }
-
-
 
   export function findSegmentAtSource(
     time: number,

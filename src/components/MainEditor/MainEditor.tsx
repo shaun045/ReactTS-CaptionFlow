@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdUpload } from "react-icons/md";
 import { PiExportBold } from "react-icons/pi";
@@ -6,6 +6,7 @@ import { FaWindowClose } from "react-icons/fa";
 import { MdZoomIn, MdZoomOut } from "react-icons/md";
 import type { Subtitle, VideoSegment } from "../../utils/types";
 import { exportVideo } from "../../export/exportVideo";
+import { sourceTimelineTime } from "../../utils/timelineUtils";
 
 
 
@@ -53,7 +54,6 @@ export default function MainEditor({
     videoFile,
     duration,
     videoSegments,
-    currentTime,
     setCurrentTime
   }: MainEditorProps) {
   
