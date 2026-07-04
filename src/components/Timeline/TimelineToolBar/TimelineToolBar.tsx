@@ -59,14 +59,10 @@ export default function TimelineToolBar({
         return;
       }
   
-      const handleTimeUpdate = () => setCurrentTime(video.currentTime);
       const handleLoadedMetadata = () => setDuration(video.duration);
-  
-      video.addEventListener("timeupdate", handleTimeUpdate);
       video.addEventListener("loadedmetadata", handleLoadedMetadata);
   
       return () => {
-        video.removeEventListener("timeupdate", handleTimeUpdate);
         video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       };
     // eslint-disable-next-line react-hooks/exhaustive-deps

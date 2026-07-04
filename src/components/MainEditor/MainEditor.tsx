@@ -159,41 +159,36 @@ export default function MainEditor({
     setIsExporting(false);
   }
 
-  // useEffect(() => {
-  //   const video = videoRef.current;
-
-  //   if (!video) return;
-
-  //   video.currentTime = timelineSourceTime(
-  //     currentTime,
-  //     videoSegments
-  //   );
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[currentTime, videoSegments])
-
-
   function handleTimeUpdate() {
     if (!videoRef.current) return;
 
     const sourceTime = videoRef.current.currentTime;
 
     const currentSegment = findSegmentAtSource(sourceTime, videoSegments);
-    if (!currentSegment) return;
 
-    console.log({
-      sourceTime,
-      sourceEnd: currentSegment.sourceEnd
-    });
-
-    if (sourceTime >= currentSegment.sourceEnd) {
-      const nextSegment = getNextSegment(currentSegment, videoSegments);
-        if (nextSegment) {
-          videoRef.current.currentTime = nextSegment.sourceStart;
-        };
+    if (!currentSegment) {
+      const next = videoSegments
+        .filter(seg => seg.sourceStart > sourceTime)
+        .sort((a, b) => a.sourceStart - b.sourceStart)[0];
+      
+      if (next) {
+        videoRef.current.currentTime = next.sourceStart;
+      } else {
+        videoRef.current.pause();
+        return;
+      }
+    } else if (sourceTime >= currentSegment.sourceEnd) {
+      const next = getNextSegment(currentSegment, videoSegments);
+      if (next) {
+        videoRef.current.currentTime = next.sourceStart;
+      } else {
+        videoRef.current.pause();
+        return;
+      }
     }
 
     const timelineTime = sourceTimelineTime(
-      sourceTime,
+      videoRef.current.currentTime,
       videoSegments
     );
     
