@@ -52,6 +52,6 @@ export function timelineSourceTime(
     currentSegment: VideoSegment,
     segments: VideoSegment[]
   ) {
-    return segments.find(seg => seg.timelineStart === currentSegment.timelineEnd);
-
+    const index = segments.findIndex(seg => seg.id === currentSegment.id);
+    return segments[index + 1];
   }

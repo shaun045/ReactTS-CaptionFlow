@@ -6,7 +6,7 @@ import { FaWindowClose } from "react-icons/fa";
 import { MdZoomIn, MdZoomOut } from "react-icons/md";
 import type { Subtitle, VideoSegment } from "../../utils/types";
 import { exportVideo } from "../../export/exportVideo";
-import { sourceTimelineTime } from "../../utils/timelineUtils";
+import { findSegmentAtSource, getNextSegment, sourceTimelineTime } from "../../utils/timelineUtils";
 
 
 
@@ -177,10 +177,26 @@ export default function MainEditor({
 
     const sourceTime = videoRef.current.currentTime;
 
+    const currentSegment = findSegmentAtSource(sourceTime, videoSegments);
+    if (!currentSegment) return;
+
+    console.log({
+      sourceTime,
+      sourceEnd: currentSegment.sourceEnd
+    });
+
+    if (sourceTime >= currentSegment.sourceEnd) {
+      const nextSegment = getNextSegment(currentSegment, videoSegments);
+        if (nextSegment) {
+          videoRef.current.currentTime = nextSegment.sourceStart;
+        };
+    }
+
     const timelineTime = sourceTimelineTime(
       sourceTime,
       videoSegments
     );
+    
     setCurrentTime(timelineTime);
   }
   

@@ -1,7 +1,6 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import type { Subtitle, VideoSegment } from "../utils/types";
-import { getKeptSegments } from "../utils/videoSegments";
 
 
 export async function exportVideo(
@@ -33,10 +32,7 @@ export async function exportVideo(
     fontData
   );
 
-  const keptSegments = getKeptSegments(
-    duration,
-    videoSegments
-  );
+  const keptSegments = videoSegments;
 
   console.log(keptSegments)
 
