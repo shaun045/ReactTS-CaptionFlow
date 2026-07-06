@@ -70,7 +70,7 @@ export async function exportVideo(
     segmentFiles.push(outName);
   }
   
-  const concatList = segmentFiles.map(f => `file '${f}`).join("\n");
+  const concatList = segmentFiles.map(f => `file '${f}'`).join("\n");
   await ffmpeg.writeFile("concat.txt", concatList);
 
   await ffmpeg.exec([
@@ -86,7 +86,7 @@ export async function exportVideo(
   ]);
 
   // const data = await ffmpeg.readFile("output.mp4");
-  const data = await ffmpeg.readFile("segment0.mp4");
+  const data = await ffmpeg.readFile("output.mp4");
 
   // console.log(data.length);
   const blob = new Blob(
