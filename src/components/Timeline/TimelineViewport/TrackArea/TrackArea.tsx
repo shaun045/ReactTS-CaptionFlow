@@ -90,6 +90,7 @@ export default function TrackArea({
                 setCurrentTime={setCurrentTime}
                 zoom={zoom}
                 duration={duration}
+                videoSegments={videoSegments}
               />
             )}
             

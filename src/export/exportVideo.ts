@@ -23,51 +23,72 @@ export async function exportVideo(
     "input.mp4",
     await fetchFile(videoFile)
   )
-
-  const fontData = await fetchFile("/fonts/arial.ttf");
-  console.log("Font size:", fontData.length);
-
   await ffmpeg.writeFile(
     "arial.ttf",
-    fontData
+    await fetchFile("/fonts/arial.ttf")
   );
 
-  const keptSegments = videoSegments;
+  const segmentFiles: string[] =[];
+  // console.log(keptSegments)
+  // const first = keptSegments[0];
 
-  console.log(keptSegments)
+  // const written = await ffmpeg.readFile("arial.ttf");
+  // console.log("Written font size:", (written as Uint8Array).length);
 
-  const first = keptSegments[0];
+  // const instructions = subtitleInstructions(subtitles);
+  // const filter = instructions.join(",");
+  // console.log(filter);
 
-  const written = await ffmpeg.readFile("arial.ttf");
-  console.log("Written font size:", (written as Uint8Array).length);
+  for (let i = 0; i < videoSegments.length; i++) {
+    const seg = videoSegments[i];
+    const outName = `segment${i}.mp4`;
 
-  const instructions = subtitleInstructions(subtitles);
-  const filter = instructions.join(",");
-  console.log(filter);
+    const segSubtitles = subtitles
+      .filter(sub => sub.endTime > seg.sourceStart && sub.startTime < seg.sourceEnd)
+      .map(sub => ({
+        ...sub,
+        startTime: Math.max(0, sub.startTime - seg.sourceStart),
+        endTime: Math.min(seg.sourceEnd - seg.sourceStart, sub.endTime - seg.sourceStart)
+      }));
+    
+    const args = [
+      "-ss", 
+      String(seg.sourceStart), 
+      "-to", 
+      String(seg.sourceEnd), 
+      "-i",
+      "input.mp4"
+    ];
 
-  // await ffmpeg.exec([
-  //   "-i",
-  //   "input.mp4",
-  //   "-vf",
-  //   filter,
-  //   "output.mp4"
-  // ])
+    if (segSubtitles.length > 0) {
+      const filter = subtitleInstructions(segSubtitles).join(",");
+      args.push("-vf", filter);
+    }
+
+    args.push(outName);
+    await ffmpeg.exec(args);
+    segmentFiles.push(outName);
+  }
+  
+  const concatList = segmentFiles.map(f => `file '${f}`).join("\n");
+  await ffmpeg.writeFile("concat.txt", concatList);
 
   await ffmpeg.exec([
-    "-ss",
-    String(first.sourceStart),
-    "-to",
-    String(first.sourceEnd),
+    "-f", 
+    "concat",
+    "-safe",
+    "0",
     "-i",
-    "input.mp4",
-    "segment0.mp4"
+    "concat.txt",
+    "-c",
+    "copy",
+    "output.mp4"
   ]);
-  
+
   // const data = await ffmpeg.readFile("output.mp4");
   const data = await ffmpeg.readFile("segment0.mp4");
 
-  console.log(data.length);
-  
+  // console.log(data.length);
   const blob = new Blob(
     [data as Uint8Array<ArrayBuffer>],
     {type: "video/mp4"}
@@ -76,9 +97,8 @@ export async function exportVideo(
   const url = URL.createObjectURL(blob);
 
   window.open(url);
-  console.log(url);
-
-  console.log("Video exported!");
+  // console.log(url);
+  // console.log("Video exported!");
 }
 
 function subtitleInstructions(subtitles: Subtitle[]) {

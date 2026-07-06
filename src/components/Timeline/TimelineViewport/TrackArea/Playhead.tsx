@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { BiSolidDownArrow } from "react-icons/bi";
+import { timelineSourceTime } from "../../../../utils/timelineUtils";
+import type { VideoSegment } from "../../../../utils/types";
 
 interface PlayheadProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -8,6 +10,7 @@ interface PlayheadProps {
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
   zoom: number;
   duration: number;
+  videoSegments: VideoSegment[];
 }
 
 export default function Playhead({
@@ -16,7 +19,8 @@ export default function Playhead({
     currentTime,
     setCurrentTime,
     zoom,
-    duration
+    duration,
+    videoSegments
   }: PlayheadProps) {
   
   const playheadLeft = currentTime * zoom;
@@ -38,11 +42,11 @@ export default function Playhead({
 
       const rect = ruler.getBoundingClientRect();
       const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
-      // const percent = x / rect.width;
-      const seekTime = x / zoom;
+      const timelineTime = x / zoom;
+      const sourceTime = timelineSourceTime(timelineTime, videoSegments)
 
-      video.currentTime = seekTime;
-      setCurrentTime(seekTime);
+      video.currentTime = sourceTime;
+      setCurrentTime(timelineTime);
     }
     function handleMouseUp() {
       setIsDraggingPlayhead(false);
@@ -69,3 +73,4 @@ export default function Playhead({
     </div>
   )
 }
+
