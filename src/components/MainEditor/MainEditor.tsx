@@ -154,7 +154,14 @@ export default function MainEditor({
       videoFile,
       subtitles,
       duration,
-      videoSegments
+      videoSegments,
+      {
+        font: selectedFont,
+        fontSize,
+        color: selectedColor,
+        style: selectedStyle,
+        pos: subtitlePos
+      }
     );
     setIsExporting(false);
   }

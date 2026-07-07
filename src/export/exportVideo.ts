@@ -2,12 +2,21 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import type { Subtitle, VideoSegment } from "../utils/types";
 
+interface SubtitleStyle {
+  font: string | null;
+  fontSize: number;
+  color: string | null;
+  style: string | null;
+  pos: {x: number; y: number};
+}
+
 
 export async function exportVideo(
   videoFile: File, 
   subtitles: Subtitle[],
   duration: number,
-  videoSegments: VideoSegment[]
+  videoSegments: VideoSegment[],
+  subtitleStyle: SubtitleStyle
 ) {
 
 
@@ -53,7 +62,7 @@ export async function exportVideo(
     ];
 
     if (segSubtitles.length > 0) {
-      const filter = subtitleInstructions(segSubtitles).join(",");
+      const filter = subtitleInstructions(segSubtitles, subtitleStyle).join(",");
       args.push("-vf", filter);
     }
 
@@ -98,7 +107,7 @@ export async function exportVideo(
   // window.open(url);
 }
 
-function subtitleInstructions(subtitles: Subtitle[]) {
+function subtitleInstructions(subtitles: Subtitle[], style: SubtitleStyle) {
   return subtitles.map(sub => {
     return (
       `drawtext=` +
@@ -106,8 +115,8 @@ function subtitleInstructions(subtitles: Subtitle[]) {
       `:fontfile=/arial.ttf` +
       `:fontsize=48` +
       `:fontcolor=white` +
-      `:x=(w-text_w)/2` +
-      `:y=h-100` +
+      `:x=w*${style.pos.x / 100}-text_w/2` +
+      `:y=h*${style.pos.y / 100}-text_h/2` +
       `:enable='between(t,${sub.startTime},${sub.endTime})'`
     );
   });
