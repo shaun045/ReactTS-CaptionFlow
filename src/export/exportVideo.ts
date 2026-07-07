@@ -29,15 +29,7 @@ export async function exportVideo(
   );
 
   const segmentFiles: string[] =[];
-  // console.log(keptSegments)
-  // const first = keptSegments[0];
 
-  // const written = await ffmpeg.readFile("arial.ttf");
-  // console.log("Written font size:", (written as Uint8Array).length);
-
-  // const instructions = subtitleInstructions(subtitles);
-  // const filter = instructions.join(",");
-  // console.log(filter);
 
   for (let i = 0; i < videoSegments.length; i++) {
     const seg = videoSegments[i];
@@ -85,7 +77,6 @@ export async function exportVideo(
     "output.mp4"
   ]);
 
-  // const data = await ffmpeg.readFile("output.mp4");
   const data = await ffmpeg.readFile("output.mp4");
 
   // console.log(data.length);
@@ -96,9 +87,15 @@ export async function exportVideo(
 
   const url = URL.createObjectURL(blob);
 
-  window.open(url);
-  // console.log(url);
-  // console.log("Video exported!");
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = videoFile.name.replace(/\.[^/.]+$/, "") + "_edited.mp4";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  URL.revokeObjectURL(url);
+  // window.open(url);
 }
 
 function subtitleInstructions(subtitles: Subtitle[]) {

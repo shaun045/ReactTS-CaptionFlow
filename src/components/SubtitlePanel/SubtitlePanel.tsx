@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
 import { transcribeAudio } from "../../utils/transcribe";
 import { extractAudio } from "../../utils/extractAudio";
+import splitLongSubtitles from "../../utils/splitLongSubtitles";
 
 interface Subtitle {
   id: number;
@@ -64,12 +65,12 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
       setIsTranscribing(true);
 
       const audioBlob = await extractAudio(videoFile);
-
       const results = await transcribeAudio(audioBlob);
 
       console.log(results);
 
-      setSubtitles(results);
+      setSubtitles(splitLongSubtitles(results));
+
     } catch (error) {
       console.error(error);
     } finally {
