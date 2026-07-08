@@ -2,11 +2,14 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import type { VideoSegment } from "./types";
 
-const ffmpeg = new FFmpeg(); 
 
 
 
-export async function extractAudio(videoFile: File, videoSegments: VideoSegment[]) {
+export async function extractAudio(
+  videoFile: File, 
+  videoSegments: VideoSegment[]
+): Promise<Blob> {
+  const ffmpeg = new FFmpeg(); 
   if (!ffmpeg.loaded) {
     await ffmpeg.load();
   }

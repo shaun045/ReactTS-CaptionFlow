@@ -7,6 +7,7 @@ import { transcribeAudio } from "../../utils/transcribe";
 import { extractAudio } from "../../utils/extractAudio";
 import splitLongSubtitles from "../../utils/splitLongSubtitles";
 import type { VideoSegment } from "../../utils/types";
+import { timelineSourceTime } from "../../utils/timelineUtils";
 
 interface Subtitle {
   id: number;
@@ -75,11 +76,16 @@ export default function SubtitlePanel({
       setIsTranscribing(true);
 
       const audioBlob = await extractAudio(videoFile, videoSegments);
+
       const results = await transcribeAudio(audioBlob);
 
-      console.log(results);
+      const adjusted = results.map(sub => ({
+        ...sub,
+        startTime: timelineSourceTime(sub.startTime, videoSegments),
+        endTime: timelineSourceTime(sub.endTime, videoSegments)
+      }));
 
-      setSubtitles(splitLongSubtitles(results));
+      setSubtitles(splitLongSubtitles(adjusted));
 
     } catch (error) {
       console.error(error);
