@@ -6,6 +6,7 @@ import { FaCheck } from "react-icons/fa";
 import { transcribeAudio } from "../../utils/transcribe";
 import { extractAudio } from "../../utils/extractAudio";
 import splitLongSubtitles from "../../utils/splitLongSubtitles";
+import type { VideoSegment } from "../../utils/types";
 
 interface Subtitle {
   id: number;
@@ -21,9 +22,18 @@ interface SubtitlePanelProps {
   videoURL: string | null;
   videoFile: File | null;
   deleteSubtitle: (id: number) => void;
+  videoSegments: VideoSegment[];
 }
 
-export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoRef, videoFile, deleteSubtitle}: SubtitlePanelProps) {
+export default function SubtitlePanel({
+  subtitles, 
+  setSubtitles, 
+  videoURL, 
+  videoRef, 
+  videoFile, 
+  deleteSubtitle,
+  videoSegments
+}: SubtitlePanelProps) {
 
   function addSubtitle() {
     const currentTime = videoRef.current?.currentTime ?? 0;
@@ -64,7 +74,7 @@ export default function SubtitlePanel({subtitles, setSubtitles, videoURL, videoR
     try {
       setIsTranscribing(true);
 
-      const audioBlob = await extractAudio(videoFile);
+      const audioBlob = await extractAudio(videoFile, videoSegments);
       const results = await transcribeAudio(audioBlob);
 
       console.log(results);

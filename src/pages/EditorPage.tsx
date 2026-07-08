@@ -197,6 +197,7 @@ export default function EditorPage() {
           setSubtitles={setSubtitles}
           videoFile={videoFile}
           deleteSubtitle={deleteSubtitle}
+          videoSegments={videoSegments}
         />
       </div>
 
