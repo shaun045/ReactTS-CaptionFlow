@@ -117,6 +117,7 @@ export default function MainEditor({
     }
   }
 
+
   const [videoZoom, setVideoZoom] = useState(100);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPanning, setIsPanning] = useState(false);

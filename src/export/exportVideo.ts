@@ -53,12 +53,10 @@ export async function exportVideo(
       }));
     
     const args = [
-      "-ss", 
-      String(seg.sourceStart), 
-      "-to", 
-      String(seg.sourceEnd), 
-      "-i",
-      "input.mp4"
+      "-i", "input.mp4",
+      "-ss", String(seg.sourceStart), 
+      "-to", String(seg.sourceEnd), 
+      "-avoid_negative_ts", "make_zero",
     ];
 
     if (segSubtitles.length > 0) {
@@ -107,16 +105,31 @@ export async function exportVideo(
   // window.open(url);
 }
 
+function getStyleParams(style: string | null, color: string): string {
+    switch (style) {
+      case "shadow": return `:shadowx=3:shadowy=3:shadowcolor=black@0.8`;
+      case "glow": return `:shadowx=0:shadowy=0:shadowcolor=${color}@0.8`;
+      case "background": return `:box=1:boxcolor=black@0.6:boxborderw=10`;
+      case "outline": return `:borderw=2:bordercolor=white`;
+      default: return "";
+    }
+  }
+
 function subtitleInstructions(subtitles: Subtitle[], style: SubtitleStyle) {
+  const isGradient = style.color?.includes("gradient");
+  const safeColor = isGradient ? "white" : (style.color ?? "white");
+  const styleParams = getStyleParams(style.style, safeColor);
+
   return subtitles.map(sub => {
     return (
       `drawtext=` +
       `text='${escapeSub(sub.text)}'` +
       `:fontfile=/arial.ttf` +
-      `:fontsize=48` +
-      `:fontcolor=white` +
+      `:fontsize=${style.fontSize}` +
+      `:fontcolor=${style.color ?? "white"}` +
       `:x=w*${style.pos.x / 100}-text_w/2` +
       `:y=h*${style.pos.y / 100}-text_h/2` +
+      styleParams +
       `:enable='between(t,${sub.startTime},${sub.endTime})'`
     );
   });
