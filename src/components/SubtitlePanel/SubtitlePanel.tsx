@@ -6,15 +6,9 @@ import { FaCheck } from "react-icons/fa";
 import { transcribeAudio } from "../../utils/transcribe";
 import { extractAudio } from "../../utils/extractAudio";
 import splitLongSubtitles from "../../utils/splitLongSubtitles";
-import type { VideoSegment } from "../../utils/types";
+import type { VideoSegment, Subtitle } from "../../utils/types";
 import { timelineSourceTime } from "../../utils/timelineUtils";
 
-interface Subtitle {
-  id: number;
-  text: string;
-  startTime: number;
-  endTime: number;
-}
 
 interface SubtitlePanelProps {
   subtitles: Subtitle[];
@@ -40,7 +34,7 @@ export default function SubtitlePanel({
     const currentTime = videoRef.current?.currentTime ?? 0;
 
     const newSubtitle = {
-      id: Date.now(),
+      id: crypto.randomUUID(),
       text: "",
       startTime: currentTime,
       endTime: currentTime + 3

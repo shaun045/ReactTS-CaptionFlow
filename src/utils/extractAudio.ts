@@ -23,7 +23,7 @@ export async function extractAudio(
 
   for (let i = 0; i < videoSegments.length; i++) {
     const seg = videoSegments[i];
-    const outName = `audio_seg${i}.mp4`;
+    const outName = `audio_seg${i}.wav`;
 
     await ffmpeg.exec([
       "-i", "input.mp4",
@@ -44,12 +44,12 @@ export async function extractAudio(
     "-safe", "0",
     "-i", "concat.txt",
     "-c", "copy",
-    "output_audio.mp3",
+    "output_audio.wav",
   ]);
 
-  const data = await ffmpeg.readFile("output_audio.mp3");
+  const data = await ffmpeg.readFile("output_audio.wav");
 
   return new Blob([data as Uint8Array<ArrayBuffer>], {
-    type: "audio/mp3"
+    type: "audio/wav"
   });
 }

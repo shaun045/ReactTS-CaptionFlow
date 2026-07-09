@@ -1,14 +1,14 @@
 
 
 export interface Subtitle {
-  id: number;
+  id: string;
   text: string;
   startTime: number;
   endTime: number;
 }
 
 export interface VideoSegment {
-  id: number;
+  id: string;
   sourceStart: number;
   sourceEnd: number;
   timelineStart: number;
