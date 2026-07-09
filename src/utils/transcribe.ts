@@ -26,8 +26,8 @@ export async function transcribeAudio(audioBlob: Blob) {
     timestamp_granularities: ["segment"]
   }) as unknown as VerboseTranscription;
 
-  return transcription.segments?.map((segment, index) => ({
-    id: Date.now() + index,
+  return transcription.segments?.map((segment) => ({
+    id: crypto.randomUUID(),
     text: segment.text.trim(),
     startTime: segment.start,
     endTime: segment.end

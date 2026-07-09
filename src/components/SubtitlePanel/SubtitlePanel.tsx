@@ -16,7 +16,7 @@ interface SubtitlePanelProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   videoURL: string | null;
   videoFile: File | null;
-  deleteSubtitle: (id: number) => void;
+  deleteSubtitle: (id: string) => void;
   videoSegments: VideoSegment[];
 }
 
@@ -52,13 +52,13 @@ export default function SubtitlePanel({
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   }
 
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  function updateSubtitle(id: number, text: string) {
+  function updateSubtitle(id: string, text: string) {
     setSubtitles(subtitles.map(sub => sub.id === id ? {...sub, text} : sub));
   }
 
-  function updateTimeStamp(id: number, startTime: number, endTime: number) {
+  function updateTimeStamp(id: string, startTime: number, endTime: number) {
     setSubtitles(subtitles.map(sub => sub.id === id ? {...sub, startTime, endTime} : sub));
   }
 
@@ -88,7 +88,7 @@ export default function SubtitlePanel({
     }
   }
 
-  const [selectedSub, setSelectedSub] = useState<number | null>(null);
+  const [selectedSub, setSelectedSub] = useState<string | null>(null);
 
   function seekToSubtitle(startTime: number) {
     if (!videoRef.current) return;
