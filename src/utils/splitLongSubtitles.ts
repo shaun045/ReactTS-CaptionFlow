@@ -35,7 +35,7 @@ export default function splitLongSubtitles(subs: Subtitle[], maxChars=20): Subti
       const endTime = i === chunks.length - 1 ? sub.endTime : cursor + chunkDuration;
 
       result.push({
-        id: Date.now() + Math.random(),
+        id: crypto.randomUUID(),
         text: chunk,
         startTime,
         endTime

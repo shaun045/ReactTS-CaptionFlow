@@ -10,7 +10,6 @@ interface SubtitleStyle {
   pos: {x: number; y: number};
 }
 
-
 export async function exportVideo(
   videoFile: File, 
   subtitles: Subtitle[],
