@@ -1,7 +1,8 @@
 import { useState, useRef } from "react";
 import TimelineToolBar from "./TimelineToolBar/TimelineToolBar"
 import TimelineViewport from "./TimelineViewport/TimelineViewport";
-import type { VideoSegment } from "../../utils/types";
+import type { VideoSegment, Subtitle } from "../../utils/types";
+
 
 interface TimelineProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -10,24 +11,18 @@ interface TimelineProps {
   setSubtitles: React.Dispatch<React.SetStateAction<Subtitle[]>>;
   videoSegments: VideoSegment[];
   setVideoSegments: React.Dispatch<React.SetStateAction<VideoSegment[]>>;
-  deleteSubtitle: (id: number) => void;
-  deleteVideoSegment: (id: number) => void;
-  selectedSub: number | null;
-  setSelectedSub: React.Dispatch<React.SetStateAction<number | null>>;
-  selectedSeg: number | null;
-  setSelectedSeg: React.Dispatch<React.SetStateAction<number | null>>;
+  deleteSubtitle: (id: string) => void;
+  deleteVideoSegment: (id: string) => void;
+  selectedSub: string | null;
+  setSelectedSub: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedSeg: string | null;
+  setSelectedSeg: React.Dispatch<React.SetStateAction<string | null>>;
   duration: number;
   setDuration: React.Dispatch<React.SetStateAction<number>>;
   currentTime: number;
   setCurrentTime: React.Dispatch<React.SetStateAction<number>>;
 }
 
-interface Subtitle {
-  id: number;
-  text: string;
-  startTime: number;
-  endTime: number;
-}
 
 export default function Timeline({
     videoRef, 
@@ -55,7 +50,7 @@ export default function Timeline({
     setDuration(d);
     setVideoSegments([
       {
-        id: 1, 
+        id: crypto.randomUUID(), 
         sourceStart: 0, 
         sourceEnd: d,
         timelineStart: 0,

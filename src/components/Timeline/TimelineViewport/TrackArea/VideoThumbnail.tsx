@@ -13,9 +13,9 @@ interface VideoThumbnailProps {
   zoom: number;
   activeTool: "select" | "cut";
   videoSegments: VideoSegment[];
-  deleteVideoSegment: (id: number) => void;
-  selectedSeg: number | null;
-  setSelectedSeg: React.Dispatch<React.SetStateAction<number | null>>;
+  deleteVideoSegment: (id: string) => void;
+  selectedSeg: string | null;
+  setSelectedSeg: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 

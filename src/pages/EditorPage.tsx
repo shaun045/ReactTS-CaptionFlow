@@ -12,15 +12,15 @@ export default function EditorPage() {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [subtitles, setSubtitles] = useState<Subtitle[]>([
     {
-      id: 1,
+      id: crypto.randomUUID(),
       text: "Hello CaptionFlow!",
       startTime: 0,
       endTime: 5
     }
   ]);
   const [videoSegments, setVideoSegments] = useState<VideoSegment[]>([]);
-  const [selectedSub, setSelectedSub] = useState<number | null>(null);
-  const [selectedSeg, setSelectedSeg] = useState<number | null>(null);
+  const [selectedSub, setSelectedSub] = useState<string | null>(null);
+  const [selectedSeg, setSelectedSeg] = useState<string | null>(null);
   const [selectedFont, setSelectedFont] = useState<string | null>(null);
   const [fontSize, setFontSize] = useState<number>(24);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
@@ -37,13 +37,13 @@ export default function EditorPage() {
     setFuture([]);
   }
 
-  function deleteSubtitle(id: number) {
+  function deleteSubtitle(id: string) {
     pushHistory();
     setSubtitles(prev => prev.filter(sub => sub.id !== id));
   }
 
 
-  function deleteVideoSegment(id: number) {
+  function deleteVideoSegment(id: string) {
     pushHistory();
     console.log("Before:", videoSegments)
     

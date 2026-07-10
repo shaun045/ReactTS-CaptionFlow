@@ -2,15 +2,9 @@ import TimelineRuler from "./TimelineRuler";
 import TrackArea from "./TrackArea/TrackArea";
 import { RAZOR_CURSOR } from "../../../utils/cursors";
 import { useState } from "react";
-import type { VideoSegment } from "../../../utils/types";
+import type { VideoSegment, Subtitle } from "../../../utils/types";
 import { findSegmentAtTimeline, timelineSourceTime } from "../../../utils/timelineUtils";
 
-interface Subtitle {
-  id: number;
-  text: string;
-  startTime: number;
-  endTime: number;
-}
 
 interface TimelineViewportProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -24,19 +18,19 @@ interface TimelineViewportProps {
   activeTool: "select" | "cut";
   setActiveTool: React.Dispatch<React.SetStateAction<"select" | "cut">>;
   setSubtitles: React.Dispatch<React.SetStateAction<{
-      id: number;
+      id: string;
       text: string;
       startTime: number;
       endTime: number;
   }[]>>;
   videoSegments: VideoSegment[];
   setVideoSegments: React.Dispatch<React.SetStateAction<VideoSegment[]>>;
-  deleteSubtitle: (id: number) => void;
-  deleteVideoSegment: (id: number) => void;
-  selectedSub: number | null;
-  setSelectedSub:  React.Dispatch<React.SetStateAction<number | null>>;
-  selectedSeg: number | null;
-  setSelectedSeg: React.Dispatch<React.SetStateAction<number | null>>;
+  deleteSubtitle: (id: string) => void;
+  deleteVideoSegment: (id: string) => void;
+  selectedSub: string | null;
+  setSelectedSub:  React.Dispatch<React.SetStateAction<string | null>>;
+  selectedSeg: string | null;
+  setSelectedSeg: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export default function TimelineViewport({
@@ -81,7 +75,7 @@ export default function TimelineViewport({
       sub.id === target.id
         ? [
           {...sub, endTime: time},
-          {...sub, id: Date.now(), startTime: time}
+          {...sub, id: crypto.randomUUID(), startTime: time}
         ]
         : [sub]
     ));
@@ -105,7 +99,7 @@ export default function TimelineViewport({
               },
               {
                 ...seg,
-                id: Date.now() + Math.random(),
+                id: crypto.randomUUID(),
                 sourceStart: sourceSplit,
                 timelineStart: time
               }

@@ -1,14 +1,8 @@
 import SubtitleTrack from "./SubtitleTrack";
 import Playhead from "./Playhead";
 import VideoThumbnail from "./VideoThumbnail";
-import type { VideoSegment } from "../../../../utils/types";
+import type { VideoSegment, Subtitle } from "../../../../utils/types";
 
-interface Subtitle {
-  id: number;
-  text: string;
-  startTime: number;
-  endTime: number;
-}
 
 interface TrackAreaProps {
   videoRef: React.RefObject<HTMLVideoElement | null>
@@ -21,12 +15,12 @@ interface TrackAreaProps {
   zoom: number;
   activeTool: "select" | "cut";
   videoSegments: VideoSegment[];
-  deleteSubtitle: (id: number) => void;
-  deleteVideoSegment: (id: number) => void;
-  selectedSub: number | null;
-  setSelectedSub: React.Dispatch<React.SetStateAction<number | null>>;
-  selectedSeg: number | null;
-  setSelectedSeg: React.Dispatch<React.SetStateAction<number | null>>;
+  deleteSubtitle: (id: string) => void;
+  deleteVideoSegment: (id: string) => void;
+  selectedSub: string | null;
+  setSelectedSub: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedSeg: string | null;
+  setSelectedSeg: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export default function TrackArea({

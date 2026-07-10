@@ -1,19 +1,12 @@
-
-
-interface Subtitle {
-  id: number;
-  text: string;
-  startTime: number;
-  endTime: number;
-}
+import type { Subtitle } from "../../../../utils/types";
 
 interface SubtitleTrackProps {
   subtitles: Subtitle[];
   zoom: number;
   activeTool: "select" | "cut";
-  deleteSubtitle: (id: number) => void;
-  selectedSub: number | null;
-  setSelectedSub: React.Dispatch<React.SetStateAction<number | null>>
+  deleteSubtitle: (id: string) => void;
+  selectedSub: string | null;
+  setSelectedSub: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 export default function SubtitleTrack({subtitles, zoom, activeTool, selectedSub, setSelectedSub}: SubtitleTrackProps) {
