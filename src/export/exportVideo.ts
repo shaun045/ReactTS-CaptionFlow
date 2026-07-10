@@ -52,17 +52,18 @@ export async function exportVideo(
       }));
     
     const args = [
-      "-i", "input.mp4",
       "-ss", String(seg.sourceStart), 
-      "-to", String(seg.sourceEnd), 
+      "-i", "input.mp4",
+      "-to", String(seg.sourceEnd - seg.sourceStart), 
       "-avoid_negative_ts", "make_zero",
     ];
 
-    if (segSubtitles.length > 0) {
-      const filter = subtitleInstructions(segSubtitles, subtitleStyle).join(",");
-      args.push("-vf", filter);
-    }
+    const filters: string[] = ["setpts=PTS-STARTPTS"];
 
+    if (segSubtitles.length > 0) {
+      filters.push(...subtitleInstructions(segSubtitles, subtitleStyle));
+    }
+    args.push("-vf", filters.join(","));
     args.push(outName);
     await ffmpeg.exec(args);
     segmentFiles.push(outName);
@@ -139,5 +140,6 @@ function escapeSub(text: string): string {
     .replace(/'/g, "\u2019")
     .replace(/:/g, "\\:")
     .replace(/\[/g, "\\[")
-    .replace(/\]/g, "\\]");
+    .replace(/\]/g, "\\]")
+    .replace(/,/g, "\\,");
 }
