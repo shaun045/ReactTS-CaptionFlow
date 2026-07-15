@@ -27,3 +27,10 @@ export interface EditorState {
   subtitlePos: SubtitlePos;
 }
 
+export interface SubtitleStyle {
+  font: string | null;
+  fontSize: number;
+  color: string | null;
+  style: string | null;
+  pos: {x: number; y: number};
+}
