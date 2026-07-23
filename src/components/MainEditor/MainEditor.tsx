@@ -7,6 +7,8 @@ import { MdZoomIn, MdZoomOut } from "react-icons/md";
 import type { Subtitle, VideoSegment } from "../../utils/types";
 import { exportVideo } from "../../export/exportVideo";
 import { findSegmentAtSource, getNextSegment, sourceTimelineTime } from "../../utils/timelineUtils";
+import rendererSubtitleFrame from "../../utils/rendererSubtitleFrame";
+
 
 
 
@@ -49,8 +51,6 @@ export default function MainEditor({
     selectedColor,
     selectedStyle,
     subtitlePos,
-    setSubtitlePos,
-    pushHistory,
     videoFile,
     duration,
     videoSegments,
@@ -71,23 +71,24 @@ export default function MainEditor({
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
-  const [currentSubtitle, setCurrentSubtitle] = useState("");
+  // const [currentSubtitle, setCurrentSubtitle] = useState("");
 
-  function updateCurrentSubtitle() {
-    if (!videoRef.current) return;
+  // function updateCurrentSubtitle() {
+  //   if (!videoRef.current) return;
 
-    const currentTime = videoRef.current.currentTime;
+  //   const currentTime = videoRef.current.currentTime;
 
-    const activeSubtitle = subtitles.find(
-      (subtitle) =>
-        currentTime >= subtitle.startTime &&
-        currentTime <= subtitle.endTime
-    );
-    setCurrentSubtitle(activeSubtitle?.text ?? "");
-    console.log(activeSubtitle?.text);
-  }
+  //   const activeSubtitle = subtitles.find(
+  //     (subtitle) =>
+  //       currentTime >= subtitle.startTime &&
+  //       currentTime <= subtitle.endTime
+  //   );
+  //   // setCurrentSubtitle(activeSubtitle?.text ?? "");
+  //   console.log(activeSubtitle?.text);
+  // }
 
   const isGradient = selectedColor?.includes("linear-gradient") || selectedColor?.includes("radial-gradient");
+
   const subtitleStyle: React.CSSProperties = {
     fontFamily: selectedFont ?? undefined,
     fontSize: `${fontSize}px`,
@@ -195,13 +196,60 @@ export default function MainEditor({
       }
     }
 
+    const subtitleRendererStyle = {
+      font: selectedFont,
+      fontSize,
+      color: selectedColor,
+      style: selectedStyle,
+      pos: subtitlePos
+    };
+
+
     const timelineTime = sourceTimelineTime(
       videoRef.current.currentTime,
       videoSegments
     );
     
     setCurrentTime(timelineTime);
+
+    if (subtitleCanvasRef.current && videoRef.current) {
+      rendererSubtitleFrame(
+        subtitleCanvasRef.current,
+        timelineTime,
+        subtitles,
+        subtitleRendererStyle,
+        videoRef.current.videoWidth,
+        videoRef.current.videoHeight
+      );
+    }
+
   }
+
+  const subtitleCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  
+
+  // const canvas = rendererSubtitleFrame(
+  //     5,
+  //     subtitles,
+  //     rendererStyle,
+  //     1280,
+  //     720
+  // );
+
+  // useEffect(() => {
+  //   console.log("Appending canvas", canvas);
+  //   if (!canvas) return;
+
+  //   document.body.appendChild(canvas);
+
+  //   return() => {
+  //     canvas.remove();
+  //   };
+    
+  // }, [canvas])
+
+  
   
   return (
     <main className="relative flex justify-center items-center flex-col h-full flex-1"
@@ -257,12 +305,12 @@ export default function MainEditor({
             >
                 <video ref={videoRef} src={videoURL} className="relative rounded-xl max-w-230"
                 onTimeUpdate={() => {
-                  updateCurrentSubtitle();
+                  // updateCurrentSubtitle();
                   handleTimeUpdate();
                  }
                 }
                 />
-                {currentSubtitle && (
+                {/* {currentSubtitle && (
                     <p 
                       className="absolute cursor-move px-4 py-2 rounded font-semibold overflow-auto"
                       style={{
@@ -287,7 +335,12 @@ export default function MainEditor({
                       >
                       {currentSubtitle}
                     </p>    
-                )}
+                )} */}
+                <canvas 
+                    ref={subtitleCanvasRef}
+                    className="absolute inset-0 pointer-events-none"
+                />
+
                 <button className="absolute top-2 right-2 text-4xl cursor-pointer opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200"
                 onClick={() => removeVideo()}
                 >

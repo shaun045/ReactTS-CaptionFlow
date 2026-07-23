@@ -1,14 +1,7 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
-import type { Subtitle, VideoSegment } from "../utils/types";
+import type { Subtitle, VideoSegment, SubtitleStyle } from "../utils/types";
 
-interface SubtitleStyle {
-  font: string | null;
-  fontSize: number;
-  color: string | null;
-  style: string | null;
-  pos: {x: number; y: number};
-}
 
 export async function exportVideo(
   videoFile: File, 
@@ -113,12 +106,13 @@ function getStyleParams(style: string | null, color: string): string {
       case "outline": return `:borderw=2:bordercolor=white`;
       default: return "";
     }
-  }
+}
 
 function subtitleInstructions(subtitles: Subtitle[], style: SubtitleStyle) {
   const isGradient = style.color?.includes("gradient");
   const safeColor = isGradient ? "white" : (style.color ?? "white");
   const styleParams = getStyleParams(style.style, safeColor);
+
 
   return subtitles.map(sub => {
     return (
@@ -134,6 +128,8 @@ function subtitleInstructions(subtitles: Subtitle[], style: SubtitleStyle) {
     );
   });
 }
+
+
 
 function escapeSub(text: string): string {
   return text
