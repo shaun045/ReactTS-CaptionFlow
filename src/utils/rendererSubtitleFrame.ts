@@ -68,13 +68,6 @@ export default function rendererSubtitleFrame(
     ctx.fill();
 
     ctx.restore();
-    
-    // ctx.fillRect(
-    //   rectX, 
-    //   rectY,
-    //   rectWidth,
-    //   rectHeight   
-    // );
   }
 
   function drawSubtitle(
@@ -91,27 +84,41 @@ export default function rendererSubtitleFrame(
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      const gradient = ctx.createLinearGradient(
-        x1, y1,
-        x2, y2
-      );
+      // const gradient = ctx.createLinearGradient(
+      //   x1, y1,
+      //   x2, y2
+      // );
 
-      gradient.addColorStop(0, "red");
-      gradient.addColorStop(1, "blue");
+      // gradient.addColorStop(0, "red");
+      // gradient.addColorStop(1, "blue");
 
-      const isGradient = style.color?.startsWith("linear-gradient");
-      if (isGradient) {
+      
+      const metrics = ctx.measureText(subtitle.text);
+      const startX = x - metrics.width / 2;
+      const endX = x + metrics.width / 2;
+
+      if (style.color?.startsWith("linear-gradient")) {
+        
         const gradientColors = style.color
-                    ?.replace("linear-gradient(to right,", "")
+                    .replace("linear-gradient(to right,", "")
                     .replace(")", "")
                     .split(",");
 
-      const startColor = gradientColors?.[0].trim();
-      const endColor = gradientColors?.[1].trim();
-      console.log(startColor, endColor);
+        const startColor = gradientColors?.[0].trim();
+        const endColor = gradientColors?.[1].trim();
+        const gradient = ctx.createLinearGradient(
+          startX, y,
+          endX, y
+        );
+        gradient.addColorStop(0, startColor);
+        gradient.addColorStop(1, endColor);
+
+        console.log(startColor, endColor);
+
+        ctx.fillStyle = gradient;
       }
       
-      ctx.fillStyle = gradient;
+      
       
 
       switch (style.style) {
