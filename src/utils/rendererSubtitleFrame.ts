@@ -26,8 +26,22 @@ export default function rendererSubtitleFrame(
   // ctx.fillStyle = style.color ?? "white";
 
   function applyGlowStyle(ctx:CanvasRenderingContext2D, style: SubtitleStyle) {
-      ctx.shadowColor = style.color ?? "white";
-      ctx.shadowBlur = 20;
+      let glowColor = style.color ?? "white";
+
+      if (style.color?.startsWith("linear-gradient")) {
+        const colors = style.color
+                      .replace("linear-gradient(to right,", "")
+                      .replace(")", "")
+                      .split(",");
+        glowColor = colors[1].trim();
+
+      }
+
+
+      ctx.shadowColor = glowColor;
+      ctx.shadowBlur = 30;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
   }
 
   function applyOutlineStyle(ctx:CanvasRenderingContext2D) {
@@ -35,11 +49,12 @@ export default function rendererSubtitleFrame(
     ctx.lineWidth = 5;
   }
 
-  function applyShadowStyle(ctx:CanvasRenderingContext2D, style: SubtitleStyle) {
-    ctx.shadowColor = style.color ?? "white";
-    ctx.shadowBlur = 4;
-    ctx.shadowOffsetX = 1;
-    ctx.shadowOffsetY = 1;
+  function applyShadowStyle(ctx:CanvasRenderingContext2D) {
+    
+    ctx.shadowColor = "black";
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 3;
   }
 
   function applyBackgroundStyle(
@@ -77,6 +92,8 @@ export default function rendererSubtitleFrame(
       x: number, 
       y: number
   ) {
+
+      ctx.save();
       // SET FONT
       ctx.font = `${style.fontSize}px ${style.font}`;
       ctx.fillStyle = style.color ?? "white";
@@ -110,6 +127,7 @@ export default function rendererSubtitleFrame(
           startX, y,
           endX, y
         );
+
         gradient.addColorStop(0, startColor);
         gradient.addColorStop(1, endColor);
 
@@ -133,13 +151,13 @@ export default function rendererSubtitleFrame(
             applyGlowStyle(ctx, style);
             break;
         case "shadow": 
-            applyShadowStyle(ctx, style);
+            applyShadowStyle(ctx);
             break;
       }
 
       //DRAW THE TEXT
       ctx.fillText(subtitle.text, x, y);
-
+      ctx.restore();
       console.log("Drawing: ", subtitle.text, x, y);
   }
   
